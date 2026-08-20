@@ -1,0 +1,15 @@
+*.osm.pbf
+dist/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+venv/
+.venv/
+.vscode/
+env/
+node_modules/*
+.DS_Store
+Thumbs.db

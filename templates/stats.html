@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>UK Addresses - Statistics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../libs/chart.js"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;📊&lt;/text&gt;&lt;/svg&gt;">
+</head>
+<body class="bg-gray-100 font-sans min-h-screen text-slate-800 flex flex-col">
+    <!-- Header -->
+    <header class="bg-slate-800 text-white px-4 py-3 shadow-lg flex items-center justify-between shrink-0 h-16">
+        <div class="flex items-center gap-4">
+            <a href="../" class="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors text-sm font-semibold bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg border border-slate-600">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Back to Map</span>
+            </a>
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <svg class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Address Statistics</span>
+            </h1>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="grow max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+        <!-- Controls Bar -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+            <!-- Time Range Buttons -->
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider mr-1">Time Range:</span>
+                <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-1 gap-1">
+                    <button id="range-month-btn" class="range-btn text-xs font-semibold px-3 py-1.5 rounded-md transition-colors text-gray-700 hover:bg-gray-200 cursor-pointer">
+                        Past Month
+                    </button>
+                    <button id="range-year-btn" class="range-btn text-xs font-semibold px-3 py-1.5 rounded-md transition-colors text-gray-700 hover:bg-gray-200 cursor-pointer">
+                        Past Year
+                    </button>
+                    <button id="range-all-btn" class="range-btn text-xs font-semibold px-3 py-1.5 rounded-md transition-colors bg-blue-600 text-white shadow-sm cursor-pointer">
+                        All Time
+                    </button>
+                </div>
+            </div>
+
+            <!-- Postcode Area Search & Select -->
+            <div class="flex items-center gap-2 relative">
+                <label for="area-select" class="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0">Area:</label>
+                <div class="relative grow md:w-64">
+                    <select id="area-select" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-sm">
+                        <option value="uk">All UK</option>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4" id="metrics-summary">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Total Objects</div>
+                <div id="stat-total-objects" class="text-2xl font-bold text-slate-900 mt-1">-</div>
+                <div id="stat-postcode-count" class="text-xs text-gray-500 mt-0.5">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Addressed</div>
+                <div id="stat-addressed-perc" class="text-2xl font-bold text-emerald-600 mt-1">-</div>
+                <div id="stat-addressed-count" class="text-xs text-gray-500 mt-0.5">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Distinct Postcodes</div>
+                <div id="stat-distinct-postcodes" class="text-2xl font-bold text-blue-600 mt-1">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Distinct Cities</div>
+                <div id="stat-cities" class="text-2xl font-bold text-slate-900 mt-1">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Distinct Suburbs</div>
+                <div id="stat-suburbs" class="text-2xl font-bold text-slate-900 mt-1">-</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 col-span-2 md:col-span-1">
+                <div class="text-xs font-semibold text-gray-500 uppercase">Distinct Streets</div>
+                <div id="stat-streets" class="text-2xl font-bold text-slate-900 mt-1">-</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Chart 1: Total Objects -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Objects with Address Tags</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-total-objects"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Percentage Addressed -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Percentage Addressed</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-addressed-perc"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: Distinct Postcodes -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Distinct Postcodes</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-distinct-postcodes"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 4: Cities Count -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Distinct Cities</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-cities"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 5: Suburbs Count -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Distinct Suburbs</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-suburbs"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 6: Streets Count -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <h2 class="text-base font-bold text-slate-800 mb-3 flex items-center justify-between">
+                    <span>Distinct Streets</span>
+                </h2>
+                <div class="relative grow min-h-65">
+                    <canvas id="chart-streets"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="p-4 border-t border-gray-200 bg-white text-xs text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-2 shrink-0 select-none max-w-7xl w-full mx-auto px-4">
+        <div>
+            Address QA Statistics & History &bull; Generated weekly
+        </div>
+        <div>
+            <a href="https://github.com/confusedbuffalo/address-areas" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-semibold">Source code</a>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

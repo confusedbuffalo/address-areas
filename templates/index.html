@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>UK Addresses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./libs/pmtiles.js"></script>
+    <script src="./libs/maplibre-gl.js"></script>
+    <link href="./libs/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;text y=%22.9em%22 font-size=%2290%22&gt;🗺️&lt;/text&gt;&lt;/svg&gt;">
+</head>
+<body class="bg-gray-100 font-sans overflow-hidden h-full">
+    <div class="h-full flex flex-col">
+        <header class="bg-slate-800 text-white px-3 sm:px-4 py-2 shadow-lg flex flex-row items-center justify-between gap-2 sm:gap-3 shrink-0 h-16 max-h-16 overflow-hidden">
+            <div class="flex items-center gap-3 shrink-0">
+                <button id="menu-btn" class="text-white hover:text-gray-300 focus:outline-none cursor-pointer" aria-label="Toggle Sidebar">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <h1 class="text-xl font-bold whitespace-nowrap hidden sm:block">UK Addresses</h1>
+            </div>
+            <div class="grow flex justify-center items-center min-w-0 max-w-full">
+                <div id="breadcrumbs" class="flex flex-col sm:flex-row items-center justify-center bg-slate-900 px-2 sm:px-3 py-1 rounded-lg border border-slate-700 gap-0.5 sm:gap-1.5 max-w-full overflow-hidden">
+                    <!-- Breadcrumbs rendered dynamically -->
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center justify-end shrink-0">
+                <a id="edit-btn" href="#" target="_blank" class="bg-blue-600 text-white px-4 py-1.5 rounded text-sm font-semibold opacity-50 cursor-not-allowed transition shadow-sm">
+                    Edit
+                </a>
+            </div>
+        </header>
+        <div class="grow flex flex-row min-h-0 relative">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="bg-white border-r border-gray-200 flex flex-col transition-all duration-300 ease-in-out shrink-0 overflow-hidden z-10">
+                <div class="p-4 border-b border-gray-200 shrink-0 bg-gray-50 flex justify-between items-center relative">
+                    <div class="flex items-center gap-2">
+                        <button id="sidebar-back-btn" class="text-gray-500 hover:text-gray-700 focus:outline-none hidden cursor-pointer" aria-label="Go Up A Level">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h2 id="sidebar-title" class="text-sm font-bold text-gray-700 uppercase tracking-wider">Sub-levels</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="sidebar-meta" class="text-xs font-semibold text-gray-500"></span>
+                        <button id="edit-all-btn" class="hidden sm:inline-block bg-blue-600 hover:bg-blue-500 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed text-white text-xs font-bold px-2 py-1 rounded transition shadow-sm cursor-pointer" disabled>
+                            Edit all
+                        </button>
+                    </div>
+                </div>
+                <!-- Section 1: Sub-levels (Collapsible) -->
+                <div id="sublevels-section" class="flex flex-col grow min-h-0">
+                    <button id="sublevels-header" class="w-full px-4 py-2 bg-gray-100 border-b border-gray-200 flex items-center gap-2 select-none text-xs font-bold text-gray-700 uppercase tracking-wider transition-colors shrink-0">
+                        <svg id="sublevels-caret" class="h-4 w-4 text-gray-500 transition-transform duration-200 rotate-90 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span id="sublevels-header-title">Sub-levels</span>
+                    </button>
+                    <div id="sublevels-content" class="flex flex-col grow min-h-0 overflow-hidden">
+                        <!-- Column headers -->
+                        <div id="sidebar-headers" class="grid grid-cols-12 gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50 text-[11px] font-bold text-gray-500 uppercase tracking-wider shrink-0 select-none">
+                            <!-- Column headers populated and managed dynamically in JS -->
+                        </div>
+                        <!-- List -->
+                        <div id="sidebar-list" class="grow overflow-y-auto divide-y divide-gray-100">
+                            <!-- Sub-levels populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Search (Collapsible / Expandable) -->
+                <div id="search-section" class="flex flex-col border-t border-gray-200 bg-white shrink-0">
+                    <div id="search-header" class="w-full px-3 py-2 bg-gray-100 hover:bg-gray-200 border-b border-gray-200 flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-gray-700 uppercase tracking-wider transition-colors shrink-0">
+                        <svg id="search-caret" class="h-4 w-4 text-gray-500 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <div class="flex items-center gap-2 grow min-w-0">
+                            <svg class="h-4 w-4 text-gray-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <div class="relative flex items-center grow min-w-0">
+                                <input id="search-input" type="text" placeholder="Search areas..." class="w-full bg-white border border-gray-300 rounded pl-2.5 pr-7 py-1 text-xs font-normal text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" autocomplete="off" />
+                                <button id="search-clear-btn" class="hidden absolute right-1.5 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer p-0.5 rounded-full hover:bg-gray-200 transition-colors" aria-label="Clear Search">
+                                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="search-content" class="hidden flex-col min-h-0 grow overflow-hidden">
+                        <div class="px-3 py-2 bg-gray-50 border-b border-gray-200 flex items-center shrink-0">
+                            <label class="inline-flex items-center text-xs text-gray-700 cursor-pointer select-none">
+                                <input id="search-area-only-checkbox" type="checkbox" checked class="form-checkbox h-3.5 w-3.5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer" />
+                                <span id="search-area-only-label" class="ml-2">Search only in current area</span>
+                            </label>
+                        </div>
+                        <div id="search-results-list" class="grow overflow-y-auto divide-y divide-gray-100">
+                            <!-- Search results populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Settings (Collapsible) -->
+                <div id="settings-section" class="flex flex-col border-t border-gray-200 bg-white shrink-0">
+                    <button id="settings-header" class="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 border-b border-gray-200 flex items-center gap-2 cursor-pointer select-none text-xs font-bold text-gray-700 uppercase tracking-wider transition-colors shrink-0">
+                        <svg id="settings-caret" class="h-4 w-4 text-gray-500 transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>Settings</span>
+                    </button>
+                    <div id="settings-content" class="hidden p-4 flex-col gap-3">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-gray-800">Envelopes</span>
+                                <span class="text-[11px] text-gray-500 leading-tight">Show address on an envelope when a point is selected</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input id="setting-envelopes-toggle" type="checkbox" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Footer -->
+                <footer class="p-3 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 shrink-0 flex justify-between items-center select-none">
+                    <div class="flex items-center gap-2">
+                        <a href="stats/" title="Statistics" aria-label="Statistics" class="text-gray-500 hover:text-blue-600 transition-colors">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </a>
+                        <div>
+                            Data Date: <span id="data-date" class="font-semibold text-gray-700">Loading...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="https://github.com/confusedbuffalo/address-areas" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-semibold">Source code</a>
+                    </div>
+                </footer>
+            </aside>
+            <!-- Map container -->
+            <div class="grow h-full min-w-0 relative">
+                <div id="map" class="w-full h-full"></div>
+                <!-- Envelope Info Card Overlay -->
+                <div id="envelope-card" class="hidden absolute bottom-4 left-4 right-4 sm:top-4 sm:right-4 sm:left-auto sm:bottom-auto z-20 w-auto sm:w-80 bg-[#eed58a] rounded-lg shadow-xl p-5 border border-[#e0c679] font-sans pointer-events-auto text-slate-800 transition-all duration-200 select-text">
+                    <!-- Stamp placeholder -->
+                    <div class="absolute top-4 right-4 w-16 h-20 border-2 border-dashed border-slate-700/80 rounded flex flex-col items-center justify-center text-center p-1 font-bold text-slate-800 text-[11px] leading-tight select-none">
+                        <span>affix</span>
+                        <span>stamp</span>
+                        <span>here</span>
+                    </div>
+                    <!-- Address lines -->
+                    <div id="envelope-address" class="pt-16 pb-2 text-sm font-medium text-slate-900 leading-normal space-y-1">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JOSM Error Modal -->
+    <div id="josm-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-sm w-full p-6 relative border border-gray-200">
+            <h3 class="text-lg font-bold text-red-600 mb-2">JOSM Connection Failed</h3>
+            <p class="text-sm text-gray-600 mb-4 leading-relaxed">
+                Could not connect to JOSM Remote Control. Please check that:
+            </p>
+            <ul class="list-disc list-inside text-xs text-gray-600 space-y-1 mb-6">
+                <li>JOSM is running.</li>
+                <li>Remote Control is enabled in preferences (HTTPS or HTTP on port 8111).</li>
+            </ul>
+            <div class="flex justify-end">
+                <button onclick="document.getElementById('josm-modal').classList.add('hidden')" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-4 py-2 rounded cursor-pointer shadow">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.DATA_TIMESTAMP = {{ data_timestamp }};
+        window.PMTILES_URLS = {{ pmtiles_urls | tojson }};
+        window.INITIAL_BOUNDS = {{ initial_bounds | tojson }};
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+name: Build Address QA Website
+on:
+    schedule:
+        - cron: "0 0 * * 6"
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Generate GitHub App Token for Push
+              id: app-token-push
+              uses: actions/create-github-app-token@v3
+              with:
+                  client-id: ${{ secrets.APP_ID }}
+                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
+                  permission-contents: 'write'
+
+            - name: Checkout
+              uses: actions/checkout@v7
+              with:
+                  token: ${{ steps.app-token-push.outputs.token }}
+                  ref: main
+
+            - name: Free up disk space on runner
+              run: |
+                  sudo rm -rf /usr/share/dotnet
+                  sudo rm -rf /usr/local/lib/android
+                  sudo rm -rf /opt/ghc
+                  sudo rm -rf /usr/local/share/powershell
+                  sudo rm -rf /usr/local/share/chromium
+                  sudo rm -rf /usr/local/share/boost
+                  sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+            - name: Set up Python
+              uses: actions/setup-python@v7
+              with:
+                  python-version: "3.14"
+
+            - name: Install dependencies
+              # TODO: revert to the following install when runners have tippecanoe >= 2.52.0
+              # then also remove install tippecanoe from source step
+              # sudo apt-get install -y libosmium2-dev libprotozero-dev libboost-dev tippecanoe
+
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libosmium2-dev libprotozero-dev libboost-dev libsqlite3-dev zlib1g-dev build-essential git rclone
+                  pip install -r requirements.txt
+
+            - name: Install Tippecanoe from source
+              run: |
+                  git clone https://github.com/felt/tippecanoe.git /tmp/tippecanoe
+                  make -C /tmp/tippecanoe -j$(nproc)
+                  sudo make -C /tmp/tippecanoe install
+                  rm -rf /tmp/tippecanoe
+                  tippecanoe -v
+
+            - name: Run Processing
+              run: python scripts/process.py
+
+            - name: Render HTML
+              run: python scripts/render.py
+
+            - name: Commit and Push History Data
+              run: |
+                  # Configure Git user
+                  git config user.name "Auto-Pusher-Bot"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+                  git add stats || true
+
+                  # Check if there are any changes to commit
+                  if git diff --cached --exit-code; then
+                      echo "No changes to stats data. Skipping commit."
+                  else
+                      git commit -m "🤖 Stats Update: $(date +%Y-%m-%d) [skip ci]"
+                      
+                      git push
+                  fi
+
+            - name: Upload PMTiles to Cloudflare R2
+              env:
+                  R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+                  R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+              if: env.R2_ACCESS_KEY_ID != '' && env.R2_SECRET_ACCESS_KEY != '' && env.R2_BUCKET_NAME != ''
+              run: |
+                  mkdir -p ~/.config/rclone
+                  cat <<EOF > ~/.config/rclone/rclone.conf
+                  [r2]
+                  type = s3
+                  provider = Cloudflare
+                  access_key_id = ${R2_ACCESS_KEY_ID}
+                  secret_access_key = ${R2_SECRET_ACCESS_KEY}
+                  endpoint = https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com
+                  no_check_bucket = true
+                  EOF
+                  rclone copy dist/pmtiles/ "r2:${R2_BUCKET_NAME}/" --include "*.pmtiles" --s3-no-head
+                  python scripts/cleanup_r2.py
+
+            - name: Remove local PMTiles file before Pages deployment
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+              if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+              run: rm -f dist/pmtiles/*.pmtiles
+
+            - name: Find and remove files over 25MB
+              # Avoid run failure due to Cloudflare rejection of files over 25MB
+              run: |
+                  if [ -d "dist/" ]; then
+                    echo "### Large Files Removed (>25MB)" >> $GITHUB_STEP_SUMMARY
+                    find dist/ -type f -size +25M -exec ls -lh {} + | tee -a $GITHUB_STEP_SUMMARY
+                    find dist/ -type f -size +25M -delete
+                  else
+                    echo "Directory dist/ does not exist."
+                  fi
+
+            - name: List top 20 largest files
+              run: |
+                  if [ -d "dist/" ]; then
+                    echo "### Top 20 Largest Files" >> $GITHUB_STEP_SUMMARY
+                    echo '| File | Size |' >> $GITHUB_STEP_SUMMARY
+                    echo '| --- | --- |' >> $GITHUB_STEP_SUMMARY
+                    find dist/ -type f -exec ls -lh {} + | sort -k5 -hr | head -n 20 | awk '{print "| " $9 " | " $5 " |"}' >> $GITHUB_STEP_SUMMARY
+                  else
+                    echo "Directory dist/ does not exist."
+                  fi
+
+            - name: Deploy to Cloudflare Pages
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+              if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+              run: |
+                  npx wrangler pages deploy dist --project-name="${{ secrets.CLOUDFLARE_PAGES_PROJECT }}"
