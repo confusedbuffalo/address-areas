@@ -17,7 +17,7 @@ jobs:
                   permission-contents: 'write'
 
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@v5
               with:
                   token: ${{ steps.app-token-push.outputs.token }}
                   ref: main
@@ -61,7 +61,8 @@ jobs:
             - name: Render HTML
               run: python scripts/render.py
 
-            - name: Commit and Push History Data
+            - name: Commit and Push Stats Data
+              continue-on-error: true
               run: |
                   # Configure Git user
                   git config user.name "Auto-Pusher-Bot"
@@ -99,7 +100,7 @@ jobs:
                   rclone copy dist/pmtiles/ "r2:${R2_BUCKET_NAME}/" --include "*.pmtiles" --s3-no-head
                   python scripts/cleanup_r2.py
 
-            - name: Remove local PMTiles file before Pages deployment
+            - name: Remove local PMTiles files before Pages deployment
               env:
                   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
