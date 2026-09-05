@@ -20,6 +20,58 @@ MISSING_VALUES_SET: set[str] = {
     'no city', 'no suburb', 'no street', 'no postcode', 'missing', 'unknown', ''
 }
 
+VALID_BASE_ADDR_TAGS: set[str] = {
+    'addr:unit',
+    'addr:flats',
+    'addr:floor',
+    'addr:housename',
+    'addr:housenumber',
+    'addr:street',
+    'addr:place',
+    'addr:parentstreet',
+    'addr:locality',
+    'addr:hamlet',
+    'addr:village',
+    'addr:suburb',
+    'addr:town',
+    'addr:city',
+    'addr:county',
+    'addr:postcode',
+    'addr:country',
+    'addr:full',
+    'addr:interpolation',
+    'addr:inclusion',
+    'addr:subdistrict',
+    'addr:district',
+    'addr:substreet',
+    'addr:state',
+}
+
+VALID_LANG_CODES: set[str] = {'en', 'cy', 'gd', 'ga'}
+
+
+def is_valid_address_tag(key: str) -> bool:
+    """Checks if an addr:* tag key is one of the standard accepted address tags or ends with an allowed language code (en, cy, gd, ga).
+
+    Args:
+        key: Tag key string (e.g. 'addr:housename', 'addr:housename:en').
+
+    Returns:
+        bool: True if key is a standard valid address tag.
+    """
+    if key in VALID_BASE_ADDR_TAGS:
+        return True
+
+    # Check for valid base tag followed by allowed language code
+    if ':' in key:
+        parts = key.rsplit(':', 1)
+        base = parts[0]
+        lang = parts[1]
+        if base in VALID_BASE_ADDR_TAGS and lang in VALID_LANG_CODES:
+            return True
+
+    return False
+
 
 def is_missing_value(val: Optional[str]) -> bool:
     """Checks if a string is None, empty, or a placeholder missing value.
@@ -197,20 +249,20 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
         'unusual_suburb',
         'unusual_street',
         'unusual_housenumber',
-        'unusual_housename'
+        'unusual_housename',
+        'unusual_address_tag'
     ]
 
-    query = "SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name FROM addresses"
+    query = "SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name, unusual_addr_tags FROM addresses"
     cursor.execute(query)
 
     for row in cursor:
-        pa, city, suburb, street, popup_tags_json, osm_id, osm_name = row
+        pa, city, suburb, street, popup_tags_json, osm_id, osm_name, unusual_tags_json = row
+
         pa_key = pa if pa else 'No postcode'
 
         housenumber = ''
         housename = ''
-
-        # Fast-path check for house number/name tags prior to invoking expensive json.loads parsing
         if popup_tags_json and ('addr:housenumber' in popup_tags_json or 'addr:housename' in popup_tags_json):
             try:
                 tags = json.loads(popup_tags_json)
@@ -219,8 +271,23 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
             except Exception:
                 pass
 
+        unusual_tags: dict[str, str] = {}
+        if unusual_tags_json:
+            try:
+                unusual_tags = json.loads(unusual_tags_json)
+            except Exception:
+                pass
+
         # Check each warning category
         flags: list[tuple[str, str, str]] = []
+
+        # Check for unusual addr:* tags
+        if unusual_tags:
+            for k, v in unusual_tags.items():
+                if k.startswith('addr:') and not is_valid_address_tag(k):
+                    tag_val = str(v or '').strip()
+                    if tag_val:
+                        flags.append(('unusual_address_tag', tag_val, k))
 
         if city:
             city_reasons = get_reasons_for_city_suburb_street(city)

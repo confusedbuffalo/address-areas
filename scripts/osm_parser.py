@@ -12,6 +12,7 @@ from config import (
     POSTCODE_AREA_REGEX,
     TRANSFORMER_TO_27700,
 )
+from warnings_detector import is_valid_address_tag
 
 
 class RelationMemberScanner(osmium.SimpleHandler):
@@ -24,7 +25,7 @@ class RelationMemberScanner(osmium.SimpleHandler):
 
     def relation(self, r: osmium.osm.Relation) -> None:
         """Collects member node and way IDs from relations containing address tags."""
-        if r.tags and any(k in r.tags for k in CONSIDERED_TAGS_SET):
+        if r.tags and any(tag.k.startswith('addr:') for tag in r.tags):
             for m in r.members:
                 if m.type == 'w':
                     self.member_way_ids.add(m.ref)
@@ -72,6 +73,11 @@ class BaseAddressHandler(osmium.SimpleHandler):
             if key in tags:
                 popup_tags[key] = tags[key]
 
+        unusual_addr_tags: dict[str, str] = {}
+        for tag in tags:
+            if tag.k.startswith('addr:') and not is_valid_address_tag(tag.k):
+                unusual_addr_tags[tag.k] = tags[tag.k]
+
         suburb_val: Optional[str] = None
         suburb_type: str = 'missing'
         for key in ['addr:suburb', 'addr:locality', 'addr:hamlet', 'addr:village', 'addr:town']:
@@ -111,6 +117,7 @@ class BaseAddressHandler(osmium.SimpleHandler):
             suburb_val, suburb_type, suburb_key,
             street_val, street_type, street_key,
             json.dumps(popup_tags) if popup_tags else "{}",
+            json.dumps(unusual_addr_tags) if unusual_addr_tags else "{}",
             f"{osm_type}{osm_id}",
             tags.get('name', ''),
             1 if has_address_info else 0,
@@ -129,8 +136,8 @@ class BaseAddressHandler(osmium.SimpleHandler):
                     postcode, postcode_area, city,
                     suburb, suburb_type, suburb_key,
                     street, street_type, street_key,
-                    popup_tags, osm_id, osm_name, is_addressed, has_feature_tag
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    popup_tags, unusual_addr_tags, osm_id, osm_name, is_addressed, has_feature_tag
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, self.batch)
             self.conn.commit()
             self.total_addresses += len(self.batch)
@@ -146,7 +153,7 @@ class NodeAddressHandler(BaseAddressHandler):
             loc: tuple[float, float] = (n.location.lat, n.location.lon)
             if n.id in self.member_node_ids:
                 self.relation_node_locs[n.id] = loc
-            if n.tags and any(k in n.tags for k in CONSIDERED_TAGS_SET):
+            if n.tags and any(tag.k.startswith('addr:') for tag in n.tags):
                 self.add_address(loc, n.tags, 'n', n.id)
 
 
@@ -155,7 +162,7 @@ class WayAddressHandler(BaseAddressHandler):
 
     def way(self, w: osmium.osm.Way) -> None:
         """Processes an OSM way, calculates node centroid and extracts address tags if present."""
-        has_tags: bool = bool(w.tags and any(k in w.tags for k in CONSIDERED_TAGS_SET))
+        has_tags: bool = bool(w.tags and any(tag.k.startswith('addr:') for tag in w.tags))
         is_member: bool = w.id in self.member_way_ids
 
         if has_tags or is_member:
@@ -176,7 +183,7 @@ class WayAddressHandler(BaseAddressHandler):
 
     def relation(self, r: osmium.osm.Relation) -> None:
         """Processes an OSM relation, calculates member centroid and extracts address tags if present."""
-        if r.tags and any(k in r.tags for k in CONSIDERED_TAGS_SET):
+        if r.tags and any(tag.k.startswith('addr:') for tag in r.tags):
             lats: list[float] = []
             lons: list[float] = []
             for m in r.members:

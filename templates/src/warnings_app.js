@@ -12,7 +12,8 @@ const CATEGORY_ORDER = [
     'unusual_street',
     'unusual_housenumber',
     'unusual_housename',
-    'duplicates'
+    'duplicates',
+    'unusual_address_tag'
 ];
 
 const CATEGORY_TITLES = {
@@ -21,7 +22,8 @@ const CATEGORY_TITLES = {
     'unusual_street': 'Unusual Street',
     'unusual_housenumber': 'Unusual Housenumber',
     'unusual_housename': 'Unusual Housename',
-    'duplicates': 'Duplicates'
+    'duplicates': 'Duplicates',
+    'unusual_address_tag': 'Unusual Address Tag'
 };
 
 // Store sort state per table category ID: Map<catId, { column: string, direction: 'asc' | 'desc' }>
@@ -84,23 +86,30 @@ function buildRowGroups(catKey, rawItems) {
         }));
     }
 
-    const isGroupedCategory = catKey === 'unusual_city' || catKey === 'unusual_suburb' || catKey === 'unusual_street';
+    const isGroupedCategory = catKey === 'unusual_city' || catKey === 'unusual_suburb' || catKey === 'unusual_street' || catKey === 'unusual_address_tag';
     if (isGroupedCategory) {
         // Group items by unusual value
         const groupedMap = new Map();
         rawItems.forEach(item => {
             // rawItem schema: [value, reason, osm_id]
             const val = item[0];
+            const reason = item[1] || '';
             if (!groupedMap.has(val)) {
                 groupedMap.set(val, {
                     value: val,
-                    reason: item[1] || '',
+                    reasonsSet: new Set(reason ? [reason] : []),
                     osm_ids: []
                 });
+            } else if (reason) {
+                groupedMap.get(val).reasonsSet.add(reason);
             }
             groupedMap.get(val).osm_ids.push(item[2]);
         });
-        return Array.from(groupedMap.values());
+        return Array.from(groupedMap.values()).map(g => ({
+            value: g.value,
+            reason: Array.from(g.reasonsSet).join(', '),
+            osm_ids: g.osm_ids
+        }));
     }
 
     // Individual rows for housenumber and housename

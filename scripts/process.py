@@ -182,6 +182,7 @@ def process() -> None:
             street_type TEXT,
             street_key TEXT,
             popup_tags TEXT,
+            unusual_addr_tags TEXT,
             osm_id TEXT,
             osm_name TEXT,
             is_addressed INTEGER,
@@ -273,6 +274,7 @@ def process() -> None:
                     'unusual_street': [],
                     'unusual_housenumber': [],
                     'unusual_housename': [],
+                    'unusual_address_tag': [],
                     'duplicates': []
                 }
             warnings_data[pa_key]['duplicates'] = dup_groups
