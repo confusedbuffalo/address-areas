@@ -162,8 +162,11 @@ class WayAddressHandler(BaseAddressHandler):
 
     def way(self, w: osmium.osm.Way) -> None:
         """Processes an OSM way, calculates node centroid and extracts address tags if present."""
-        has_tags: bool = bool(w.tags and any(tag.k.startswith('addr:') for tag in w.tags))
         is_member: bool = w.id in self.member_way_ids
+        if not is_member and not w.tags:
+            return
+
+        has_tags: bool = any(tag.k.startswith('addr:') for tag in w.tags) if w.tags else False
 
         if has_tags or is_member:
             lats: list[float] = []

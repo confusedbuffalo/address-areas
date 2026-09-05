@@ -51,15 +51,6 @@ from warnings_detector import extract_warnings_from_db
 logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 
-def shutil_copyfileobj(fsrc, fdst, length=1024*1024):
-    """Copies contents from fsrc to fdst in chunks."""
-    while True:
-        buf = fsrc.read(length)
-        if not buf:
-            break
-        fdst.write(buf)
-
-
 def compile_single_layer_pmtiles(cfg: dict[str, Any], geojson_path: str, timestamp_str: str, output_dir: str) -> str:
     """Compiles a single layer GeoJSON file into PMTiles using Tippecanoe with parallel speedup options.
 
@@ -322,7 +313,12 @@ def process() -> None:
     root_search_index = []
 
     points_files = []
-    hulls_files = []
+    hulls_files_by_level: dict[str, list[str]] = {
+        'postcode_area': [],
+        'city': [],
+        'suburb': [],
+        'street': []
+    }
 
     # Accumulators for No Postcode results across letter keys and chunks
     no_postcode_raw_city_items: dict[str, list[list[Any]]] = {}  # { city_child_id: list of city tuples }
@@ -351,17 +347,19 @@ def process() -> None:
             task_type, task_label = futures[future]
             try:
                 if task_type == 'standard':
-                    pa_res, pa_root_search, points_path, hulls_path = future.result()
+                    pa_res, pa_root_search, points_path, hulls_paths = future.result()
                     if pa_res:
                         root_tuples.extend(pa_res)
                     if pa_root_search:
                         root_search_index.extend(pa_root_search)
                     if os.path.exists(points_path):
                         points_files.append(points_path)
-                    if os.path.exists(hulls_path):
-                        hulls_files.append(hulls_path)
+                    if isinstance(hulls_paths, dict):
+                        for lvl, hp in hulls_paths.items():
+                            if os.path.exists(hp):
+                                hulls_files_by_level[lvl].append(hp)
                 else:
-                    city_items, search_items, points_path, hulls_path, letter_key, letter_suburbs_dict, sector_points_dict = future.result()
+                    city_items, search_items, points_path, hulls_paths, letter_key, letter_suburbs_dict, sector_points_dict = future.result()
 
                     for item in city_items:
                         c_id = item[3]
@@ -383,8 +381,10 @@ def process() -> None:
 
                     if os.path.exists(points_path):
                         points_files.append(points_path)
-                    if os.path.exists(hulls_path):
-                        hulls_files.append(hulls_path)
+                    if isinstance(hulls_paths, dict):
+                        for lvl, hp in hulls_paths.items():
+                            if os.path.exists(hp):
+                                hulls_files_by_level[lvl].append(hp)
             except Exception as exc:
                 logging.error(f"Task {task_type}:{task_label} generated an exception: {exc}")
                 raise exc
@@ -480,21 +480,21 @@ def process() -> None:
     # Aggregating top-level postcode_area hull feature for No postcode if present
     if has_no_postcode and no_postcode_raw_city_items:
         no_postcode_id = get_clean_id('root', 'No postcode')
-        no_pc_hulls_files = [hf for hf in hulls_files if os.path.basename(hf).startswith(f"hulls_{no_postcode_id}_")]
+        no_pc_city_hulls_files = [hf for hf in hulls_files_by_level['city'] if os.path.basename(hf).startswith(f"hulls_{no_postcode_id}_")]
         no_pc_city_geoms = []
-        for hf in no_pc_hulls_files:
+        for hf in no_pc_city_hulls_files:
             if os.path.exists(hf):
                 with open(hf, 'r', encoding='utf-8') as f:
                     for line in f:
                         if line.strip():
                             feat = json.loads(line)
-                            if feat.get("properties", {}).get("level") == "city":
-                                geom = shapely.geometry.shape(feat["geometry"])
-                                no_pc_city_geoms.append(geom)
+                            geom = shapely.geometry.shape(feat["geometry"])
+                            no_pc_city_geoms.append(geom)
 
         if no_pc_city_geoms:
             logging.info(f"Combining {len(no_pc_city_geoms)} city hulls to create top-level 'No postcode' postcode_area hull...")
-            no_pc_union_geom = shapely.union_all(no_pc_city_geoms)
+            simplified_geoms = [g.simplify(0.0001) for g in no_pc_city_geoms]
+            no_pc_union_geom = shapely.union_all(simplified_geoms)
             no_pc_union_geom = shapely.make_valid(no_pc_union_geom)
 
             pm_props = {
@@ -512,44 +512,29 @@ def process() -> None:
                 "geometry": no_pc_union_geom.__geo_interface__
             }
 
-            # Write to a temporary hull file and append to hulls_files
-            no_pc_pa_hull_file = os.path.join(OUTPUT_DIR, f"hulls_{no_postcode_id}_top_level.geojson")
+            # Write to a temporary hull file and add to postcode_area level files
+            no_pc_pa_hull_file = os.path.join(OUTPUT_DIR, f"hulls_{no_postcode_id}_top_level_postcode_area.geojson")
             with open(no_pc_pa_hull_file, 'w', encoding='utf-8') as f:
                 f.write(json.dumps(no_pc_pa_hull_feature) + "\n")
-            hulls_files.append(no_pc_pa_hull_file)
+            hulls_files_by_level['postcode_area'].append(no_pc_pa_hull_file)
 
     logging.info("Combining points GeoJSON files...")
     with open(geojson_level_paths['points'], "w", encoding="utf-8") as f_out:
         for pf in points_files:
             if os.path.exists(pf):
                 with open(pf, "r", encoding="utf-8") as f_in:
-                    shutil_copyfileobj(f_in, f_out)
+                    shutil.copyfileobj(f_in, f_out, 1024*1024)
                 os.remove(pf)
 
     logging.info("Splitting and combining hull GeoJSON files by level...")
-    hull_handles = {
-        lvl: open(path, "w", encoding="utf-8")
-        for lvl, path in geojson_level_paths.items()
-        if lvl != 'points'
-    }
-
-    try:
-        for hf in hulls_files:
-            if os.path.exists(hf):
-                with open(hf, "r", encoding="utf-8") as f_in:
-                    for line in f_in:
-                        if line.strip():
-                            try:
-                                feat = json.loads(line)
-                                lvl = feat.get("properties", {}).get("level")
-                                if lvl in hull_handles:
-                                    hull_handles[lvl].write(line)
-                            except Exception:
-                                pass
-                os.remove(hf)
-    finally:
-        for h in hull_handles.values():
-            h.close()
+    for lvl in ('postcode_area', 'city', 'suburb', 'street'):
+        target_path = geojson_level_paths[lvl]
+        with open(target_path, "w", encoding="utf-8") as f_out:
+            for hf in hulls_files_by_level.get(lvl, []):
+                if os.path.exists(hf):
+                    with open(hf, "r", encoding="utf-8") as f_in:
+                        shutil.copyfileobj(f_in, f_out, 1024*1024)
+                    os.remove(hf)
 
     logging.info("Saving root hierarchy and search index...")
     with open(f"{OUTPUT_DIR}/root.json", 'w', encoding='utf-8') as f:
@@ -562,14 +547,14 @@ def process() -> None:
     timestamp_str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     layer_configs = [
+        {"level": "points", "min_zoom": 0, "max_zoom": 15},
         {"level": "postcode_area", "min_zoom": 0, "max_zoom": 14},
         {"level": "city", "min_zoom": 5, "max_zoom": 15},
         {"level": "suburb", "min_zoom": 5, "max_zoom": 15},
         {"level": "street", "min_zoom": 9, "max_zoom": 16},
-        {"level": "points", "min_zoom": 0, "max_zoom": 15},
     ]
 
-    max_tp_workers = min(os.cpu_count() or 2, 5)
+    max_tp_workers = 5
     logging.info(f"Compiling 5 PMTiles layers in parallel using ProcessPoolExecutor ({max_tp_workers} workers)...")
     with ProcessPoolExecutor(max_workers=max_tp_workers) as executor:
         futures = [

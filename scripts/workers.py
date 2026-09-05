@@ -237,9 +237,19 @@ def process_no_postcode_sub_partition_worker(
             suburbs_res = item[7] if len(item) > 7 else []
             letter_suburbs_dict[child_id] = suburbs_res
 
-        with open(hulls_part_path, 'w', encoding='utf-8') as f_hulls:
-            for hull_feat in all_hulls_part:
-                f_hulls.write(json.dumps(hull_feat) + "\n")
+        hulls_by_lvl: dict[str, list[dict[str, Any]]] = {}
+        for hull_feat in all_hulls_part:
+            lvl = hull_feat.get("properties", {}).get("level")
+            if lvl:
+                hulls_by_lvl.setdefault(lvl, []).append(hull_feat)
+
+        hulls_part_paths: dict[str, str] = {}
+        for lvl, feats in hulls_by_lvl.items():
+            lvl_path = os.path.join(output_dir, f"hulls_{pa_id}_{letter_key}{chunk_suffix}_{lvl}.geojson")
+            with open(lvl_path, 'w', encoding='utf-8') as f_hulls:
+                for hull_feat in feats:
+                    f_hulls.write(json.dumps(hull_feat) + "\n")
+            hulls_part_paths[lvl] = lvl_path
 
         if all_points_part:
             logging.info(f"[No postcode - {letter_key}{chunk_label}] Running point pre-clustering for Tippecanoe ({len(all_points_part)} address points)...")
@@ -252,7 +262,7 @@ def process_no_postcode_sub_partition_worker(
 
             _write_points_geojson_file(processed_rows, points_part_path)
 
-        return city_items, pa_search_indices, points_part_path, hulls_part_path, letter_key, letter_suburbs_dict, sector_points_dict
+        return city_items, pa_search_indices, points_part_path, hulls_part_paths, letter_key, letter_suburbs_dict, sector_points_dict
     except Exception as e:
         logging.error(f"[No postcode - {letter_key}{chunk_label}] Exception occurred during processing: {e}", exc_info=True)
         raise e
@@ -345,9 +355,19 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
             with open(os.path.join(output_dir, f"{sector_id}_points.json"), 'w', encoding='utf-8') as f:
                 json.dump(streets_dict, f, separators=(',', ':'))
 
-        with open(hulls_pa_path, 'w', encoding='utf-8') as f_hulls:
-            for hull_feat in all_hulls_pa:
-                f_hulls.write(json.dumps(hull_feat) + "\n")
+        hulls_by_lvl: dict[str, list[dict[str, Any]]] = {}
+        for hull_feat in all_hulls_pa:
+            lvl = hull_feat.get("properties", {}).get("level")
+            if lvl:
+                hulls_by_lvl.setdefault(lvl, []).append(hull_feat)
+
+        hulls_pa_paths: dict[str, str] = {}
+        for lvl, feats in hulls_by_lvl.items():
+            lvl_path = os.path.join(output_dir, f"hulls_{pa_id}_{lvl}.geojson")
+            with open(lvl_path, 'w', encoding='utf-8') as f_hulls:
+                for hull_feat in feats:
+                    f_hulls.write(json.dumps(hull_feat) + "\n")
+            hulls_pa_paths[lvl] = lvl_path
 
         if all_points_pa:
             logging.info(f"[{pa}] Running point pre-clustering for Tippecanoe ({len(all_points_pa)} address points)...")
@@ -360,7 +380,7 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
 
             _write_points_geojson_file(processed_rows, points_pa_path)
 
-        return pa_res, root_search_indices, points_pa_path, hulls_pa_path
+        return pa_res, root_search_indices, points_pa_path, hulls_pa_paths
     except Exception as e:
         logging.error(f"[{pa}] Exception occurred during processing: {e}", exc_info=True)
         raise e

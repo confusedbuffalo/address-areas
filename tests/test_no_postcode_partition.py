@@ -82,7 +82,10 @@ class TestNoPostcodeSubPartitionWorker(unittest.TestCase):
 
         self.assertEqual(letter_key, 'a')
         self.assertEqual(len(city_items), 2)  # Aberdeen and Alloa
-        self.assertTrue(os.path.exists(hulls_path))
+        if isinstance(hulls_path, dict):
+            self.assertTrue(any(os.path.exists(p) for p in hulls_path.values()))
+        else:
+            self.assertTrue(os.path.exists(hulls_path))
 
         # Check letter_suburbs_dict mapping
         city_ids = [item[3] for item in city_items]
@@ -120,12 +123,14 @@ class TestNoPostcodeSubPartitionWorker(unittest.TestCase):
         city_items, _, _, hulls_path_a, _, _, _ = process_no_postcode_sub_partition_worker(arg_a)
 
         geoms = []
-        with open(hulls_path_a, 'r', encoding='utf-8') as f:
-            for line in f:
-                if line.strip():
-                    feat = json.loads(line)
-                    if feat.get("properties", {}).get("level") == "city":
-                        geoms.append(shapely.geometry.shape(feat["geometry"]))
+        city_file = hulls_path_a.get('city') if isinstance(hulls_path_a, dict) else hulls_path_a
+        if city_file and os.path.exists(city_file):
+            with open(city_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    if line.strip():
+                        feat = json.loads(line)
+                        if feat.get("properties", {}).get("level") == "city":
+                            geoms.append(shapely.geometry.shape(feat["geometry"]))
 
         self.assertGreater(len(geoms), 0)
         union_geom = shapely.union_all(geoms)
