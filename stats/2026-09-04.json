@@ -72,7 +72,7 @@
     "total_objects": 31437
   },
   "BN": {
-    "addressed_count": 97104,
+    "addressed_count": 97105,
     "cities": 142,
     "distinct_postcodes": 12494,
     "postcode_count": 153762,
@@ -90,7 +90,7 @@
     "total_objects": 40661
   },
   "BS": {
-    "addressed_count": 237728,
+    "addressed_count": 237729,
     "cities": 137,
     "distinct_postcodes": 23082,
     "postcode_count": 308304,
@@ -99,7 +99,7 @@
     "total_objects": 308304
   },
   "BT": {
-    "addressed_count": 10716,
+    "addressed_count": 10718,
     "cities": 427,
     "distinct_postcodes": 4807,
     "postcode_count": 12458,
@@ -1008,7 +1008,7 @@
     "total_objects": 32947
   },
   "TW": {
-    "addressed_count": 26593,
+    "addressed_count": 26595,
     "cities": 48,
     "distinct_postcodes": 4407,
     "postcode_count": 37137,
@@ -1044,7 +1044,7 @@
     "total_objects": 1
   },
   "W": {
-    "addressed_count": 48621,
+    "addressed_count": 48626,
     "cities": 1,
     "distinct_postcodes": 9470,
     "postcode_count": 56324,
@@ -1062,7 +1062,7 @@
     "total_objects": 98527
   },
   "WC": {
-    "addressed_count": 2576,
+    "addressed_count": 2577,
     "cities": 1,
     "distinct_postcodes": 1270,
     "postcode_count": 3170,
@@ -1134,7 +1134,7 @@
     "total_objects": 101027
   },
   "ZE": {
-    "addressed_count": 386,
+    "addressed_count": 387,
     "cities": 16,
     "distinct_postcodes": 626,
     "postcode_count": 6427,
@@ -1143,12 +1143,12 @@
     "total_objects": 6427
   },
   "uk": {
-    "addressed_count": 5619625,
+    "addressed_count": 5620193,
     "cities": 11701,
     "distinct_postcodes": 820844,
-    "postcode_count": 7549163,
+    "postcode_count": 7549161,
     "streets": 202217,
     "suburbs": 18145,
-    "total_objects": 9449303
+    "total_objects": 9469398
   }
 }
