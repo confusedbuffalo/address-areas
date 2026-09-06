@@ -493,8 +493,7 @@ def process() -> None:
 
         if no_pc_city_geoms:
             logging.info(f"Combining {len(no_pc_city_geoms)} city hulls to create top-level 'No postcode' postcode_area hull...")
-            simplified_geoms = [g.simplify(0.0001) for g in no_pc_city_geoms]
-            no_pc_union_geom = shapely.union_all(simplified_geoms)
+            no_pc_union_geom = shapely.union_all(no_pc_city_geoms)
             no_pc_union_geom = shapely.make_valid(no_pc_union_geom)
 
             pm_props = {
