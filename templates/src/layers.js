@@ -284,6 +284,53 @@ export function renderBreadcrumbs() {
 }
 
 /**
+ * Normalizes a raw trail array into an array of breadcrumb objects `{ id, name }`,
+ * ensuring the lead item `{ id: 'root', name: 'UK' }` is preserved and all step IDs are correctly formed.
+ *
+ * @param {string} dataId - Target area/street level identifier (e.g. 'ip_thetford').
+ * @param {Array<string|{id?: string, name: string}>} rawTrail - Raw trail items list.
+ * @returns {Array<{id: string, name: string}>} Normalized trail items list.
+ */
+export function normalizeTrail(dataId, rawTrail) {
+    if (!rawTrail || !Array.isArray(rawTrail) || rawTrail.length === 0) {
+        return [{ id: 'root', name: 'UK' }];
+    }
+
+    const parts = (!dataId || dataId === 'root') ? [] : dataId.split('_');
+    const first = rawTrail[0];
+
+    const hasRoot = (typeof first === 'object' && first !== null && first.id === 'root') ||
+                    (typeof first === 'string' && (first === 'UK' || first === 'root'));
+
+    const result = [];
+    if (!hasRoot) {
+        result.push({ id: 'root', name: 'UK' });
+    }
+
+    rawTrail.forEach((t, idx) => {
+        if (typeof t === 'string') {
+            if (hasRoot && idx === 0) {
+                result.push({ id: 'root', name: t || 'UK' });
+            } else {
+                const subIdx = hasRoot ? idx : idx + 1;
+                const stepId = parts.slice(0, subIdx).join('_');
+                result.push({ id: stepId || t, name: t });
+            }
+        } else if (t && typeof t === 'object') {
+            if (t.id === 'root') {
+                result.push({ id: 'root', name: t.name || 'UK' });
+            } else {
+                const subIdx = hasRoot ? idx : idx + 1;
+                const stepId = t.id || parts.slice(0, subIdx).join('_');
+                result.push({ id: stepId, name: t.name });
+            }
+        }
+    });
+
+    return result;
+}
+
+/**
  * Resolves full hierarchy trail array (`[{id, name}, ...]`) starting from root for a target ID.
  *
  * @param {string|null} targetId - Target area/street level identifier.
@@ -386,12 +433,7 @@ export async function loadLayer(dataId, name, options = {}) {
 
     // 1. Update trail immediately
     if (options.trail && Array.isArray(options.trail) && options.trail.length > 0) {
-        state.trail = options.trail.map((t, idx) => {
-            if (typeof t === 'string') {
-                return { id: idx === 0 ? 'root' : t, name: t };
-            }
-            return { id: t.id, name: t.name };
-        });
+        state.trail = normalizeTrail(dataId, options.trail);
     } else if (!options.isInitialLoad) {
         const existingIndex = state.trail.findIndex(t => t.id === dataId);
         if (existingIndex !== -1) {

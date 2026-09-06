@@ -9,8 +9,10 @@ import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeA
 const initialParams = getUrlParams();
 
 // Register the PMTiles protocol
-let protocol = new pmtiles.Protocol();
-maplibregl.addProtocol("pmtiles", protocol.tile);
+if (typeof pmtiles !== 'undefined' && typeof maplibregl !== 'undefined') {
+    let protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tile);
+}
 
 const mapOptions = {
     container: 'map',
@@ -20,7 +22,7 @@ const mapOptions = {
 if (initialParams.lng !== null && initialParams.lat !== null) {
     mapOptions.center = [initialParams.lng, initialParams.lat];
     mapOptions.zoom = initialParams.zoom !== null ? initialParams.zoom : 10;
-} else if (window.INITIAL_BOUNDS) {
+} else if (typeof window !== 'undefined' && window.INITIAL_BOUNDS) {
     mapOptions.bounds = window.INITIAL_BOUNDS;
     mapOptions.fitBoundsOptions = { padding: 40 };
 } else {
@@ -32,16 +34,16 @@ if (initialParams.lng !== null && initialParams.lat !== null) {
  * Global MapLibre GL map instance.
  * @type {maplibregl.Map}
  */
-export const map = new maplibregl.Map(mapOptions);
+export const map = (typeof maplibregl !== 'undefined') ? new maplibregl.Map(mapOptions) : null;
 
 /**
  * Global Popup instance for map feature inspection.
  * @type {maplibregl.Popup}
  */
-export const popup = new maplibregl.Popup({
+export const popup = (typeof maplibregl !== 'undefined') ? new maplibregl.Popup({
     closeButton: true,
     closeOnClick: false
-});
+}) : null;
 
 /**
  * Calculates geographical LngLatBounds covering features in a dataset.

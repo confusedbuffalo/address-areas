@@ -37,6 +37,9 @@ export function updateDataDateElement() {
  * @returns {{lat: number|null, lng: number|null, zoom: number|null, selectedPoint: string|null, id: string|null}} Parsed parameters.
  */
 export function getUrlParams() {
+    if (typeof window === 'undefined' || !window.location) {
+        return { lat: null, lng: null, zoom: null, selectedPoint: null, id: null };
+    }
     const params = new URLSearchParams(window.location.search);
     const lat = parseFloat(params.get('lat'));
     const lng = parseFloat(params.get('lng'));

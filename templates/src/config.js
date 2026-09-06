@@ -7,13 +7,13 @@
  * Global timestamp for address dataset. Fallbacks to current time if window variable is unset.
  * @type {number}
  */
-export const DATA_TIMESTAMP = window.DATA_TIMESTAMP || Date.now();
+export const DATA_TIMESTAMP = (typeof window !== 'undefined' && window.DATA_TIMESTAMP) || Date.now();
 
 /**
  * Global URLs for address PMTiles datasets per layer.
  * @type {Object<string, string>}
  */
-export const PMTILES_URLS = window.PMTILES_URLS || {
+export const PMTILES_URLS = (typeof window !== 'undefined' && window.PMTILES_URLS) || {
     postcode_area: 'pmtiles/postcode_area.pmtiles',
     city: 'pmtiles/city.pmtiles',
     suburb: 'pmtiles/suburb.pmtiles',
@@ -40,9 +40,9 @@ export const state = {
     currentSelectedPoint: null,
     currentSelectedPointTags: null,
     currentSelectedPointName: null,
-    showEnvelope: localStorage.getItem('showEnvelope') === 'true',
+    showEnvelope: typeof localStorage !== 'undefined' && localStorage.getItem('showEnvelope') === 'true',
     activeSection: 'sublevels',
-    sidebarVisible: window.innerWidth >= 768,
+    sidebarVisible: typeof window !== 'undefined' ? window.innerWidth >= 768 : true,
     currentSortColumn: 'name',
     currentSortDirection: 'asc',
     activeRenderFrameId: null,
