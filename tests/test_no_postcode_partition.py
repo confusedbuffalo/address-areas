@@ -115,25 +115,29 @@ class TestNoPostcodeSubPartitionWorker(unittest.TestCase):
         self.assertIn(expected_sector_id, sector_points_dict)
 
     def test_no_postcode_top_level_postcode_area_hull_properties(self) -> None:
-        """Tests that 'No postcode' city hulls can be combined into a valid top-level postcode_area hull feature."""
+        """Tests that 'No postcode' city workers produce both city and postcode_area hulls and can be combined into a top-level postcode_area hull."""
         import json
         import shapely.geometry
 
         arg_a = ('a', ['Aberdeen', 'Alloa'], 0, 1, [], 1, 2, self.db_path, self.temp_dir)
         city_items, _, _, hulls_path_a, _, _, _ = process_no_postcode_sub_partition_worker(arg_a)
 
-        geoms = []
-        city_file = hulls_path_a.get('city') if isinstance(hulls_path_a, dict) else hulls_path_a
-        if city_file and os.path.exists(city_file):
-            with open(city_file, 'r', encoding='utf-8') as f:
+        self.assertIsInstance(hulls_path_a, dict)
+        self.assertIn('city', hulls_path_a)
+        self.assertIn('postcode_area', hulls_path_a)
+
+        pa_geoms = []
+        pa_file = hulls_path_a.get('postcode_area')
+        if pa_file and os.path.exists(pa_file):
+            with open(pa_file, 'r', encoding='utf-8') as f:
                 for line in f:
                     if line.strip():
                         feat = json.loads(line)
-                        if feat.get("properties", {}).get("level") == "city":
-                            geoms.append(shapely.geometry.shape(feat["geometry"]))
+                        if feat.get("properties", {}).get("level") == "postcode_area":
+                            pa_geoms.append(shapely.geometry.shape(feat["geometry"]))
 
-        self.assertGreater(len(geoms), 0)
-        union_geom = shapely.union_all(geoms)
+        self.assertGreater(len(pa_geoms), 0)
+        union_geom = shapely.union_all(pa_geoms)
         self.assertTrue(union_geom.is_valid)
 
         pm_props = {

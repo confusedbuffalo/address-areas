@@ -570,6 +570,55 @@ def process_hierarchy(
             "geometry": final_hull_4326.__geo_interface__
         })
 
+        if group_col == 'city' and pa_label == 'No postcode':
+            pa_buffer_dist = 1000.0
+            buffered_pa_hull = hull.buffer(pa_buffer_dist)
+            max_extent_pa = shapely.union_all(shapely.buffer(group_data_proj.geometry.values, pa_buffer_dist))
+
+            if 'voronoi_cell' in group_data_proj.columns:
+                cells = [c for c in group_data_proj['voronoi_cell'].values if c is not None]
+                if cells:
+                    voronoi_region = shapely.union_all(cells)
+                    final_pa_hull = buffered_pa_hull.intersection(voronoi_region)
+                else:
+                    final_pa_hull = buffered_pa_hull
+            else:
+                final_pa_hull = buffered_pa_hull
+
+            final_pa_hull = final_pa_hull.intersection(max_extent_pa)
+
+            if final_pa_hull.is_empty:
+                final_pa_hull = max_extent_pa
+
+            final_pa_hull_4326 = transform(TRANSFORMER_TO_4326.transform, final_pa_hull)
+            final_pa_hull_4326 = shapely.make_valid(final_pa_hull_4326)
+
+            if final_pa_hull_4326.geom_type == 'GeometryCollection':
+                polys = [g for g in final_pa_hull_4326.geoms if g.geom_type in ('Polygon', 'MultiPolygon')]
+                if polys:
+                    final_pa_hull_4326 = shapely.unary_union(polys)
+                else:
+                    final_pa_hull_4326 = transform(TRANSFORMER_TO_4326.transform, max_extent_pa)
+            elif final_pa_hull_4326.geom_type not in ('Polygon', 'MultiPolygon'):
+                final_pa_hull_4326 = transform(TRANSFORMER_TO_4326.transform, max_extent_pa)
+
+            final_pa_hull_4326 = shapely.make_valid(final_pa_hull_4326)
+
+            pa_pm_props = {
+                "name": "No postcode",
+                "raw_name": "No postcode",
+                "level": "postcode_area",
+                "child_id": filename,
+                "parent_id": "root"
+            }
+            assign_colours(pa_pm_props, is_points_level=False)
+
+            all_hulls_acc.append({
+                "type": "Feature",
+                "properties": pa_pm_props,
+                "geometry": final_pa_hull_4326.__geo_interface__
+            })
+
     if group_col == 'city' and pa_label != 'No postcode':
         with open(f"{OUTPUT_DIR}/{filename}.json", 'w', encoding='utf-8') as f:
             json.dump(features_for_json, f, separators=(',', ':'))

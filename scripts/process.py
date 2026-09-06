@@ -480,20 +480,20 @@ def process() -> None:
     # Aggregating top-level postcode_area hull feature for No postcode if present
     if has_no_postcode and no_postcode_raw_city_items:
         no_postcode_id = get_clean_id('root', 'No postcode')
-        no_pc_city_hulls_files = [hf for hf in hulls_files_by_level['city'] if os.path.basename(hf).startswith(f"hulls_{no_postcode_id}_")]
-        no_pc_city_geoms = []
-        for hf in no_pc_city_hulls_files:
+        no_pc_pa_hulls_files = [hf for hf in hulls_files_by_level['postcode_area'] if os.path.basename(hf).startswith(f"hulls_{no_postcode_id}_")]
+        no_pc_pa_geoms = []
+        for hf in no_pc_pa_hulls_files:
             if os.path.exists(hf):
                 with open(hf, 'r', encoding='utf-8') as f:
                     for line in f:
                         if line.strip():
                             feat = json.loads(line)
                             geom = shapely.geometry.shape(feat["geometry"])
-                            no_pc_city_geoms.append(geom)
+                            no_pc_pa_geoms.append(geom)
 
-        if no_pc_city_geoms:
-            logging.info(f"Combining {len(no_pc_city_geoms)} city hulls to create top-level 'No postcode' postcode_area hull...")
-            no_pc_union_geom = shapely.union_all(no_pc_city_geoms)
+        if no_pc_pa_geoms:
+            logging.info(f"Combining {len(no_pc_pa_geoms)} city partition PA hulls to create top-level 'No postcode' postcode_area hull...")
+            no_pc_union_geom = shapely.union_all(no_pc_pa_geoms)
             no_pc_union_geom = shapely.make_valid(no_pc_union_geom)
 
             pm_props = {
@@ -511,11 +511,20 @@ def process() -> None:
                 "geometry": no_pc_union_geom.__geo_interface__
             }
 
+            # Filter out per-partition postcode_area hull files from hulls_files_by_level['postcode_area']
+            hulls_files_by_level['postcode_area'] = [
+                hf for hf in hulls_files_by_level['postcode_area'] if hf not in no_pc_pa_hulls_files
+            ]
+
             # Write to a temporary hull file and add to postcode_area level files
             no_pc_pa_hull_file = os.path.join(OUTPUT_DIR, f"hulls_{no_postcode_id}_top_level_postcode_area.geojson")
             with open(no_pc_pa_hull_file, 'w', encoding='utf-8') as f:
                 f.write(json.dumps(no_pc_pa_hull_feature) + "\n")
             hulls_files_by_level['postcode_area'].append(no_pc_pa_hull_file)
+
+            for hf in no_pc_pa_hulls_files:
+                if os.path.exists(hf):
+                    os.remove(hf)
 
     logging.info("Combining points GeoJSON files...")
     with open(geojson_level_paths['points'], "w", encoding="utf-8") as f_out:
