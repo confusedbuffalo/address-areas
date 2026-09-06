@@ -53,7 +53,18 @@ PALETTE: list[dict[str, str]] = [
     { 'fill': '#dcfce7', 'label': '#166534' }, # Emerald
     { 'fill': '#fef9c3', 'label': '#854d0e' }, # Yellow
     { 'fill': '#fef3c7', 'label': '#92400e' }, # Amber
-    { 'fill': '#ffedd5', 'label': '#9a3412' }  # Orange
+    { 'fill': '#ffedd5', 'label': '#9a3412' }, # Orange
+    { 'fill': '#fae8ff', 'label': '#86198f' }, # Fuchsia / Deep Orchid
+    { 'fill': '#e9d5ff', 'label': '#581c87' }, # Deep Purple
+    { 'fill': '#c7d2fe', 'label': '#312e81' }, # Deep Indigo
+    { 'fill': '#bfdbfe', 'label': '#1e3a8a' }, # Deep Blue
+    { 'fill': '#bae6fd', 'label': '#0c4a6e' }, # Deep Sky
+    { 'fill': '#cff4fc', 'label': '#0851f6' }, # Cyan
+    { 'fill': '#99f6e4', 'label': '#134e4a' }, # Deep Teal
+    { 'fill': '#bbf7d0', 'label': '#14532d' }, # Deep Emerald
+    { 'fill': '#d9f99d', 'label': '#3f6212' }, # Lime Green
+    { 'fill': '#eab308', 'label': '#713f12' }, # Deep Yellow / Ochre
+    { 'fill': '#fed7aa', 'label': '#7c2d12' }  # Deep Orange / Terracotta
 ]
 
 
