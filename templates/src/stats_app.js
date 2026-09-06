@@ -173,7 +173,7 @@ function updateDashboard() {
         return d;
     });
 
-    // Render Chart 1: Objects with Address Tags (Double line graph for 'uk', single line for individual area)
+    // Render Chart 1: Objects with Address Tags (Triple line graph for 'uk', double line for individual area)
     const totalObjectsDatasets = [{
         label: 'Total Objects',
         data: totalObjectsData,
@@ -201,6 +201,19 @@ function updateDashboard() {
             pointBackgroundColor: '#10b981'
         });
     }
+
+    totalObjectsDatasets.push({
+        label: 'Addressed',
+        data: addressedCountData,
+        borderColor: '#8b5cf6',
+        backgroundColor: '#8b5cf620',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#8b5cf6'
+    });
 
     renderMultiChart('chart-total-objects', labels, totalObjectsDatasets);
     renderChart('chart-addressed-perc', 'Percentage Addressed', labels, addressedPercData, '#10b981', '%');
