@@ -187,13 +187,15 @@ class WayAddressHandler(BaseAddressHandler):
             return
 
         has_tags: bool = any(tag.k.startswith('addr:') for tag in w.tags) if w.tags else False
-        is_physical_highway: bool = bool(
-            w.tags and
-            'highway' in w.tags and
-            w.tags['highway'] in PHYSICAL_HIGHWAY_TYPES and
-            'name' in w.tags and
-            w.tags['name'].strip()
-        )
+        highway_names: set[str] = set()
+        if w.tags and 'highway' in w.tags and w.tags['highway'] in PHYSICAL_HIGHWAY_TYPES:
+            for tag_k in ('name', 'name:left', 'name:right'):
+                if tag_k in w.tags:
+                    val = w.tags[tag_k].strip()
+                    if val:
+                        highway_names.add(val)
+
+        is_physical_highway: bool = len(highway_names) > 0
 
         if has_tags or is_member or is_physical_highway:
             lats: list[float] = []
@@ -229,26 +231,27 @@ class WayAddressHandler(BaseAddressHandler):
 
                     geom_wkt = "LINESTRING (" + ", ".join(f"{lon:.7f} {lat:.7f}" for lat, lon in zip(lats, lons)) + ")"
 
-                    self.highway_batch.append((
-                        f"w{w.id}",
-                        w.tags['name'].strip(),
-                        w.tags['highway'].strip(),
-                        w.tags.get('surface', '').strip(),
-                        w.tags.get('lit', '').strip(),
-                        w.tags.get('maxspeed', '').strip(),
-                        w.tags.get('lanes', '').strip(),
-                        w.tags.get('sidewalk', '').strip(),
-                        w.tags.get('name:etymology:wikidata', '').strip(),
-                        float(length_m),
-                        geom_wkt,
-                        float(min_x),
-                        float(max_x),
-                        float(min_y),
-                        float(max_y)
-                    ))
+                    for h_name in highway_names:
+                        self.highway_batch.append((
+                            f"w{w.id}",
+                            h_name,
+                            w.tags['highway'].strip(),
+                            w.tags.get('surface', '').strip(),
+                            w.tags.get('lit', '').strip(),
+                            w.tags.get('maxspeed', '').strip(),
+                            w.tags.get('lanes', '').strip(),
+                            w.tags.get('sidewalk', '').strip(),
+                            w.tags.get('name:etymology:wikidata', '').strip(),
+                            float(length_m),
+                            geom_wkt,
+                            float(min_x),
+                            float(max_x),
+                            float(min_y),
+                            float(max_y)
+                        ))
 
-                    if len(self.highway_batch) >= 10000:
-                        self.flush()
+                        if len(self.highway_batch) >= 10000:
+                            self.flush()
 
     def relation(self, r: osmium.osm.Relation) -> None:
         """Processes an OSM relation, calculates member centroid and extracts address tags if present."""

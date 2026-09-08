@@ -6,10 +6,55 @@ import json
 import os
 import sqlite3
 import tempfile
+from typing import Any
 import unittest
 
+from scripts.osm_parser import WayAddressHandler
 from scripts.spatial import match_and_aggregate_physical_highway
 from scripts.warnings_detector import extract_warnings_from_db
+
+
+class DummyNodeRef:
+    def __init__(self, lat: float, lon: float, valid: bool = True):
+        class Location:
+            def __init__(self, lat_v: float, lon_v: float, valid_v: bool):
+                self.lat = lat_v
+                self.lon = lon_v
+                self._valid = valid_v
+            def valid(self) -> bool:
+                return self._valid
+        self.location = Location(lat, lon, valid)
+
+
+class DummyTag:
+    def __init__(self, k: str, v: str):
+        self.k = k
+        self.v = v
+
+
+class DummyTags:
+    def __init__(self, tags_dict: dict[str, str]):
+        self._dict = tags_dict
+        self._list = [DummyTag(k, v) for k, v in tags_dict.items()]
+
+    def __iter__(self):
+        return iter(self._list)
+
+    def __contains__(self, key: str):
+        return key in self._dict
+
+    def __getitem__(self, key: str):
+        return self._dict[key]
+
+    def get(self, key: str, default: Any = None):
+        return self._dict.get(key, default)
+
+
+class DummyWay:
+    def __init__(self, way_id: int, tags: dict[str, str], nodes: list[DummyNodeRef]):
+        self.id = way_id
+        self.tags = DummyTags(tags)
+        self.nodes = nodes
 
 
 class TestPhysicalStreetFeatures(unittest.TestCase):
@@ -149,6 +194,54 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         self.assertEqual(missing_item[0], "Missing Road")
         self.assertIn("No physical highway", missing_item[1])
         self.assertEqual(missing_item[2], "n102")
+
+    def test_name_left_and_right_highway_parsing_and_matching(self) -> None:
+        """Tests that ways with name:left or name:right are extracted and matched correctly."""
+        handler = WayAddressHandler(conn=self.conn)
+
+        # Way 301 has name:left = "North Street" and name:right = "South Street"
+        nodes_301 = [
+            DummyNodeRef(54.7700, -1.5700),
+            DummyNodeRef(54.7710, -1.5710)
+        ]
+        way_301 = DummyWay(301, {
+            "highway": "residential",
+            "name:left": "North Street",
+            "name:right": "South Street",
+            "surface": "asphalt",
+            "lit": "yes"
+        }, nodes_301)
+
+        handler.way(way_301)
+        handler.flush()
+
+        # Verify physical_highways table contains records for both "North Street" and "South Street"
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT osm_id, name, highway_type, surface, lit FROM physical_highways WHERE osm_id = 'w301'")
+        rows = cursor.fetchall()
+
+        self.assertEqual(len(rows), 2)
+        names = {r[1] for r in rows}
+        self.assertEqual(names, {"North Street", "South Street"})
+
+        cursor.execute("SELECT min_x, min_y, max_x, max_y FROM physical_highways WHERE osm_id = 'w301'")
+        r_bbox = cursor.fetchone()
+        bounds_301 = (r_bbox[0], r_bbox[1], r_bbox[2], r_bbox[3])
+
+        # Match against "North Street" and "South Street" address elements
+        child_id_n = "dh1_durham_city_north-street"
+        s_info_n, l_feats_n = match_and_aggregate_physical_highway(
+            self.conn, "North Street", bounds_301, child_id_n
+        )
+        self.assertTrue(s_info_n.get("has_physical_road"))
+        self.assertEqual(len(l_feats_n), 1)
+
+        child_id_s = "dh1_durham_city_south-street"
+        s_info_s, l_feats_s = match_and_aggregate_physical_highway(
+            self.conn, "South Street", bounds_301, child_id_s
+        )
+        self.assertTrue(s_info_s.get("has_physical_road"))
+        self.assertEqual(len(l_feats_s), 1)
 
 
 if __name__ == "__main__":
