@@ -138,11 +138,14 @@ export function decodeHierarchyItem(item) {
             obj.suburbs = item[7].map(decodeHierarchyItem);
         } else if (level === 'suburb') {
             obj.streets = item[7].map(decodeHierarchyItem);
-        } else if (level === 'street') {
+        } else if (level === 'street_area') {
             obj.sector_ids = item[7];
         } else {
             obj.children = item[7].map(decodeHierarchyItem);
         }
+    }
+    if (level === 'street_area' && item[8]) {
+        obj.street_info = item[8];
     }
     return obj;
 }

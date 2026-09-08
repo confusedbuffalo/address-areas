@@ -6,6 +6,7 @@ import sqlite3
 from typing import Any, Optional
 import osmium
 
+import math
 from config import (
     CONSIDERED_TAGS_SET,
     FEATURE_TAG_KEYS,
@@ -13,6 +14,12 @@ from config import (
     TRANSFORMER_TO_27700,
 )
 from warnings_detector import is_valid_address_tag
+
+PHYSICAL_HIGHWAY_TYPES: set[str] = {
+    'residential', 'unclassified', 'tertiary', 'secondary', 'primary',
+    'trunk', 'motorway', 'living_street', 'service', 'pedestrian',
+    'footway', 'cycleway', 'path'
+}
 
 
 class RelationMemberScanner(osmium.SimpleHandler):
@@ -46,11 +53,13 @@ class BaseAddressHandler(osmium.SimpleHandler):
         self.conn: sqlite3.Connection = conn
         self.cursor: sqlite3.Cursor = conn.cursor()
         self.batch: list[tuple[Any, ...]] = []
+        self.highway_batch: list[tuple[Any, ...]] = []
         self.member_way_ids: set[int] = member_way_ids if member_way_ids is not None else set()
         self.member_node_ids: set[int] = member_node_ids if member_node_ids is not None else set()
         self.relation_node_locs: dict[int, tuple[float, float]] = {}
         self.way_locs: dict[int, tuple[float, float]] = {}
         self.total_addresses: int = 0
+        self.total_highways: int = 0
 
     def add_address(self, loc: tuple[float, float], tags: Any, osm_type: str, osm_id: int) -> None:
         """Extracts and normalises address attributes from OSM tags and buffers for SQLite insertion."""
@@ -128,7 +137,7 @@ class BaseAddressHandler(osmium.SimpleHandler):
             self.flush()
 
     def flush(self) -> None:
-        """Flushes buffered address records to SQLite database."""
+        """Flushes buffered address and physical highway records to SQLite database."""
         if self.batch:
             self.cursor.executemany("""
                 INSERT INTO addresses (
@@ -142,6 +151,17 @@ class BaseAddressHandler(osmium.SimpleHandler):
             self.conn.commit()
             self.total_addresses += len(self.batch)
             self.batch.clear()
+
+        if self.highway_batch:
+            self.cursor.executemany("""
+                INSERT INTO physical_highways (
+                    osm_id, name, highway_type, surface, lit, maxspeed, lanes, sidewalk,
+                    etymology_wikidata, length_m, geom_wkt, min_x, max_x, min_y, max_y
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, self.highway_batch)
+            self.conn.commit()
+            self.total_highways += len(self.highway_batch)
+            self.highway_batch.clear()
 
 
 class NodeAddressHandler(BaseAddressHandler):
@@ -167,15 +187,30 @@ class WayAddressHandler(BaseAddressHandler):
             return
 
         has_tags: bool = any(tag.k.startswith('addr:') for tag in w.tags) if w.tags else False
+        is_physical_highway: bool = bool(
+            w.tags and
+            'highway' in w.tags and
+            w.tags['highway'] in PHYSICAL_HIGHWAY_TYPES and
+            'name' in w.tags and
+            w.tags['name'].strip()
+        )
 
-        if has_tags or is_member:
+        if has_tags or is_member or is_physical_highway:
             lats: list[float] = []
             lons: list[float] = []
+            xs: list[float] = []
+            ys: list[float] = []
 
             for node_ref in w.nodes:
                 if node_ref.location.valid():
-                    lats.append(node_ref.location.lat)
-                    lons.append(node_ref.location.lon)
+                    lat_val = node_ref.location.lat
+                    lon_val = node_ref.location.lon
+                    lats.append(lat_val)
+                    lons.append(lon_val)
+                    if is_physical_highway:
+                        x_proj, y_proj = TRANSFORMER_TO_27700.transform(lon_val, lat_val)
+                        xs.append(float(x_proj))
+                        ys.append(float(y_proj))
 
             if lats and lons:
                 avg_lat: float = sum(lats) / len(lats)
@@ -183,6 +218,37 @@ class WayAddressHandler(BaseAddressHandler):
                 self.way_locs[w.id] = (avg_lat, avg_lon)
                 if has_tags:
                     self.add_address((avg_lat, avg_lon), w.tags, 'w', w.id)
+
+                if is_physical_highway and len(lats) >= 2 and len(xs) >= 2:
+                    length_m = 0.0
+                    for i in range(len(xs) - 1):
+                        length_m += math.hypot(xs[i + 1] - xs[i], ys[i + 1] - ys[i])
+
+                    min_x, max_x = min(xs), max(xs)
+                    min_y, max_y = min(ys), max(ys)
+
+                    geom_wkt = "LINESTRING (" + ", ".join(f"{lon:.7f} {lat:.7f}" for lat, lon in zip(lats, lons)) + ")"
+
+                    self.highway_batch.append((
+                        f"w{w.id}",
+                        w.tags['name'].strip(),
+                        w.tags['highway'].strip(),
+                        w.tags.get('surface', '').strip(),
+                        w.tags.get('lit', '').strip(),
+                        w.tags.get('maxspeed', '').strip(),
+                        w.tags.get('lanes', '').strip(),
+                        w.tags.get('sidewalk', '').strip(),
+                        w.tags.get('name:etymology:wikidata', '').strip(),
+                        float(length_m),
+                        geom_wkt,
+                        float(min_x),
+                        float(max_x),
+                        float(min_y),
+                        float(max_y)
+                    ))
+
+                    if len(self.highway_batch) >= 10000:
+                        self.flush()
 
     def relation(self, r: osmium.osm.Relation) -> None:
         """Processes an OSM relation, calculates member centroid and extracts address tags if present."""

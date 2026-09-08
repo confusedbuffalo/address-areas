@@ -13,7 +13,8 @@ const CATEGORY_ORDER = [
     'unusual_housenumber',
     'unusual_housename',
     'duplicates',
-    'unusual_address_tag'
+    'unusual_address_tag',
+    'missing_physical_road'
 ];
 
 const CATEGORY_TITLES = {
@@ -23,7 +24,8 @@ const CATEGORY_TITLES = {
     'unusual_housenumber': 'Unusual Housenumber',
     'unusual_housename': 'Unusual Housename',
     'duplicates': 'Duplicates',
-    'unusual_address_tag': 'Unusual Address Tag'
+    'unusual_address_tag': 'Unusual Address Tag',
+    'missing_physical_road': 'Missing Physical Street'
 };
 
 // Store sort state per table category ID: Map<catId, { column: string, direction: 'asc' | 'desc' }>
@@ -86,7 +88,7 @@ function buildRowGroups(catKey, rawItems) {
         }));
     }
 
-    const isGroupedCategory = catKey === 'unusual_city' || catKey === 'unusual_suburb' || catKey === 'unusual_street' || catKey === 'unusual_address_tag';
+    const isGroupedCategory = catKey === 'unusual_city' || catKey === 'unusual_suburb' || catKey === 'unusual_street' || catKey === 'unusual_address_tag' || catKey === 'missing_physical_road';
     if (isGroupedCategory) {
         // Group items by unusual value
         const groupedMap = new Map();

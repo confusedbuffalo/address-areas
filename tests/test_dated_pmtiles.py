@@ -90,19 +90,41 @@ class TestRenderPMTilesURL(unittest.TestCase):
             f1 = os.path.join(data_dir, 'city_20250101_100000.pmtiles')
             f2 = os.path.join(data_dir, 'city_20250226_150000.pmtiles')
 
-            open(f1, 'w').close()
-            open(f2, 'w').close()
+            with open(f1, 'w') as f:
+                f.write('data')
+            with open(f2, 'w') as f:
+                f.write('data')
 
             with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir):
                 filename = get_pmtiles_filename_for_layer('city')
                 self.assertEqual(filename, 'city_20250226_150000.pmtiles')
+
+    def test_get_pmtiles_filename_for_street_layer_ignores_street_geom(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            data_dir = os.path.join(temp_dir, 'pmtiles')
+            os.makedirs(data_dir, exist_ok=True)
+
+            f1 = os.path.join(data_dir, 'street_area_20250226_100000.pmtiles')
+            f2 = os.path.join(data_dir, 'street_geom_20250226_120000.pmtiles')
+
+            with open(f1, 'w') as f:
+                f.write('data')
+            with open(f2, 'w') as f:
+                f.write('data')
+
+            with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir):
+                street_fn = get_pmtiles_filename_for_layer('street_area')
+                street_geom_fn = get_pmtiles_filename_for_layer('street_geom')
+                self.assertEqual(street_fn, 'street_area_20250226_100000.pmtiles')
+                self.assertEqual(street_geom_fn, 'street_geom_20250226_120000.pmtiles')
 
     def test_get_pmtiles_urls_default(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             data_dir = os.path.join(temp_dir, 'pmtiles')
             os.makedirs(data_dir, exist_ok=True)
             f1 = os.path.join(data_dir, 'city_20250226_120000.pmtiles')
-            open(f1, 'w').close()
+            with open(f1, 'w') as f:
+                f.write('data')
 
             with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir), \
                  patch.dict(os.environ, {}, clear=True):

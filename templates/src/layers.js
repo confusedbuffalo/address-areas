@@ -4,8 +4,8 @@
  */
 
 import { state, sectorPointsCache } from './config.js';
-import { getUrlParams, getFeaturesArray, getDisplayName, isMissingValue, isStreetId, getSuburbIdForStreet, decodeHierarchyData, decodePointsData, getCityLetterKey, showToast } from './utils.js';
-import { map, popup, getLayerBounds, getFeatureBounds, updateMapFilters, updateUrlParams, updateEditButton } from './map.js';
+import { getUrlParams, getFeaturesArray, getDisplayName, isMissingValue, isStreetId, decodeHierarchyData, decodePointsData, getCityLetterKey, showToast } from './utils.js';
+import { map, popup, getLayerBounds, getFeatureBounds, updateMapFilters, updateUrlParams, updateEditButton, renderStreetInfoCard } from './map.js';
 import { populateSidebar, updateSearchAreaCheckboxState, executeSearch, fetchRootSearchIndex, fetchPostcodeSearchIndex, renderSidebarLoadingSkeleton, renderHeaders, getSidebarLevelName } from './sidebar.js';
 import { updateSidebarEditAllButton } from './josm.js';
 
@@ -638,6 +638,25 @@ export async function loadLayer(dataId, name, options = {}) {
                 }).catch(err => console.warn("Failed fetching postcode search index:", err));
             } else if (state.searchActive) {
                 executeSearch();
+            }
+
+            if (isPointsLevel) {
+                const paId = parts[0];
+                const cityId = parts.slice(0, 2).join('_');
+                const suburbId = parts.slice(0, 3).join('_');
+                fetchPaData(paId).then(paData => {
+                    const cityObj = getFeaturesArray(paData).find(f => (f.properties || f).child_id === cityId);
+                    const cityProps = cityObj ? (cityObj.properties || cityObj) : null;
+                    const suburbs = cityProps ? (cityProps.suburbs || []) : [];
+                    const suburbObj = suburbs.find(f => (f.properties || f).child_id === suburbId);
+                    const subProps = suburbObj ? (suburbObj.properties || suburbObj) : null;
+                    const streets = subProps ? (subProps.streets || []) : [];
+                    const foundStreet = streets.find(f => (f.properties || f).child_id === dataId);
+                    const sInfo = (foundStreet?.properties || foundStreet)?.street_info || null;
+                    renderStreetInfoCard(sInfo, name || (foundStreet?.properties || foundStreet)?.name);
+                }).catch(() => renderStreetInfoCard(null));
+            } else {
+                renderStreetInfoCard(null);
             }
 
             if (pointFound) {

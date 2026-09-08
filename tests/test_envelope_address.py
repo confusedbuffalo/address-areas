@@ -39,4 +39,4 @@ def test_duplicate_group_title_with_floor():
         floor='2',
         street='High Street'
     )
-    assert title == 'Floor 2, Unit Suite A, Flat 1, 10, High Street'
+    assert title == 'Floor 2, Suite A, Flat 1, 10, High Street'

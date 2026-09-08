@@ -36,6 +36,38 @@ if (initialParams.lng !== null && initialParams.lat !== null) {
  */
 export const map = (typeof maplibregl !== 'undefined') ? new maplibregl.Map(mapOptions) : null;
 
+if (map) {
+    map.on('load', () => {
+        if (typeof window !== 'undefined' && window.PMTILES_URLS && window.PMTILES_URLS['street_geom']) {
+            const sourceId = 'src-street_geom';
+            if (!map.getSource(sourceId)) {
+                map.addSource(sourceId, {
+                    type: 'vector',
+                    url: `pmtiles://${window.PMTILES_URLS['street_geom']}`
+                });
+            }
+            if (map.getSource(sourceId) && !map.getLayer('street-geom-line')) {
+                map.addLayer({
+                    id: 'street-geom-line',
+                    type: 'line',
+                    source: sourceId,
+                    'source-layer': 'street_geom',
+                    layout: {
+                        'line-cap': 'round',
+                        'line-join': 'round',
+                        'visibility': 'none'
+                    },
+                    paint: {
+                        'line-color': '#2563eb',
+                        'line-width': 4,
+                        'line-opacity': 0.85
+                    }
+                });
+            }
+        }
+    });
+}
+
 /**
  * Global Popup instance for map feature inspection.
  * @type {maplibregl.Popup}
@@ -101,7 +133,7 @@ export function getFeatureBounds(featureOrBbox) {
  * Updates MapLibre layer filter expressions and paint properties based on state.currentLevel and map zoom.
  */
 export function updateMapFilters() {
-    const hullLevels = ['postcode_area', 'city', 'suburb', 'street'];
+    const hullLevels = ['postcode_area', 'city', 'suburb', 'street_area'];
     const isStreet = isStreetId(state.currentLevel);
 
     let activeLevel = null;
@@ -112,7 +144,7 @@ export function updateMapFilters() {
             const depth = state.currentLevel.split('_').length;
             if (depth === 1) activeLevel = 'city';
             else if (depth === 2) activeLevel = 'suburb';
-            else if (depth === 3) activeLevel = 'street';
+            else if (depth === 3) activeLevel = 'street_area';
         }
     }
 
@@ -264,6 +296,18 @@ export function updateMapFilters() {
     } else {
         pointLayers.forEach(l => map.setLayoutProperty(l, 'visibility', 'none'));
     }
+
+    // --- Physical Street Line Highlight Layer ---
+    if (map.getLayer('street-geom-line')) {
+        const isStreet = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
+        if (isStreet) {
+            const streetId = state.currentLevel.split('_').slice(0, 4).join('_');
+            map.setLayoutProperty('street-geom-line', 'visibility', 'visible');
+            map.setFilter('street-geom-line', ['==', ['get', 'child_id'], streetId]);
+        } else {
+            map.setLayoutProperty('street-geom-line', 'visibility', 'none');
+        }
+    }
 }
 
 /**
@@ -337,6 +381,7 @@ export function updateEditButton() {
  */
 export function updateEnvelopeCard(popup_tags, osm_name) {
     const card = document.getElementById('envelope-card');
+    const streetCard = document.getElementById('street-info-card');
     const container = document.getElementById('envelope-address');
     if (!card || !container) return;
 
@@ -349,6 +394,9 @@ export function updateEnvelopeCard(popup_tags, osm_name) {
 
     if (!state.showEnvelope || !state.currentSelectedPoint) {
         card.classList.add('hidden');
+        if (state.activeStreetInfo && streetCard) {
+            streetCard.classList.remove('hidden');
+        }
         return;
     }
 
@@ -363,4 +411,184 @@ export function updateEnvelopeCard(popup_tags, osm_name) {
     }
 
     card.classList.remove('hidden');
+    if (streetCard) {
+        streetCard.classList.add('hidden');
+    }
+}
+
+/**
+ * Renders or hides the collapsible Street Information card panel in the sidebar.
+ *
+ * @param {Object|null} streetInfo - Street attribute aggregation object.
+ * @param {string} [streetName=''] - Street display name string.
+ */
+export function renderStreetInfoCard(streetInfo, streetName = '') {
+    const container = document.getElementById('street-info-card');
+    if (!container) return;
+
+    if (!streetInfo || typeof streetInfo !== 'object' || streetInfo.has_physical_road === undefined) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+    }
+
+    container.classList.remove('hidden');
+
+    if (streetInfo.has_physical_road === false) {
+        container.innerHTML = `
+            <div class="p-3 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs flex items-center gap-2 font-medium">
+                <span class="text-amber-600 text-base">⚠️</span>
+                <span>No nearby physical road found in OpenStreetMap</span>
+            </div>
+        `;
+        return;
+    }
+
+    state.activeStreetInfo = streetInfo;
+
+    // Check if envelope card is currently showing
+    const envelopeCard = document.getElementById('envelope-card');
+    if (envelopeCard && !envelopeCard.classList.contains('hidden')) {
+        container.classList.add('hidden');
+        return;
+    }
+
+    const totalLen = streetInfo.total_length_m ? `${streetInfo.total_length_m.toLocaleString()} m` : '';
+
+    const buildBar = (attrKey, label, pctMap) => {
+        if (!pctMap || typeof pctMap !== 'object') return '';
+        const entries = Object.entries(pctMap).filter(([_, v]) => v > 0);
+        if (entries.length === 0) return '';
+
+        const TAG_COLOR_MAP = {
+            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-400', 'unknown': 'bg-rose-400' }
+        };
+        const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-teal-500', 'bg-pink-500', 'bg-slate-400'];
+
+        const segments = [];
+        const legendParts = [];
+
+        entries.forEach(([val, pct], idx) => {
+            let colorClass = TAG_COLOR_MAP[attrKey]?.[val];
+            if (!colorClass) {
+                colorClass = val === 'unknown' ? 'bg-slate-300' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
+            }
+
+            let displayVal = val;
+            if (attrKey === 'lit') {
+                if (val === 'yes') displayVal = 'Lit';
+                else if (val === 'no') displayVal = 'Unlit';
+            }
+
+            segments.push(`<div class="${colorClass} h-2" style="width: ${pct}%;" title="${displayVal}: ${pct}%"></div>`);
+            legendParts.push(`<span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${colorClass} inline-block shrink-0"></span>${displayVal} (${pct}%)</span>`);
+        });
+
+        return `
+            <div class="flex flex-col gap-1 text-[11px]">
+                <div class="flex justify-between items-center text-gray-700 font-medium">
+                    <span class="font-bold text-slate-700">${label}</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden flex shadow-inner">
+                    ${segments.join('')}
+                </div>
+                <div class="flex flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-gray-600">
+                    ${legendParts.join(' ')}
+                </div>
+            </div>
+        `;
+    };
+
+    const highwayBar = buildBar('highway', 'Highway Type', streetInfo.highway);
+    const surfaceBar = buildBar('surface', 'Surface', streetInfo.surface);
+    const litBar = buildBar('lit', 'Lighting', streetInfo.lit);
+    const maxspeedBar = buildBar('maxspeed', 'Speed Limit', streetInfo.maxspeed);
+    const lanesBar = buildBar('lanes', 'Lanes', streetInfo.lanes);
+    const sidewalkBar = buildBar('sidewalk', 'Sidewalk', streetInfo.sidewalk);
+
+    let html = `
+        <div class="p-4 flex flex-col gap-3 text-xs text-gray-800">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                <span class="font-bold text-slate-900 text-sm">${streetName || 'Street Info'}</span>
+                ${totalLen ? `<span class="font-semibold text-slate-500 text-xs">${totalLen}</span>` : ''}
+            </div>
+            <div class="flex flex-col gap-2.5">
+                ${highwayBar}
+                ${surfaceBar}
+                ${litBar}
+                ${maxspeedBar}
+                ${lanesBar}
+                ${sidewalkBar}
+            </div>
+            <div id="wikidata-etymology-card" class="hidden border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                <!-- Wikidata entity details fetched asynchronously -->
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+
+    if (streetInfo.wikidata) {
+        fetchWikidataEtymology(streetInfo.wikidata);
+    }
+}
+
+/**
+ * Fetches Wikidata etymology details asynchronously via the Wikidata REST API.
+ *
+ * @param {string} wikidataId - Wikidata Q-identifier string (e.g. 'Q1234').
+ */
+export async function fetchWikidataEtymology(wikidataId) {
+    const etymCard = document.getElementById('wikidata-etymology-card');
+    if (!etymCard || !wikidataId) return;
+
+    try {
+        const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${wikidataId}&format=json&props=labels|descriptions|claims&languages=en&origin=*`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const entity = data?.entities?.[wikidataId];
+        if (!entity) return;
+
+        const label = entity.labels?.en?.value || wikidataId;
+        const description = entity.descriptions?.en?.value || '';
+
+        let imgUrl = '';
+        if (entity.claims?.P18?.[0]?.mainsnak?.datavalue?.value) {
+            const fileName = entity.claims.P18[0].mainsnak.datavalue.value;
+            try {
+                const commonsUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=File:${encodeURIComponent(fileName)}&prop=imageinfo&iiprop=url&iiurlwidth=120&format=json&origin=*`;
+                const cRes = await fetch(commonsUrl);
+                if (cRes.ok) {
+                    const cData = await cRes.json();
+                    const pages = cData?.query?.pages;
+                    if (pages) {
+                        const pageObj = Object.values(pages)[0];
+                        if (pageObj?.imageinfo?.[0]?.thumburl) {
+                            imgUrl = pageObj.imageinfo[0].thumburl;
+                        }
+                    }
+                }
+            } catch (cErr) {
+                console.warn(`Failed loading Commons thumbnail for ${fileName}:`, cErr);
+            }
+        }
+
+        etymCard.classList.remove('hidden');
+        etymCard.innerHTML = `
+            <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+            <div class="flex items-start gap-2.5 mt-1 bg-slate-50 p-2 rounded border border-slate-200">
+                ${imgUrl ? `<img src="${imgUrl}" alt="${label}" class="w-12 h-12 object-cover rounded shadow-xs shrink-0 border border-slate-300" />` : ''}
+                <div class="flex flex-col min-w-0">
+                    <a href="https://www.wikidata.org/wiki/${wikidataId}" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-600 hover:underline text-xs truncate">
+                        ${label}
+                    </a>
+                    ${description ? `<span class="text-[11px] text-gray-600 leading-tight line-clamp-2">${description}</span>` : ''}
+                </div>
+            </div>
+        `;
+    } catch (err) {
+        console.warn(`Failed loading Wikidata etymology for ${wikidataId}:`, err);
+    }
 }

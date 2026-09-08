@@ -27,6 +27,12 @@ def merge_street_tuples(tuples_list: list[list[Any]]) -> list[Any]:
     min_x, min_y, max_x, max_y = bbox_val[0], bbox_val[1], bbox_val[2], bbox_val[3]
     all_sector_ids = set(base[7]) if len(base) > 7 and isinstance(base[7], list) else set()
 
+    street_info = None
+    for t in tuples_list:
+        if len(t) > 8 and isinstance(t[8], dict) and t[8].get('has_physical_road') is not None:
+            street_info = t[8]
+            break
+
     for t in tuples_list[1:]:
         t_count = t[4]
         t_addr_p = t[5]
@@ -45,7 +51,10 @@ def merge_street_tuples(tuples_list: list[list[Any]]) -> list[Any]:
     merged_bbox = [round(min_x, 5), round(min_y, 5), round(max_x, 5), round(max_y, 5)]
     merged_display_name = f"{label}\n{merged_addr_p}%"
 
-    return [merged_display_name, label, g_col, child_id, total_count, merged_addr_p, merged_bbox, sorted(list(all_sector_ids))]
+    merged = [merged_display_name, label, g_col, child_id, total_count, merged_addr_p, merged_bbox, sorted(list(all_sector_ids))]
+    if street_info is not None:
+        merged.append(street_info)
+    return merged
 
 
 def merge_suburb_tuples(tuples_list: list[list[Any]]) -> list[Any]:
@@ -146,6 +155,7 @@ def process_no_postcode_sub_partition_worker(
     chunk_suffix = f"_chunk{chunk_idx}" if total_chunks > 1 else ""
     points_part_path = os.path.join(output_dir, f"points_{pa_id}_{letter_key}{chunk_suffix}.geojson")
     hulls_part_path = os.path.join(output_dir, f"hulls_{pa_id}_{letter_key}{chunk_suffix}.geojson")
+    street_geom_part_path = os.path.join(output_dir, f"street_geom_{pa_id}_{letter_key}{chunk_suffix}.geojson")
 
     try:
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
@@ -175,7 +185,6 @@ def process_no_postcode_sub_partition_worker(
             return [], [], points_part_path, hulls_part_path, letter_key, {}, {}
 
         df_nearby = get_nearby_buffer_points(df_target, conn, buffer_dist=2000.0, grid_size=10000.0)
-        conn.close()
 
         chunk_label = f" (chunk {chunk_idx + 1}/{total_chunks})" if total_chunks > 1 else ""
         logging.info(f"[{idx}/{total_tasks}] [No postcode - {letter_key}{chunk_label}] Calculating clipped Voronoi cells ({len(df_target)} target points, {len(df_nearby)} nearby spatial buffer points)...")
@@ -212,6 +221,7 @@ def process_no_postcode_sub_partition_worker(
 
         all_points_part = []
         all_hulls_part = []
+        all_street_geoms_part = []
         pa_search_indices = []
         root_search_indices = []
         sector_points_dict = {}
@@ -228,8 +238,12 @@ def process_no_postcode_sub_partition_worker(
             root_search_acc=root_search_indices,
             pa_search_acc=pa_search_indices,
             sector_points_acc=sector_points_dict,
-            pa_label=pa
+            pa_label=pa,
+            db_conn=conn,
+            all_street_geoms_acc=all_street_geoms_part
         )
+
+        conn.close()
 
         letter_suburbs_dict = {}
         for item in city_items:
@@ -262,6 +276,12 @@ def process_no_postcode_sub_partition_worker(
 
             _write_points_geojson_file(processed_rows, points_part_path)
 
+        if all_street_geoms_part:
+            with open(street_geom_part_path, 'w', encoding='utf-8') as f_sg:
+                for sg_feat in all_street_geoms_part:
+                    f_sg.write(json.dumps(sg_feat, separators=(',', ':')) + "\n")
+            hulls_part_paths['street_geom'] = street_geom_part_path
+
         return city_items, pa_search_indices, points_part_path, hulls_part_paths, letter_key, letter_suburbs_dict, sector_points_dict
     except Exception as e:
         logging.error(f"[No postcode - {letter_key}{chunk_label}] Exception occurred during processing: {e}", exc_info=True)
@@ -284,6 +304,7 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
 
         points_pa_path = os.path.join(output_dir, f"points_{pa_id}.geojson")
         hulls_pa_path = os.path.join(output_dir, f"hulls_{pa_id}.geojson")
+        street_geom_pa_path = os.path.join(output_dir, f"street_geom_{pa_id}.geojson")
 
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
 
@@ -293,7 +314,6 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
             return [], [], points_pa_path, hulls_pa_path
 
         df_nearby = get_nearby_buffer_points(df_target, conn, buffer_dist=2000.0, grid_size=10000.0)
-        conn.close()
 
         logging.info(f"[{idx}/{total_pas}] [{pa}] Calculating clipped Voronoi cells ({len(df_target)} target points, {len(df_nearby)} nearby spatial buffer points)...")
 
@@ -329,6 +349,7 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
 
         all_points_pa = []
         all_hulls_pa = []
+        all_street_geoms_pa = []
         pa_search_indices = []
         root_search_indices = []
         sector_points_dict = {}
@@ -344,8 +365,12 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
             root_search_acc=root_search_indices,
             pa_search_acc=pa_search_indices,
             sector_points_acc=sector_points_dict,
-            pa_label=pa
+            pa_label=pa,
+            db_conn=conn,
+            all_street_geoms_acc=all_street_geoms_pa
         )
+
+        conn.close()
 
         if pa_search_indices:
             with open(os.path.join(output_dir, f"search_index_{pa_id}.json"), 'w', encoding='utf-8') as f:
@@ -379,6 +404,12 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
             )
 
             _write_points_geojson_file(processed_rows, points_pa_path)
+
+        if all_street_geoms_pa:
+            with open(street_geom_pa_path, 'w', encoding='utf-8') as f_sg:
+                for sg_feat in all_street_geoms_pa:
+                    f_sg.write(json.dumps(sg_feat, separators=(',', ':')) + "\n")
+            hulls_pa_paths['street_geom'] = street_geom_pa_path
 
         return pa_res, root_search_indices, points_pa_path, hulls_pa_paths
     except Exception as e:
