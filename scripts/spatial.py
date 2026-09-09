@@ -324,7 +324,11 @@ def match_and_aggregate_physical_highway(
     if not rows:
         return {"has_physical_road": False}, []
 
+    path_types = ['path', 'footway', 'cycleway']
+    road_only_tags = ['maxspeed', 'lanes', 'sidewalk']
+
     total_length = sum(r[8] for r in rows)
+    total_road_length = sum(r[8] for r in rows if str(r[1] or '').strip().lower() not in path_types)
     if total_length <= 0:
         total_length = 1.0
 
@@ -341,22 +345,29 @@ def match_and_aggregate_physical_highway(
 
     for tag_name, idx in tag_indices.items():
         length_map: dict[str, float] = {}
-        for r in rows:
-            val = str(r[idx] or '').strip().lower()
+        for row in rows:
+            # Skip length calculation for tags that make no sense on paths
+            if tag_name in road_only_tags and str(row[1] or '').strip().lower() in path_types:
+                continue
+
+            val = str(row[idx] or '').strip().lower()
             if not val:
                 val = 'unknown'
-            length_map[val] = length_map.get(val, 0.0) + r[8]
+            length_map[val] = length_map.get(val, 0.0) + row[8]
 
         pct_map = {}
         for val, l_sum in length_map.items():
-            pct = round((l_sum / total_length) * 100.0, 1)
+            if tag_name in road_only_tags:
+                pct = round((l_sum / total_road_length) * 100.0, 1)
+            else:
+                pct = round((l_sum / total_length) * 100.0, 1)
             if pct > 0:
                 pct_map[val] = pct
         aggregated_tags[tag_name] = pct_map
 
     wikidata_id = ""
-    for r in rows:
-        w_id = str(r[7] or '').strip()
+    for row in rows:
+        w_id = str(row[7] or '').strip()
         if w_id:
             wikidata_id = w_id
             break
@@ -367,15 +378,15 @@ def match_and_aggregate_physical_highway(
         "highway": aggregated_tags['highway'],
         "surface": aggregated_tags['surface'],
         "lit": aggregated_tags['lit'],
-        "maxspeed": aggregated_tags['maxspeed'],
-        "lanes": aggregated_tags['lanes'],
-        "sidewalk": aggregated_tags['sidewalk'],
+        "maxspeed": aggregated_tags.get('maxspeed'),
+        "lanes": aggregated_tags.get('lanes'),
+        "sidewalk": aggregated_tags.get('sidewalk'),
         "wikidata": wikidata_id
     }
 
     line_features: list[dict[str, Any]] = []
-    for r in rows:
-        osm_id_val, h_type, _, _, _, _, _, _, _, wkt_str = r
+    for row in rows:
+        osm_id_val, h_type, _, _, _, _, _, _, _, wkt_str = row
         if wkt_str and wkt_str.startswith("LINESTRING (") and wkt_str.endswith(")"):
             coord_pairs_str = wkt_str[12:-1].split(", ")
             coords = []

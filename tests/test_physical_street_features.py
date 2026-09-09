@@ -104,6 +104,12 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
             # Segment 2: High Street, 100m long, secondary, paved, lit=no, maxspeed=30 mph, Q1234
             ("w202", "High Street", "secondary", "paved", "no", "30 mph", "2", "left", "Q1234", 100.0,
              "LINESTRING (-1.571000 54.771000, -1.572000 54.772000)", 394100.0, 394200.0, 806100.0, 806200.0),
+             # Segment 3: The Walk, 100m long, service, asphalt, lit=no, maxspeed=30 mph, Q1234
+            ("w101", "The Walk", "service", "asphalt", "yes", "30 mph", "2", "both", "Q1234", 100.0,
+             "LINESTRING (-1.570000 54.770000, -1.571000 54.771000)", 394000.0, 394100.0, 806000.0, 806100.0),
+            # Segment 4: The Walk, 100m long, secondary, paved, lit=yes, Q1234
+            ("w102", "The Walk", "footway", "paved", "no", "30 mph", None, None, "Q1234", 100.0,
+             "LINESTRING (-1.571000 54.771000, -1.572000 54.772000)", 394100.0, 394200.0, 806100.0, 806200.0),
         ]
 
         self.conn.executemany("""
@@ -119,6 +125,7 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         addresses = [
             (54.7705, -1.5705, 394050.0, 806050.0, "DH1 1AA", "DH", "Durham", "City", "suburb", "suburb:City", "High Street", "street", "street:High Street", "{}", "{}", "n101", "", 1, 0),
             (54.7800, -1.5800, 395000.0, 807000.0, "DH1 2BB", "DH", "Durham", "City", "suburb", "suburb:City", "Missing Road", "street", "street:Missing Road", "{}", "{}", "n102", "", 1, 0),
+            (54.7705, -1.5705, 394050.0, 806050.0, "DH1 2CC", "DH", "Durham", "City", "suburb", "suburb:City", "The Walk", "street", "street:The Walk", "{}", "{}", "n103", "", 1, 0),
         ]
 
         self.conn.executemany("""
@@ -164,6 +171,40 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         feat0 = line_features[0]
         self.assertEqual(feat0["properties"]["child_id"], child_id)
         self.assertEqual(feat0["properties"]["name"], "High Street")
+        self.assertEqual(feat0["geometry"]["type"], "LineString")
+        self.assertEqual(len(feat0["geometry"]["coordinates"]), 2)
+
+    def test_match_and_aggregate_physical_highway_mixed_path(self) -> None:
+        """Tests attribute aggregation when physical highway is a mix of roads and paths."""
+        address_bounds = (394000.0, 806000.0, 394100.0, 806100.0)
+        child_id = "dh1_durham_city_the-walk"
+
+        street_info, line_features = match_and_aggregate_physical_highway(
+            self.conn, "The Walk", address_bounds, child_id
+        )
+
+        self.assertTrue(street_info.get("has_physical_road"))
+        self.assertEqual(street_info.get("total_length_m"), 200.0)
+        self.assertEqual(street_info.get("wikidata"), "Q1234")
+
+        print(street_info)
+
+        # Check aggregated tag percentages (100m + 100m = 200m total -> 50% each for residential/secondary, asphalt/paved, yes/no)
+        self.assertEqual(street_info["highway"].get("service"), 50.0)
+        self.assertEqual(street_info["highway"].get("footway"), 50.0)
+        self.assertEqual(street_info["surface"].get("asphalt"), 50.0)
+        self.assertEqual(street_info["surface"].get("paved"), 50.0)
+        self.assertEqual(street_info["lit"].get("yes"), 50.0)
+        self.assertEqual(street_info["lit"].get("no"), 50.0)
+        self.assertEqual(street_info["maxspeed"].get("30 mph"), 100.0)
+        self.assertEqual(street_info["lanes"].get("2"), 100.0)
+        self.assertEqual(street_info["sidewalk"].get("both"), 100.0)
+
+        # Check line features output for Tippecanoe vector tiles
+        self.assertEqual(len(line_features), 2)
+        feat0 = line_features[0]
+        self.assertEqual(feat0["properties"]["child_id"], child_id)
+        self.assertEqual(feat0["properties"]["name"], "The Walk")
         self.assertEqual(feat0["geometry"]["type"], "LineString")
         self.assertEqual(len(feat0["geometry"]["coordinates"]), 2)
 

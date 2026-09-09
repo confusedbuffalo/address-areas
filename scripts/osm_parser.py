@@ -238,9 +238,9 @@ class WayAddressHandler(BaseAddressHandler):
                             w.tags['highway'].strip(),
                             w.tags.get('surface', '').strip(),
                             w.tags.get('lit', '').strip(),
-                            w.tags.get('maxspeed', '').strip(),
-                            w.tags.get('lanes', '').strip(),
-                            w.tags.get('sidewalk', '').strip(),
+                            parse_maxspeed(w.tags),
+                            parse_lanes(w.tags),
+                            parse_sidewalk(w.tags),
                             w.tags.get('name:etymology:wikidata', '').strip(),
                             float(length_m),
                             geom_wkt,
@@ -269,3 +269,70 @@ class WayAddressHandler(BaseAddressHandler):
                     lons.append(lon)
             if lats and lons:
                 self.add_address((sum(lats)/len(lats), sum(lons)/len(lons)), r.tags, 'r', r.id)
+
+def parse_lanes(tags):
+    lanes_val = tags.get('lanes', '').strip()
+    if lanes_val:
+        return lanes_val
+    lane_markings_val = tags.get('lane_markings', '').strip()
+    if lane_markings_val and lane_markings_val == 'no':
+        return 'unmarked'
+        # Marked but without a value is not useful information so should count as unknown
+    
+    return None
+
+def parse_sidewalk(tags):
+    """Basic sidewalk tagging parser, to determine if sidewalk is both, left, right, separate or no"""
+    sw = tags.get('sidewalk', '').strip()
+    sw_both = tags.get('sidewalk:both', '').strip()
+    sw_left = tags.get('sidewalk:left', '').strip()
+    sw_right = tags.get('sidewalk:right', '').strip()
+
+    if sw:
+        return sw
+    if sw_both:
+        return sw_both
+    if sw_left and sw_right:
+        if sw_left == 'yes' and sw_right == 'yes':
+            return 'both'
+        if sw_left == 'yes' and sw_right == 'no':
+            return 'left'
+        if sw_left == 'no' and sw_right == 'yes':
+            return 'right'
+        if sw_left == 'no' and sw_right == 'no':
+            return 'no'
+        if sw_left == 'separate' and sw_right == 'separate':
+            return 'separate'
+        if sw_left == 'separate' and sw_right == 'no':
+            return 'separate'
+        if sw_left == 'no' and sw_right == 'separate':
+            return 'separate'
+    # Incomplete tagging treat as not tagged
+    return None
+
+def parse_maxspeed(tags):
+    maxspeed_val = tags.get('maxspeed', '').strip()
+    maxspeed_type = tags.get('maxspeed:type', '').strip()
+
+    if maxspeed_type:
+        if maxspeed_type == 'sign':
+            pass
+        if maxspeed_type == 'GB:zone20':
+            return '20 mph zone'
+        if maxspeed_type == 'GB:zone40':
+            return '40 mph zone'
+        if maxspeed_type == 'GB:nsl_single':
+            return 'NSL (single carriageway)'
+        if maxspeed_type == 'GB:nsl_dual':
+            return 'NSL (dual carriageway)'
+        if maxspeed_type == 'GB:motorway':
+            return 'NSL (motorway)'
+        if maxspeed_type == 'GB-WLS:nsl_restricted':
+            return 'Implicit 20 mph'
+        if maxspeed_type == 'GB:nsl_restricted':
+            return 'Implicit 30 mph'
+
+    if maxspeed_val:
+        return maxspeed_val
+
+    return None

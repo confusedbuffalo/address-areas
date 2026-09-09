@@ -460,6 +460,9 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         const entries = Object.entries(pctMap).filter(([_, v]) => v > 0);
         if (entries.length === 0) return '';
 
+        // Unknown values should always show last
+        entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
+
         const TAG_COLOR_MAP = {
             lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-400', 'unknown': 'bg-rose-400' }
         };
@@ -471,7 +474,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         entries.forEach(([val, pct], idx) => {
             let colorClass = TAG_COLOR_MAP[attrKey]?.[val];
             if (!colorClass) {
-                colorClass = val === 'unknown' ? 'bg-slate-300' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
+                colorClass = val === 'unknown' ? 'bg-rose-400' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
             }
 
             let displayVal = val;
@@ -504,7 +507,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
     const litBar = buildBar('lit', 'Lighting', streetInfo.lit);
     const maxspeedBar = buildBar('maxspeed', 'Speed Limit', streetInfo.maxspeed);
     const lanesBar = buildBar('lanes', 'Lanes', streetInfo.lanes);
-    const sidewalkBar = buildBar('sidewalk', 'Sidewalk', streetInfo.sidewalk);
+    const sidewalkBar = buildBar('sidewalk', 'Pavement', streetInfo.sidewalk);
 
     let html = `
         <div class="p-4 flex flex-col gap-3 text-xs text-gray-800">
