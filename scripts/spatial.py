@@ -12,6 +12,8 @@ from shapely.ops import transform
 
 from config import (
     OUTPUT_DIR,
+    PATH_TYPES,
+    ROAD_ONLY_TAGS,
     TRANSFORMER_TO_4326,
     assign_colours,
     extract_postcode_sector,
@@ -324,11 +326,8 @@ def match_and_aggregate_physical_highway(
     if not rows:
         return {"has_physical_road": False}, []
 
-    path_types = ['path', 'footway', 'cycleway']
-    road_only_tags = ['maxspeed', 'lanes', 'sidewalk']
-
     total_length = sum(r[8] for r in rows)
-    total_road_length = sum(r[8] for r in rows if str(r[1] or '').strip().lower() not in path_types)
+    total_road_length = sum(r[8] for r in rows if r[1] not in PATH_TYPES)
     if total_length <= 0:
         total_length = 1.0
 
@@ -347,17 +346,17 @@ def match_and_aggregate_physical_highway(
         length_map: dict[str, float] = {}
         for row in rows:
             # Skip length calculation for tags that make no sense on paths
-            if tag_name in road_only_tags and str(row[1] or '').strip().lower() in path_types:
+            if tag_name in ROAD_ONLY_TAGS and row[1] in PATH_TYPES:
                 continue
 
-            val = str(row[idx] or '').strip().lower()
+            val = str(row[idx] or '').strip()
             if not val:
                 val = 'unknown'
             length_map[val] = length_map.get(val, 0.0) + row[8]
 
         pct_map = {}
         for val, l_sum in length_map.items():
-            if tag_name in road_only_tags:
+            if tag_name in ROAD_ONLY_TAGS:
                 pct = round((l_sum / total_road_length) * 100.0, 1)
             else:
                 pct = round((l_sum / total_length) * 100.0, 1)
@@ -386,7 +385,7 @@ def match_and_aggregate_physical_highway(
 
     line_features: list[dict[str, Any]] = []
     for row in rows:
-        osm_id_val, h_type, _, _, _, _, _, _, _, wkt_str = row
+        osm_id_val, h_type, surface_val, lit_val, maxspeed_val, lanes_val, sidewalk_val, _, _, wkt_str = row
         if wkt_str and wkt_str.startswith("LINESTRING (") and wkt_str.endswith(")"):
             coord_pairs_str = wkt_str[12:-1].split(", ")
             coords = []
@@ -402,6 +401,11 @@ def match_and_aggregate_physical_highway(
                         "name": clean_name,
                         "osm_id": osm_id_val,
                         "highway": h_type,
+                        "surface": surface_val,
+                        "lit": lit_val,
+                        "maxspeed": maxspeed_val,
+                        "lanes": lanes_val,
+                        "sidewalk": sidewalk_val,
                         "level": "street_geom"
                     },
                     "geometry": {

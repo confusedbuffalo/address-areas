@@ -8,8 +8,8 @@ import osmium
 
 import math
 from config import (
-    CONSIDERED_TAGS_SET,
     FEATURE_TAG_KEYS,
+    PATH_TYPES,
     POSTCODE_AREA_REGEX,
     TRANSFORMER_TO_27700,
 )
@@ -236,8 +236,8 @@ class WayAddressHandler(BaseAddressHandler):
                             f"w{w.id}",
                             h_name,
                             w.tags['highway'].strip(),
-                            w.tags.get('surface', '').strip(),
-                            w.tags.get('lit', '').strip(),
+                            w.tags.get('surface', 'unknown').strip(),
+                            w.tags.get('lit', 'unknown').strip(),
                             parse_maxspeed(w.tags),
                             parse_lanes(w.tags),
                             parse_sidewalk(w.tags),
@@ -271,6 +271,9 @@ class WayAddressHandler(BaseAddressHandler):
                 self.add_address((sum(lats)/len(lats), sum(lons)/len(lons)), r.tags, 'r', r.id)
 
 def parse_lanes(tags):
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
     lanes_val = tags.get('lanes', '').strip()
     if lanes_val:
         return lanes_val
@@ -279,10 +282,13 @@ def parse_lanes(tags):
         return 'unmarked'
         # Marked but without a value is not useful information so should count as unknown
     
-    return None
+    return 'unknown'
 
 def parse_sidewalk(tags):
     """Basic sidewalk tagging parser, to determine if sidewalk is both, left, right, separate or no"""
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
     sw = tags.get('sidewalk', '').strip()
     sw_both = tags.get('sidewalk:both', '').strip()
     sw_left = tags.get('sidewalk:left', '').strip()
@@ -305,12 +311,19 @@ def parse_sidewalk(tags):
             return 'separate'
         if sw_left == 'separate' and sw_right == 'no':
             return 'separate'
+        if sw_left == 'separate' and sw_right == 'yes':
+            return 'separate'
         if sw_left == 'no' and sw_right == 'separate':
             return 'separate'
+        if sw_left == 'yes' and sw_right == 'separate':
+            return 'separate'
     # Incomplete tagging treat as not tagged
-    return None
+    return 'unknown'
 
 def parse_maxspeed(tags):
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
     maxspeed_val = tags.get('maxspeed', '').strip()
     maxspeed_type = tags.get('maxspeed:type', '').strip()
 
@@ -335,4 +348,4 @@ def parse_maxspeed(tags):
     if maxspeed_val:
         return maxspeed_val
 
-    return None
+    return 'unknown'

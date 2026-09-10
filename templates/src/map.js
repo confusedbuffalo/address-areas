@@ -7,6 +7,38 @@ import { isPlaceholderExpr, state } from './config.js';
 import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeAddressLines } from './utils.js';
 
 const initialParams = getUrlParams();
+let activePinnedAttrRow = null;
+
+export function updateStreetGeomHighlight(attrKey = null, pctMap = null) {
+    if (!map || !map.getLayer('street-geom-line')) return;
+
+    if (!attrKey || !pctMap) {
+        map.setPaintProperty('street-geom-line', 'line-color', '#2563eb');
+        return;
+    }
+
+    const entries = Object.entries(pctMap).filter(([_, v]) => v > 0);
+    entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
+
+    const TAG_COLOUR_MAP = {
+        lit: { 'yes': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' }
+    };
+    const DEFAULT_SEGMENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6', '#ec4899', '#94a3b8'];
+
+    const matchCases = ['match', ['get', attrKey]];
+    entries.forEach(([val], idx) => {
+        let hexColor = TAG_COLOUR_MAP[attrKey]?.[val];
+        if (!hexColor) {
+            hexColor = val === 'unknown' ? '#f43f5e' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
+        }
+        matchCases.push(val, hexColor);
+    });
+
+    // Default color for empty / unset values: greyed out
+    matchCases.push('#94a3b8');
+
+    map.setPaintProperty('street-geom-line', 'line-color', matchCases);
+}
 
 // Register the PMTiles protocol
 if (typeof pmtiles !== 'undefined' && typeof maplibregl !== 'undefined') {
@@ -463,8 +495,8 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         // Unknown values should always show last
         entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
 
-        const TAG_COLOR_MAP = {
-            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-400', 'unknown': 'bg-rose-400' }
+        const TAG_COLOUR_MAP = {
+            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' }
         };
         const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-teal-500', 'bg-pink-500', 'bg-slate-400'];
 
@@ -472,15 +504,15 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         const legendParts = [];
 
         entries.forEach(([val, pct], idx) => {
-            let colorClass = TAG_COLOR_MAP[attrKey]?.[val];
+            let colorClass = TAG_COLOUR_MAP[attrKey]?.[val];
             if (!colorClass) {
                 colorClass = val === 'unknown' ? 'bg-rose-400' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
             }
 
             let displayVal = val;
             if (attrKey === 'lit') {
-                if (val === 'yes') displayVal = 'Lit';
-                else if (val === 'no') displayVal = 'Unlit';
+                if (val === 'yes') displayVal = 'lit';
+                else if (val === 'no') displayVal = 'unlit';
             }
 
             segments.push(`<div class="${colorClass} h-2" style="width: ${pct}%;" title="${displayVal}: ${pct}%"></div>`);
@@ -488,7 +520,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         });
 
         return `
-            <div class="flex flex-col gap-1 text-[11px]">
+            <div class="street-info-row flex flex-col gap-1 text-[11px] cursor-pointer p-1.5 rounded transition-colors hover:bg-gray-100 select-none" data-attr="${attrKey}">
                 <div class="flex justify-between items-center text-gray-700 font-medium">
                     <span class="font-bold text-slate-700">${label}</span>
                 </div>
@@ -501,6 +533,9 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
             </div>
         `;
     };
+
+    activePinnedAttrRow = null;
+    updateStreetGeomHighlight(null, null);
 
     const highwayBar = buildBar('highway', 'Highway Type', streetInfo.highway);
     const surfaceBar = buildBar('surface', 'Surface', streetInfo.surface);
@@ -530,6 +565,42 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
     `;
 
     container.innerHTML = html;
+
+    const rowEls = container.querySelectorAll('.street-info-row');
+    rowEls.forEach(rowEl => {
+        const attrKey = rowEl.dataset.attr;
+        const pctMap = streetInfo[attrKey];
+        if (!pctMap) return;
+
+        rowEl.addEventListener('mouseenter', () => {
+            updateStreetGeomHighlight(attrKey, pctMap);
+        });
+
+        rowEl.addEventListener('mouseleave', () => {
+            if (activePinnedAttrRow) {
+                const pinnedAttr = activePinnedAttrRow.dataset.attr;
+                const pinnedMap = streetInfo[pinnedAttr];
+                updateStreetGeomHighlight(pinnedAttr, pinnedMap);
+            } else {
+                updateStreetGeomHighlight(null, null);
+            }
+        });
+
+        rowEl.addEventListener('click', () => {
+            if (activePinnedAttrRow === rowEl) {
+                activePinnedAttrRow.classList.remove('bg-blue-50', 'ring-1', 'ring-blue-400');
+                activePinnedAttrRow = null;
+                updateStreetGeomHighlight(null, null);
+            } else {
+                if (activePinnedAttrRow) {
+                    activePinnedAttrRow.classList.remove('bg-blue-50', 'ring-1', 'ring-blue-400');
+                }
+                activePinnedAttrRow = rowEl;
+                activePinnedAttrRow.classList.add('bg-blue-50', 'ring-1', 'ring-blue-400');
+                updateStreetGeomHighlight(attrKey, pctMap);
+            }
+        });
+    });
 
     if (streetInfo.wikidata) {
         fetchWikidataEtymology(streetInfo.wikidata);
