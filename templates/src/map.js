@@ -27,7 +27,8 @@ export function updateStreetGeomHighlight(attrKey = null, pctMap = null) {
     entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
 
     const TAG_COLOUR_MAP = {
-        lit: { 'yes': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' }
+        lit: { 'yes': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' },
+        sidewalk: { 'both': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' }
     };
     const DEFAULT_SEGMENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6', '#ec4899', '#94a3b8'];
 
@@ -502,7 +503,8 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
 
         const TAG_COLOUR_MAP = {
-            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' }
+            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' },
+            sidewalk: { 'both': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' }
         };
         const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-teal-500', 'bg-pink-500', 'bg-slate-400'];
 
