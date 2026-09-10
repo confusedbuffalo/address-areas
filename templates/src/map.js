@@ -9,6 +9,12 @@ import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeA
 const initialParams = getUrlParams();
 let activePinnedAttrRow = null;
 
+/**
+ * In-memory cache for fetched Wikidata etymology HTML results.
+ * @type {Map<string, string>}
+ */
+export const etymologyCache = new Map();
+
 export function updateStreetGeomHighlight(attrKey = null, pctMap = null) {
     if (!map || !map.getLayer('street-geom-line')) return;
 
@@ -544,6 +550,36 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
     const lanesBar = buildBar('lanes', 'Lanes', streetInfo.lanes);
     const sidewalkBar = buildBar('sidewalk', 'Pavement', streetInfo.sidewalk);
 
+    let etymologyCardHtml = '';
+    if (!streetInfo.wikidata) {
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+                <div class="text-xs text-slate-500 italic mt-0.5">Unknown etymology</div>
+            </div>
+        `;
+    } else if (etymologyCache.has(streetInfo.wikidata)) {
+        const cachedContent = etymologyCache.get(streetInfo.wikidata);
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" data-wikidata-id="${streetInfo.wikidata}" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                ${cachedContent}
+            </div>
+        `;
+    } else {
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" data-wikidata-id="${streetInfo.wikidata}" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+                <div class="flex items-start gap-2.5 mt-1 bg-slate-50 p-2 rounded border border-slate-200 animate-pulse">
+                    <div class="w-12 h-12 bg-slate-200 rounded shrink-0"></div>
+                    <div class="flex flex-col gap-1.5 min-w-0 flex-1 py-1">
+                        <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                        <div class="h-2.5 bg-slate-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     let html = `
         <div class="p-4 flex flex-col gap-3 text-xs text-gray-800">
             <div class="flex items-center justify-between border-b border-gray-200 pb-2">
@@ -558,9 +594,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
                 ${lanesBar}
                 ${sidewalkBar}
             </div>
-            <div id="wikidata-etymology-card" class="hidden border-t border-gray-200 pt-2.5 flex flex-col gap-1">
-                <!-- Wikidata entity details fetched asynchronously -->
-            </div>
+            ${etymologyCardHtml}
         </div>
     `;
 
@@ -602,7 +636,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         });
     });
 
-    if (streetInfo.wikidata) {
+    if (streetInfo.wikidata && !etymologyCache.has(streetInfo.wikidata)) {
         fetchWikidataEtymology(streetInfo.wikidata);
     }
 }
@@ -616,14 +650,21 @@ export async function fetchWikidataEtymology(wikidataId) {
     const etymCard = document.getElementById('wikidata-etymology-card');
     if (!etymCard || !wikidataId) return;
 
+    if (etymologyCache.has(wikidataId)) {
+        const cachedHtml = etymologyCache.get(wikidataId);
+        etymCard.classList.remove('hidden');
+        etymCard.innerHTML = cachedHtml;
+        return;
+    }
+
     try {
         const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${wikidataId}&format=json&props=labels|descriptions|claims&languages=en&origin=*`;
         const res = await fetch(url);
-        if (!res.ok) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
         const entity = data?.entities?.[wikidataId];
-        if (!entity) return;
+        if (!entity) throw new Error('Entity not found');
 
         const label = entity.labels?.en?.value || wikidataId;
         const description = entity.descriptions?.en?.value || '';
@@ -649,8 +690,7 @@ export async function fetchWikidataEtymology(wikidataId) {
             }
         }
 
-        etymCard.classList.remove('hidden');
-        etymCard.innerHTML = `
+        const html = `
             <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
             <div class="flex items-start gap-2.5 mt-1 bg-slate-50 p-2 rounded border border-slate-200">
                 ${imgUrl ? `<img src="${imgUrl}" alt="${label}" class="w-12 h-12 object-cover rounded shadow-xs shrink-0 border border-slate-300" />` : ''}
@@ -662,7 +702,26 @@ export async function fetchWikidataEtymology(wikidataId) {
                 </div>
             </div>
         `;
+
+        etymologyCache.set(wikidataId, html);
+
+        const currentCard = document.getElementById('wikidata-etymology-card');
+        if (currentCard && currentCard.dataset.wikidataId === wikidataId) {
+            currentCard.classList.remove('hidden');
+            currentCard.innerHTML = html;
+        }
     } catch (err) {
         console.warn(`Failed loading Wikidata etymology for ${wikidataId}:`, err);
+        const fallbackHtml = `
+            <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+            <div class="text-xs text-slate-500 italic mt-0.5">Unknown etymology</div>
+        `;
+        etymologyCache.set(wikidataId, fallbackHtml);
+
+        const currentCard = document.getElementById('wikidata-etymology-card');
+        if (currentCard && currentCard.dataset.wikidataId === wikidataId) {
+            currentCard.classList.remove('hidden');
+            currentCard.innerHTML = fallbackHtml;
+        }
     }
 }
