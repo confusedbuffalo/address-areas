@@ -4,7 +4,8 @@
  */
 
 import { isPlaceholderExpr, state } from './config.js';
-import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeAddressLines } from './utils.js';
+import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeAddressLines, getOsmUrl } from './utils.js';
+import { sendIdsToJosm } from './josm.js';
 
 const initialParams = getUrlParams();
 let activePinnedAttrRow = null;
@@ -456,6 +457,26 @@ export function updateEnvelopeCard(popup_tags, osm_name) {
 }
 
 /**
+ * Formats a street length in metres into human-readable metric or imperial representation.
+ *
+ * @param {number} lengthM - Distance in metres.
+ * @param {boolean} [useImperial=false] - True to convert distances >= 1000m to miles.
+ * @returns {string} Formatted length string.
+ */
+export function formatStreetLength(lengthM, useImperial = false) {
+    if (!lengthM || lengthM <= 0) return '';
+    if (lengthM < 1000) {
+        return `${Math.round(lengthM)} m`;
+    }
+    if (useImperial) {
+        const miles = lengthM / 1609.344;
+        return `${miles.toFixed(1)} mi`;
+    }
+    const km = lengthM / 1000;
+    return `${km.toFixed(1)} km`;
+}
+
+/**
  * Renders or hides the collapsible Street Information card panel in the sidebar.
  *
  * @param {Object|null} streetInfo - Street attribute aggregation object.
@@ -471,6 +492,9 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         return;
     }
 
+    state.activeStreetInfo = streetInfo;
+    state.activeStreetName = streetName;
+
     container.classList.remove('hidden');
 
     if (streetInfo.has_physical_road === false) {
@@ -483,8 +507,6 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         return;
     }
 
-    state.activeStreetInfo = streetInfo;
-
     // Check if envelope card is currently showing
     const envelopeCard = document.getElementById('envelope-card');
     if (envelopeCard && !envelopeCard.classList.contains('hidden')) {
@@ -492,7 +514,8 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         return;
     }
 
-    const totalLen = streetInfo.total_length_m ? `${streetInfo.total_length_m.toLocaleString()} m` : '';
+    const cleanStreetName = (streetName || '').split(/\r?\n/)[0].trim() || 'Street Info';
+    const totalLen = formatStreetLength(streetInfo.total_length_m, state.useImperial);
 
     const buildBar = (attrKey, label, pctMap) => {
         if (!pctMap || typeof pctMap !== 'object') return '';
@@ -582,10 +605,37 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         `;
     }
 
+    let segmentsSectionHtml = '';
+    if (Array.isArray(streetInfo.segments) && streetInfo.segments.length > 0) {
+        const linksHtml = streetInfo.segments.map(sId => {
+            const url = getOsmUrl(sId);
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="bg-slate-100 hover:bg-blue-50 text-blue-600 hover:text-blue-800 font-mono text-[11px] px-2 py-0.5 rounded border border-slate-200 transition-colors">${sId}</a>`;
+        }).join('');
+
+        segmentsSectionHtml = `
+            <details class="border-t border-gray-200 pt-2.5 text-xs text-slate-700 group">
+                <summary class="flex items-center justify-between font-bold cursor-pointer select-none py-1 text-[11px] uppercase tracking-wider text-gray-500 hover:text-gray-800 transition-colors">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 group-open:rotate-90 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>Segments (${streetInfo.segments.length})</span>
+                    </span>
+                    <button type="button" class="segment-edit-all-btn bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded transition shadow-xs cursor-pointer lowercase" title="Load segments in JOSM">
+                        Edit all
+                    </button>
+                </summary>
+                <div class="flex flex-wrap gap-1.5 pt-2 pb-1">
+                    ${linksHtml}
+                </div>
+            </details>
+        `;
+    }
+
     let html = `
         <div class="p-4 flex flex-col gap-3 text-xs text-gray-800">
             <div class="flex items-center justify-between border-b border-gray-200 pb-2">
-                <span class="font-bold text-slate-900 text-sm">${streetName || 'Street Info'}</span>
+                <span class="font-bold text-slate-900 text-sm">${cleanStreetName}</span>
                 ${totalLen ? `<span class="font-semibold text-slate-500 text-xs">${totalLen}</span>` : ''}
             </div>
             <div class="flex flex-col gap-2.5">
@@ -597,10 +647,20 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
                 ${sidewalkBar}
             </div>
             ${etymologyCardHtml}
+            ${segmentsSectionHtml}
         </div>
     `;
 
     container.innerHTML = html;
+
+    const segmentEditBtn = container.querySelector('.segment-edit-all-btn');
+    if (segmentEditBtn && streetInfo.segments) {
+        segmentEditBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            sendIdsToJosm(streetInfo.segments);
+        });
+    }
 
     const rowEls = container.querySelectorAll('.street-info-row');
     rowEls.forEach(rowEl => {
@@ -648,6 +708,10 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
  *
  * @param {string} wikidataId - Wikidata Q-identifier string (e.g. 'Q1234').
  */
+if (typeof window !== 'undefined') {
+    window.renderStreetInfoCardRef = renderStreetInfoCard;
+}
+
 export async function fetchWikidataEtymology(wikidataId) {
     const etymCard = document.getElementById('wikidata-etymology-card');
     if (!etymCard || !wikidataId) return;

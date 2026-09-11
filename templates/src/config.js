@@ -41,6 +41,7 @@ export const state = {
     currentSelectedPointTags: null,
     currentSelectedPointName: null,
     showEnvelope: typeof localStorage !== 'undefined' && localStorage.getItem('showEnvelope') === 'true',
+    useImperial: typeof localStorage !== 'undefined' && localStorage.getItem('useImperial') === 'true',
     activeSection: 'sublevels',
     sidebarVisible: typeof window !== 'undefined' ? window.innerWidth >= 768 : true,
     currentSortColumn: 'name',

@@ -561,6 +561,7 @@ export function initSidebar() {
 
     const settingsHeader = document.getElementById('settings-header');
     const envelopeToggle = document.getElementById('setting-envelopes-toggle');
+    const imperialToggle = document.getElementById('setting-imperial-toggle');
 
     if (settingsHeader) {
         settingsHeader.onclick = () => {
@@ -574,6 +575,17 @@ export function initSidebar() {
             state.showEnvelope = e.target.checked;
             localStorage.setItem('showEnvelope', e.target.checked ? 'true' : 'false');
             updateEnvelopeCard();
+        };
+    }
+
+    if (imperialToggle) {
+        imperialToggle.checked = state.useImperial;
+        imperialToggle.onchange = (e) => {
+            state.useImperial = e.target.checked;
+            localStorage.setItem('useImperial', e.target.checked ? 'true' : 'false');
+            if (state.activeStreetInfo && typeof window !== 'undefined' && window.renderStreetInfoCardRef) {
+                window.renderStreetInfoCardRef(state.activeStreetInfo, state.activeStreetName);
+            }
         };
     }
 

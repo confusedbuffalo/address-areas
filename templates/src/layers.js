@@ -652,8 +652,10 @@ export async function loadLayer(dataId, name, options = {}) {
                     const subProps = suburbObj ? (suburbObj.properties || suburbObj) : null;
                     const streets = subProps ? (subProps.streets || []) : [];
                     const foundStreet = streets.find(f => (f.properties || f).child_id === dataId);
-                    const sInfo = (foundStreet?.properties || foundStreet)?.street_info || null;
-                    renderStreetInfoCard(sInfo, name || (foundStreet?.properties || foundStreet)?.name);
+                    const stObj = foundStreet?.properties || foundStreet;
+                    const sInfo = stObj?.street_info || null;
+                    const stName = stObj?.raw_name || name || stObj?.name;
+                    renderStreetInfoCard(sInfo, stName);
                 }).catch(() => renderStreetInfoCard(null));
             } else {
                 renderStreetInfoCard(null);

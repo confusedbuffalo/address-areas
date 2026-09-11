@@ -371,6 +371,14 @@ def match_and_aggregate_physical_highway(
             wikidata_id = w_id
             break
 
+    segment_ids = []
+    seen_segments = set()
+    for row in rows:
+        s_id = str(row[0] or '').strip()
+        if s_id and s_id not in seen_segments:
+            seen_segments.add(s_id)
+            segment_ids.append(s_id)
+
     street_info = {
         "has_physical_road": True,
         "total_length_m": round(total_length, 1),
@@ -380,7 +388,8 @@ def match_and_aggregate_physical_highway(
         "maxspeed": aggregated_tags.get('maxspeed'),
         "lanes": aggregated_tags.get('lanes'),
         "sidewalk": aggregated_tags.get('sidewalk'),
-        "wikidata": wikidata_id
+        "wikidata": wikidata_id,
+        "segments": segment_ids
     }
 
     line_features: list[dict[str, Any]] = []
