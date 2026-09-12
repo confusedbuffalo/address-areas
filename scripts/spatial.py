@@ -676,7 +676,8 @@ def process_hierarchy(
             item_tuple.append(child_res)
         elif group_col == 'street_area':
             item_tuple.append(sorted(list(street_sector_ids)))
-            if db_conn is not None:
+            is_place = str(label_key).startswith('place:')
+            if db_conn is not None and not is_place:
                 addr_bounds = (
                     float(group_data_proj['x_proj'].min()),
                     float(group_data_proj['y_proj'].min()),

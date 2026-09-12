@@ -9,8 +9,10 @@ import tempfile
 from typing import Any
 import unittest
 
+import geopandas as gpd
+
 from scripts.osm_parser import WayAddressHandler
-from scripts.spatial import match_and_aggregate_physical_highway
+from scripts.spatial import match_and_aggregate_physical_highway, process_hierarchy
 from scripts.warnings_detector import extract_warnings_from_db
 
 
@@ -122,10 +124,12 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         # Add address records
         # Group 1: 'High Street' in DH -> matches physical_highways
         # Group 2: 'Missing Road' in DH -> no physical_highways match
+        # Group 3: 'Market Square' in DH -> street_type='place' (addr:place)
         addresses = [
             (54.7705, -1.5705, 394050.0, 806050.0, "DH1 1AA", "DH", "Durham", "City", "suburb", "suburb:City", "High Street", "street", "street:High Street", "{}", "{}", "n101", "", 1, 0),
             (54.7800, -1.5800, 395000.0, 807000.0, "DH1 2BB", "DH", "Durham", "City", "suburb", "suburb:City", "Missing Road", "street", "street:Missing Road", "{}", "{}", "n102", "", 1, 0),
             (54.7705, -1.5705, 394050.0, 806050.0, "DH1 2CC", "DH", "Durham", "City", "suburb", "suburb:City", "The Walk", "street", "street:The Walk", "{}", "{}", "n103", "", 1, 0),
+            (54.7850, -1.5850, 395500.0, 807500.0, "DH1 3DD", "DH", "Durham", "City", "suburb", "suburb:City", "Market Square", "place", "place:Market Square", "{}", "{}", "n104", "", 1, 0),
         ]
 
         self.conn.executemany("""
@@ -221,7 +225,7 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         self.assertEqual(len(line_features), 0)
 
     def test_extract_warnings_missing_physical_road(self) -> None:
-        """Tests that extract_warnings_from_db extracts missing physical road QA warnings."""
+        """Tests that extract_warnings_from_db extracts missing physical road QA warnings and ignores addr:place."""
         warnings_data = extract_warnings_from_db(self.db_path)
 
         self.assertIn("DH", warnings_data)
@@ -235,6 +239,30 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         self.assertEqual(missing_item[0], "Missing Road")
         self.assertIn("No physical highway", missing_item[1])
         self.assertEqual(missing_item[2], "n102")
+
+    def test_process_hierarchy_skips_street_info_for_place(self) -> None:
+        """Tests that process_hierarchy does not generate street_info for addr:place groups."""
+        import pandas as pd
+        from shapely.geometry import Point
+
+        df_raw = pd.read_sql_query("SELECT * FROM addresses WHERE street = 'Market Square'", self.conn)
+        geometry = [Point(xy) for xy in zip(df_raw['lon'], df_raw['lat'])]
+        df = gpd.GeoDataFrame(df_raw, geometry=geometry, crs="EPSG:4326").to_crs("EPSG:27700")
+
+        features = process_hierarchy(
+            df,
+            group_col='street_area',
+            filename='dh1_durham_city',
+            next_col='points',
+            db_conn=self.conn
+        )
+
+        self.assertEqual(len(features), 1)
+        item = features[0]
+        # Tuple format for street_area without street_info:
+        # [display_name, raw_name, level, child_id, total, addr_perc, bbox, sector_ids]
+        # Length should be 8, instead of 9 (which includes street_info)
+        self.assertEqual(len(item), 8)
 
     def test_name_left_and_right_highway_parsing_and_matching(self) -> None:
         """Tests that ways with name:left or name:right are extracted and matched correctly."""

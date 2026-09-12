@@ -487,6 +487,8 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
     if (!container) return;
 
     if (!streetInfo || typeof streetInfo !== 'object' || streetInfo.has_physical_road === undefined) {
+        state.activeStreetInfo = null;
+        state.activeStreetName = '';
         container.classList.add('hidden');
         container.innerHTML = '';
         return;
