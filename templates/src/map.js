@@ -86,23 +86,44 @@ if (map) {
                     url: `pmtiles://${window.PMTILES_URLS['street_geom']}`
                 });
             }
-            if (map.getSource(sourceId) && !map.getLayer('street-geom-line')) {
-                map.addLayer({
-                    id: 'street-geom-line',
-                    type: 'line',
-                    source: sourceId,
-                    'source-layer': 'street_geom',
-                    layout: {
-                        'line-cap': 'round',
-                        'line-join': 'round',
-                        'visibility': 'none'
-                    },
-                    paint: {
-                        'line-color': '#2563eb',
-                        'line-width': 4,
-                        'line-opacity': 0.85
-                    }
-                });
+            if (map.getSource(sourceId)) {
+                if (!map.getLayer('street-geom-inactive-line')) {
+                    map.addLayer({
+                        id: 'street-geom-inactive-line',
+                        type: 'line',
+                        source: sourceId,
+                        'source-layer': 'street_geom',
+                        minzoom: 17,
+                        layout: {
+                            'line-cap': 'round',
+                            'line-join': 'round',
+                            'visibility': 'none'
+                        },
+                        paint: {
+                            'line-color': '#94a3b8',
+                            'line-width': 4,
+                            'line-opacity': 0.45
+                        }
+                    });
+                }
+                if (!map.getLayer('street-geom-line')) {
+                    map.addLayer({
+                        id: 'street-geom-line',
+                        type: 'line',
+                        source: sourceId,
+                        'source-layer': 'street_geom',
+                        layout: {
+                            'line-cap': 'round',
+                            'line-join': 'round',
+                            'visibility': 'none'
+                        },
+                        paint: {
+                            'line-color': '#2563eb',
+                            'line-width': 4,
+                            'line-opacity': 0.85
+                        }
+                    });
+                }
             }
         }
     });
@@ -338,15 +359,46 @@ export function updateMapFilters() {
     }
 
     // --- Physical Street Line Highlight Layer ---
+    const isStreetLevel = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
+    const streetId = isStreetLevel ? state.currentLevel.split('_').slice(0, 4).join('_') : null;
+
     if (map.getLayer('street-geom-line')) {
-        const isStreet = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
-        if (isStreet) {
-            const streetId = state.currentLevel.split('_').slice(0, 4).join('_');
+        if (isStreetLevel && streetId) {
             map.setLayoutProperty('street-geom-line', 'visibility', 'visible');
             map.setFilter('street-geom-line', ['==', ['get', 'child_id'], streetId]);
         } else {
             map.setLayoutProperty('street-geom-line', 'visibility', 'none');
         }
+    }
+
+    updateInactiveStreetFilter();
+}
+
+export function updateInactiveStreetFilter() {
+    if (!map || !map.getLayer('street-geom-inactive-line')) return;
+
+    const isStreetLevel = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
+    const streetId = isStreetLevel ? state.currentLevel.split('_').slice(0, 4).join('_') : null;
+    const currentZoom = map.getZoom();
+
+    if (isStreetLevel && streetId && currentZoom >= 17) {
+        map.setLayoutProperty('street-geom-inactive-line', 'visibility', 'visible');
+
+        const activeSegments = state.activeStreetInfo && Array.isArray(state.activeStreetInfo.segments)
+            ? state.activeStreetInfo.segments
+            : [];
+
+        if (activeSegments.length > 0) {
+            map.setFilter('street-geom-inactive-line', [
+                'all',
+                ['!=', ['get', 'child_id'], streetId],
+                ['!', ['in', ['get', 'osm_id'], ['literal', activeSegments]]]
+            ]);
+        } else {
+            map.setFilter('street-geom-inactive-line', ['!=', ['get', 'child_id'], streetId]);
+        }
+    } else {
+        map.setLayoutProperty('street-geom-inactive-line', 'visibility', 'none');
     }
 }
 
@@ -491,11 +543,13 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
         state.activeStreetName = '';
         container.classList.add('hidden');
         container.innerHTML = '';
+        updateInactiveStreetFilter();
         return;
     }
 
     state.activeStreetInfo = streetInfo;
     state.activeStreetName = streetName;
+    updateInactiveStreetFilter();
 
     container.classList.remove('hidden');
 

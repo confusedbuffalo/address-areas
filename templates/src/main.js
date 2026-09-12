@@ -320,9 +320,32 @@ map.on('click', 'points-circle', (e) => {
     }, 0);
 });
 
+map.on('click', 'street-geom-inactive-line', (e) => {
+    if (isSelectingPoint) return;
+    if (!e.features || e.features.length === 0) return;
+
+    if (map.getLayer('points-circle') && map.getLayoutProperty('points-circle', 'visibility') !== 'none') {
+        const pointFeatures = map.queryRenderedFeatures(e.point, { layers: ['points-circle'] });
+        if (pointFeatures.length > 0) return;
+    }
+
+    const feature = e.features[0];
+    const props = feature.properties;
+
+    if (!props.child_id || props.child_id === state.currentLevel) return;
+
+    if (state.activeStreetInfo && Array.isArray(state.activeStreetInfo.segments)) {
+        if (state.activeStreetInfo.segments.includes(props.osm_id)) {
+            return;
+        }
+    }
+
+    loadLayer(props.child_id, props.raw_name || props.name, { preserveViewport: true });
+});
+
 // Map hover & Popup close handlers
 map.on('mousemove', (e) => {
-    const activeLayers = ['postcode_area-fill', 'city-fill', 'suburb-fill', 'street_area-fill', 'points-circle', 'points-cluster-circles', 'points-cluster-counts']
+    const activeLayers = ['postcode_area-fill', 'city-fill', 'suburb-fill', 'street_area-fill', 'points-circle', 'points-cluster-circles', 'points-cluster-counts', 'street-geom-inactive-line']
         .filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
 
     if (activeLayers.length === 0) {
