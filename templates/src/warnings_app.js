@@ -78,6 +78,19 @@ function createOsmLinks(osmIds) {
     return fragment;
 }
 
+function parseOsmIds(osmIdVal) {
+    if (Array.isArray(osmIdVal)) {
+        return osmIdVal;
+    }
+    if (typeof osmIdVal === 'string') {
+        return osmIdVal.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    if (osmIdVal) {
+        return [String(osmIdVal)];
+    }
+    return [];
+}
+
 function buildRowGroups(catKey, rawItems) {
     if (catKey === 'duplicates') {
         // rawItems schema: [ [title, [osm_ids]], ... ]
@@ -96,6 +109,8 @@ function buildRowGroups(catKey, rawItems) {
             // rawItem schema: [value, reason, osm_id]
             const val = item[0];
             const reason = item[1] || '';
+            const ids = parseOsmIds(item[2]);
+
             if (!groupedMap.has(val)) {
                 groupedMap.set(val, {
                     value: val,
@@ -105,7 +120,13 @@ function buildRowGroups(catKey, rawItems) {
             } else if (reason) {
                 groupedMap.get(val).reasonsSet.add(reason);
             }
-            groupedMap.get(val).osm_ids.push(item[2]);
+
+            const targetIds = groupedMap.get(val).osm_ids;
+            ids.forEach(id => {
+                if (!targetIds.includes(id)) {
+                    targetIds.push(id);
+                }
+            });
         });
         return Array.from(groupedMap.values()).map(g => ({
             value: g.value,
@@ -118,7 +139,7 @@ function buildRowGroups(catKey, rawItems) {
     return rawItems.map(item => ({
         value: item[0],
         reason: item[1] || '',
-        osm_ids: [item[2]]
+        osm_ids: parseOsmIds(item[2])
     }));
 }
 
@@ -190,17 +211,12 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
     const catTitle = CATEGORY_TITLES[catKey];
     const isDuplicates = catKey === 'duplicates';
 
+    const rowGroups = buildRowGroups(catKey, rawItems);
+
     // Calculate total OSM elements
-    let totalElements = 0;
-    if (isDuplicates) {
-        totalElements = rawItems.reduce((sum, item) => sum + (item[1] ? item[1].length : 0), 0);
-    } else {
-        totalElements = rawItems.length;
-    }
+    const totalElements = rowGroups.reduce((sum, group) => sum + group.osm_ids.length, 0);
 
     const canEditAll = totalElements <= 400;
-
-    let rowGroups = buildRowGroups(catKey, rawItems);
 
     // Accordion caret
     const caretSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -238,11 +254,9 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
             editAllBtn.disabled = true;
 
             const allIds = [];
-            if (isDuplicates) {
-                rawItems.forEach(item => { if (item[1]) allIds.push(...item[1]); });
-            } else {
-                rawItems.forEach(item => { if (item[2]) allIds.push(item[2]); });
-            }
+            rowGroups.forEach(group => {
+                allIds.push(...group.osm_ids);
+            });
             const uniqueIds = Array.from(new Set(allIds));
 
             sendIdsToJosm(uniqueIds).finally(() => {
@@ -350,7 +364,15 @@ function renderWarnings(warningsData) {
 
         CATEGORY_ORDER.forEach(cat => {
             if (paCategories[cat]) {
-                paTotalCount += paCategories[cat].length;
+                const rawItems = paCategories[cat];
+                if (cat === 'missing_physical_road') {
+                    rawItems.forEach(item => {
+                        const ids = parseOsmIds(item[2]);
+                        paTotalCount += ids.length;
+                    });
+                } else {
+                    paTotalCount += rawItems.length;
+                }
             }
         });
 

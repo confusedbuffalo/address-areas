@@ -335,7 +335,7 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
 
     if 'x_proj' in add_cols and has_highways_table:
         cursor.execute("""
-            SELECT postcode_area, street, MIN(osm_id), MIN(x_proj), MAX(x_proj), MIN(y_proj), MAX(y_proj)
+            SELECT postcode_area, street, GROUP_CONCAT(osm_id, ','), MIN(x_proj), MAX(x_proj), MIN(y_proj), MAX(y_proj)
             FROM addresses
             WHERE street IS NOT NULL AND TRIM(street) != ''
               AND LOWER(TRIM(street)) NOT IN ('no street', 'missing', 'unknown')
@@ -346,7 +346,7 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
         missing_road_rows = cursor.fetchall()
 
         for row in missing_road_rows:
-            pa, street_val, sample_osm_id, min_x, max_x, min_y, max_y = row
+            pa, street_val, concat_osm_ids, min_x, max_x, min_y, max_y = row
             pa_key = pa if pa else 'No postcode'
 
             if min_x is None or max_x is None or min_y is None or max_y is None:
@@ -366,12 +366,16 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
             match_count = cursor.fetchone()[0]
 
             if match_count == 0:
+                raw_ids = [s.strip() for s in str(concat_osm_ids or '').split(',') if s.strip()]
+                unique_ids = list(dict.fromkeys(raw_ids))
+                ids_str = ",".join(unique_ids)
+
                 if pa_key not in warnings_by_pa:
                     warnings_by_pa[pa_key] = {cat: [] for cat in categories}
                 warnings_by_pa[pa_key]['missing_physical_road'].append([
                     str(street_val),
                     "No physical highway with matching name within 250m",
-                    str(sample_osm_id)
+                    ids_str
                 ])
 
     conn.close()

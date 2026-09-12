@@ -128,6 +128,7 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         addresses = [
             (54.7705, -1.5705, 394050.0, 806050.0, "DH1 1AA", "DH", "Durham", "City", "suburb", "suburb:City", "High Street", "street", "street:High Street", "{}", "{}", "n101", "", 1, 0),
             (54.7800, -1.5800, 395000.0, 807000.0, "DH1 2BB", "DH", "Durham", "City", "suburb", "suburb:City", "Missing Road", "street", "street:Missing Road", "{}", "{}", "n102", "", 1, 0),
+            (54.7801, -1.5801, 395010.0, 807010.0, "DH1 2BB", "DH", "Durham", "City", "suburb", "suburb:City", "Missing Road", "street", "street:Missing Road", "{}", "{}", "w205", "", 1, 0),
             (54.7705, -1.5705, 394050.0, 806050.0, "DH1 2CC", "DH", "Durham", "City", "suburb", "suburb:City", "The Walk", "street", "street:The Walk", "{}", "{}", "n103", "", 1, 0),
             (54.7850, -1.5850, 395500.0, 807500.0, "DH1 3DD", "DH", "Durham", "City", "suburb", "suburb:City", "Market Square", "place", "place:Market Square", "{}", "{}", "n104", "", 1, 0),
         ]
@@ -225,7 +226,7 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         self.assertEqual(len(line_features), 0)
 
     def test_extract_warnings_missing_physical_road(self) -> None:
-        """Tests that extract_warnings_from_db extracts missing physical road QA warnings and ignores addr:place."""
+        """Tests that extract_warnings_from_db extracts missing physical road QA warnings and aggregates all element IDs."""
         warnings_data = extract_warnings_from_db(self.db_path)
 
         self.assertIn("DH", warnings_data)
@@ -238,7 +239,7 @@ class TestPhysicalStreetFeatures(unittest.TestCase):
         missing_item = missing_roads[0]
         self.assertEqual(missing_item[0], "Missing Road")
         self.assertIn("No physical highway", missing_item[1])
-        self.assertEqual(missing_item[2], "n102")
+        self.assertEqual(missing_item[2], "n102,w205")
 
     def test_process_hierarchy_skips_street_info_for_place(self) -> None:
         """Tests that process_hierarchy does not generate street_info for addr:place groups."""
