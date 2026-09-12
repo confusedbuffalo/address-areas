@@ -187,15 +187,15 @@ class WayAddressHandler(BaseAddressHandler):
             return
 
         has_tags: bool = any(tag.k.startswith('addr:') for tag in w.tags) if w.tags else False
-        highway_names: set[str] = set()
+        highway_names = {'name': None, 'name:left': None, 'name:right': None}
         if w.tags and 'highway' in w.tags and w.tags['highway'] in PHYSICAL_HIGHWAY_TYPES:
-            for tag_k in ('name', 'name:left', 'name:right'):
+            for tag_k in highway_names:
                 if tag_k in w.tags:
                     val = w.tags[tag_k].strip()
                     if val:
-                        highway_names.add(val)
+                        highway_names[tag_k] = val
 
-        is_physical_highway: bool = len(highway_names) > 0
+        is_physical_highway: bool = len([v for v in highway_names.values() if v]) > 0
 
         if has_tags or is_member or is_physical_highway:
             lats: list[float] = []
@@ -231,7 +231,9 @@ class WayAddressHandler(BaseAddressHandler):
 
                     geom_wkt = "LINESTRING (" + ", ".join(f"{lon:.7f} {lat:.7f}" for lat, lon in zip(lats, lons)) + ")"
 
-                    for h_name in highway_names:
+                    for name_tag, h_name in highway_names.items():
+                        if not h_name:
+                            continue
                         self.highway_batch.append((
                             f"w{w.id}",
                             h_name,
@@ -241,7 +243,7 @@ class WayAddressHandler(BaseAddressHandler):
                             parse_maxspeed(w.tags),
                             parse_lanes(w.tags),
                             parse_sidewalk(w.tags),
-                            w.tags.get('name:etymology:wikidata', '').strip(),
+                            w.tags.get(f'{name_tag}:etymology:wikidata', '').strip(),
                             float(length_m),
                             geom_wkt,
                             float(min_x),
