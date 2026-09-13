@@ -10,7 +10,9 @@ from unittest.mock import patch
 
 from scripts.cleanup_r2 import (
     parse_file_timestamp,
-    filter_files_for_deletion
+    filter_files_for_deletion,
+    is_main_branch,
+    cleanup,
 )
 from scripts.render import (
     get_pmtiles_filename_for_layer,
@@ -77,6 +79,26 @@ class TestCleanupR2(unittest.TestCase):
 
         to_delete = filter_files_for_deletion(files)
         self.assertEqual(to_delete, [])
+
+    def test_is_main_branch_with_ref_name(self) -> None:
+        with patch.dict(os.environ, {"GITHUB_REF_NAME": "main"}):
+            self.assertTrue(is_main_branch())
+
+        with patch.dict(os.environ, {"GITHUB_REF_NAME": "feature-branch"}):
+            self.assertFalse(is_main_branch())
+
+    def test_is_main_branch_with_github_ref(self) -> None:
+        with patch.dict(os.environ, {"GITHUB_REF_NAME": "", "GITHUB_REF": "refs/heads/main"}):
+            self.assertTrue(is_main_branch())
+
+        with patch.dict(os.environ, {"GITHUB_REF_NAME": "", "GITHUB_REF": "refs/heads/feature"}):
+            self.assertFalse(is_main_branch())
+
+    def test_cleanup_skips_on_non_main_branch(self) -> None:
+        with patch("scripts.cleanup_r2.is_main_branch", return_value=False), \
+             patch("scripts.cleanup_r2.get_r2_bucket_files") as mock_get_files:
+            cleanup()
+            mock_get_files.assert_not_called()
 
 
 class TestRenderPMTilesURL(unittest.TestCase):
