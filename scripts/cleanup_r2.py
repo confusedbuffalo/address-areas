@@ -118,6 +118,32 @@ def filter_files_for_deletion(files: list[dict[str, str]]) -> list[str]:
     return to_delete
 
 
+def is_main_branch() -> bool:
+    """Checks whether execution is on the main branch.
+
+    Returns:
+        bool: True if running on main branch, False otherwise.
+    """
+    ref_name = os.getenv("GITHUB_REF_NAME")
+    if ref_name:
+        return ref_name == "main"
+
+    github_ref = os.getenv("GITHUB_REF")
+    if github_ref:
+        return github_ref == "refs/heads/main"
+
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return result.stdout.strip() == "main"
+    except Exception:
+        return False
+
+
 def delete_r2_file(bucket_name: str, file_path: str) -> None:
     """Deletes a file from Cloudflare R2 bucket using rclone deletefile.
 
@@ -136,6 +162,10 @@ def delete_r2_file(bucket_name: str, file_path: str) -> None:
 
 def cleanup() -> None:
     """Main execution function to list, filter and delete expired R2 PMTiles files."""
+    if not is_main_branch():
+        logging.info("Not running on main branch. Skipping R2 PMTiles cleanup to preserve live data.")
+        return
+
     bucket_name = os.getenv("R2_BUCKET_NAME")
     if not bucket_name:
         logging.warning("R2_BUCKET_NAME environment variable not set. Skipping R2 cleanup.")
