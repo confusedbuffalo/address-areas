@@ -235,8 +235,8 @@ def process() -> None:
     logging.info("Creating SQLite indices...")
     conn.execute("CREATE INDEX idx_postcode_area ON addresses(postcode_area);")
     conn.execute("CREATE INDEX idx_xy ON addresses(x_proj, y_proj);")
-    conn.execute("CREATE INDEX idx_highways_name ON physical_highways(name);")
-    conn.execute("CREATE INDEX idx_highways_bbox ON physical_highways(min_x, max_x, min_y, max_y);")
+    conn.execute("CREATE INDEX idx_addresses_street ON addresses(street) WHERE street IS NOT NULL AND street != '';")
+    conn.execute("CREATE INDEX idx_highways_name_bbox ON physical_highways(name, min_x, max_x, min_y, max_y);")
     conn.commit()
 
     pas_df = pd.read_sql_query("SELECT DISTINCT postcode_area FROM addresses", conn)

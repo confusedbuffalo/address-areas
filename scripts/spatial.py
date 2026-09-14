@@ -317,7 +317,7 @@ def match_and_aggregate_physical_highway(
     cursor.execute("""
         SELECT osm_id, highway_type, surface, lit, maxspeed, lanes, sidewalk, etymology_wikidata, length_m, geom_wkt
         FROM physical_highways
-        WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+        WHERE name = ?
           AND max_x >= ? AND min_x <= ? AND max_y >= ? AND min_y <= ?
     """, (clean_name, b_min_x, b_max_x, b_min_y, b_max_y))
 

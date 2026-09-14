@@ -104,10 +104,9 @@ def extract_duplicates_from_db(db_path: str) -> dict[str, list[list[Any]]]:
     columns = [row[1] for row in cursor.fetchall()]
     has_feature_col = 'has_feature_tag' in columns
 
-    query = "SELECT postcode_area, postcode, city, suburb, suburb_type, street, street_type, popup_tags, osm_id, osm_name"
+    query = "SELECT postcode_area, postcode, city, suburb, suburb_type, street, street_type, popup_tags, osm_id, osm_name FROM addresses WHERE postcode_area IS NOT NULL AND postcode_area != 'No postcode'"
     if has_feature_col:
-        query += ", has_feature_tag"
-    query += " FROM addresses"
+        query += " AND has_feature_tag = 0"
 
     cursor.execute(query)
 
@@ -115,12 +114,7 @@ def extract_duplicates_from_db(db_path: str) -> dict[str, list[list[Any]]]:
     candidate_buckets: dict[tuple, list[dict[str, Any]]] = {}
 
     for row in cursor:
-        if has_feature_col:
-            pa, db_pc, db_city, db_suburb, db_suburb_type, db_street, db_street_type, popup_tags_json, osm_id, osm_name, feature_flag = row
-            if feature_flag == 1:
-                continue
-        else:
-            pa, db_pc, db_city, db_suburb, db_suburb_type, db_street, db_street_type, popup_tags_json, osm_id, osm_name = row
+        pa, db_pc, db_city, db_suburb, db_suburb_type, db_street, db_street_type, popup_tags_json, osm_id, osm_name = row
 
         tags: dict[str, str] = {}
         if popup_tags_json:

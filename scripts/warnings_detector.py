@@ -338,9 +338,9 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
             SELECT postcode_area, street, GROUP_CONCAT(osm_id, ','), MIN(x_proj), MAX(x_proj), MIN(y_proj), MAX(y_proj)
             FROM addresses
             WHERE street IS NOT NULL AND TRIM(street) != ''
-              AND LOWER(TRIM(street)) NOT IN ('no street', 'missing', 'unknown')
+              AND street NOT IN ('No street', 'no street', 'missing', 'unknown')
               AND (street_type IS NULL OR street_type != 'place')
-            GROUP BY postcode_area, LOWER(TRIM(street))
+            GROUP BY postcode_area, street
         """)
 
         missing_road_rows = cursor.fetchall()
@@ -358,14 +358,15 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
             b_max_y = max_y + 250.0
 
             cursor.execute("""
-                SELECT COUNT(*) FROM physical_highways
-                WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))
+                SELECT 1 FROM physical_highways
+                WHERE name = ?
                   AND max_x >= ? AND min_x <= ? AND max_y >= ? AND min_y <= ?
+                LIMIT 1
             """, (street_val, b_min_x, b_max_x, b_min_y, b_max_y))
 
-            match_count = cursor.fetchone()[0]
+            has_match = cursor.fetchone() is not None
 
-            if match_count == 0:
+            if not has_match:
                 raw_ids = [s.strip() for s in str(concat_osm_ids or '').split(',') if s.strip()]
                 unique_ids = list(dict.fromkeys(raw_ids))
                 ids_str = ",".join(unique_ids)
