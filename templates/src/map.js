@@ -29,9 +29,9 @@ export function updateStreetGeomHighlight(attrKey = null, pctMap = null) {
 
     const TAG_COLOUR_MAP = {
         lit: { 'yes': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' },
-        sidewalk: { 'both': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' }
+        sidewalk: { 'both': '#10b981', 'no': '#1e293b', 'separate': '#84cc16', 'left': '#8b5cf6', 'right': '#ec4899', 'unknown': '#f43f5e' }
     };
-    const DEFAULT_SEGMENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#14b8a6', '#ec4899', '#94a3b8'];
+    const DEFAULT_SEGMENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#84cc16', '#ec4899', '#94a3b8'];
 
     const matchCases = ['match', ['get', attrKey]];
     entries.forEach(([val], idx) => {
@@ -583,9 +583,9 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
 
         const TAG_COLOUR_MAP = {
             lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' },
-            sidewalk: { 'both': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' }
+            sidewalk: { 'both': 'bg-emerald-500', 'no': 'bg-slate-800', 'separate': 'bg-lime-500', 'left': 'bg-purple-500', 'right': 'bg-pink-500', 'unknown': 'bg-rose-400' }
         };
-        const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-teal-500', 'bg-pink-500', 'bg-slate-400'];
+        const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-lime-500', 'bg-pink-500', 'bg-slate-400'];
 
         const segments = [];
         const legendParts = [];
