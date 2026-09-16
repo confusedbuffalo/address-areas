@@ -231,7 +231,7 @@ export function parseSearchItem(rawItem, prefix = []) {
             let level = 'postcode_area';
             if (parts.length === 2) level = 'city';
             else if (parts.length === 3) level = 'suburb';
-            else if (parts.length === 4) level = 'street';
+            else if (parts.length === 4) level = 'street_area';
             const name = rawItem[1] || '';
             return {
                 id: id,
@@ -252,7 +252,7 @@ export function parseSearchItem(rawItem, prefix = []) {
         } else if (parts.length === 3) {
             level = 'suburb';
         } else if (parts.length === 4) {
-            level = 'street';
+            level = 'street_area';
         }
 
         const count = rawItem[1];
@@ -356,7 +356,7 @@ export async function executeSearch() {
     const prefixNeedle = `${state.currentLevel}_`;
 
     const matches = [];
-    const levelOrder = { 'city': 1, 'postcode_area': 2, 'suburb': 3, 'street': 4 };
+    const levelOrder = { 'city': 1, 'postcode_area': 2, 'suburb': 3, 'street_area': 4 };
 
     for (let i = 0; i < combinedIndex.length; i++) {
         const item = combinedIndex[i];
@@ -561,6 +561,7 @@ export function initSidebar() {
 
     const settingsHeader = document.getElementById('settings-header');
     const envelopeToggle = document.getElementById('setting-envelopes-toggle');
+    const imperialToggle = document.getElementById('setting-imperial-toggle');
 
     if (settingsHeader) {
         settingsHeader.onclick = () => {
@@ -574,6 +575,17 @@ export function initSidebar() {
             state.showEnvelope = e.target.checked;
             localStorage.setItem('showEnvelope', e.target.checked ? 'true' : 'false');
             updateEnvelopeCard();
+        };
+    }
+
+    if (imperialToggle) {
+        imperialToggle.checked = state.useImperial;
+        imperialToggle.onchange = (e) => {
+            state.useImperial = e.target.checked;
+            localStorage.setItem('useImperial', e.target.checked ? 'true' : 'false');
+            if (state.activeStreetInfo && typeof window !== 'undefined' && window.renderStreetInfoCardRef) {
+                window.renderStreetInfoCardRef(state.activeStreetInfo, state.activeStreetName);
+            }
         };
     }
 
@@ -728,7 +740,7 @@ export function getSidebarLevelName(featuresListOrId) {
         case 'postcode_area': return 'Postcode Areas';
         case 'city': return 'Cities';
         case 'suburb': return 'Suburbs';
-        case 'street': return 'Streets';
+        case 'street_area': return 'Streets';
         case 'points': return 'Address Points';
         default: return 'Sub-levels';
     }

@@ -81,9 +81,15 @@ def compile_single_layer_pmtiles(cfg: dict[str, Any], geojson_path: str, timesta
         "--no-feature-limit",
         "--read-parallel",
         "--no-tile-stats",
-        "--progress-interval=30",
-        geojson_path
+        "--progress-interval=30"
     ]
+
+    if lvl == "street_geom":
+        cmd.extend([
+            "--no-line-simplification"
+        ])
+
+    cmd.append(geojson_path)
 
     try:
         logging.info(f"Compiling {lvl} layer into PMTiles file {pmtiles_filename}...")
@@ -181,6 +187,27 @@ def process() -> None:
         )
     """)
 
+    conn.execute("""
+        CREATE TABLE physical_highways (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            osm_id TEXT,
+            name TEXT,
+            highway_type TEXT,
+            surface TEXT,
+            lit TEXT,
+            maxspeed TEXT,
+            lanes TEXT,
+            sidewalk TEXT,
+            etymology_wikidata TEXT,
+            length_m REAL,
+            geom_wkt TEXT,
+            min_x REAL,
+            max_x REAL,
+            min_y REAL,
+            max_y REAL
+        )
+    """)
+
     key_filter = osmium.filter.KeyFilter(*CONSIDERED_TAGS)
 
     logging.info(f"Scanning relations in {active_pbf_file}...")
@@ -208,6 +235,8 @@ def process() -> None:
     logging.info("Creating SQLite indices...")
     conn.execute("CREATE INDEX idx_postcode_area ON addresses(postcode_area);")
     conn.execute("CREATE INDEX idx_xy ON addresses(x_proj, y_proj);")
+    conn.execute("CREATE INDEX idx_addresses_street ON addresses(street) WHERE street IS NOT NULL AND street != '';")
+    conn.execute("CREATE INDEX idx_highways_name_bbox ON physical_highways(name, min_x, max_x, min_y, max_y);")
     conn.commit()
 
     pas_df = pd.read_sql_query("SELECT DISTINCT postcode_area FROM addresses", conn)
@@ -313,11 +342,12 @@ def process() -> None:
     root_search_index = []
 
     points_files = []
+    street_geom_files = []
     hulls_files_by_level: dict[str, list[str]] = {
         'postcode_area': [],
         'city': [],
         'suburb': [],
-        'street': []
+        'street_area': []
     }
 
     # Accumulators for No Postcode results across letter keys and chunks
@@ -357,7 +387,10 @@ def process() -> None:
                     if isinstance(hulls_paths, dict):
                         for lvl, hp in hulls_paths.items():
                             if os.path.exists(hp):
-                                hulls_files_by_level[lvl].append(hp)
+                                if lvl == 'street_geom':
+                                    street_geom_files.append(hp)
+                                else:
+                                    hulls_files_by_level[lvl].append(hp)
                 else:
                     city_items, search_items, points_path, hulls_paths, letter_key, letter_suburbs_dict, sector_points_dict = future.result()
 
@@ -384,7 +417,10 @@ def process() -> None:
                     if isinstance(hulls_paths, dict):
                         for lvl, hp in hulls_paths.items():
                             if os.path.exists(hp):
-                                hulls_files_by_level[lvl].append(hp)
+                                if lvl == 'street_geom':
+                                    street_geom_files.append(hp)
+                                else:
+                                    hulls_files_by_level[lvl].append(hp)
             except Exception as exc:
                 logging.error(f"Task {task_type}:{task_label} generated an exception: {exc}")
                 raise exc
@@ -473,7 +509,8 @@ def process() -> None:
         'postcode_area': os.path.join(OUTPUT_DIR, "postcode_area.geojson"),
         'city': os.path.join(OUTPUT_DIR, "city.geojson"),
         'suburb': os.path.join(OUTPUT_DIR, "suburb.geojson"),
-        'street': os.path.join(OUTPUT_DIR, "street.geojson"),
+        'street_area': os.path.join(OUTPUT_DIR, "street.geojson"),
+        'street_geom': os.path.join(OUTPUT_DIR, "street_geom.geojson"),
         'points': os.path.join(OUTPUT_DIR, "points.geojson")
     }
 
@@ -534,8 +571,16 @@ def process() -> None:
                     shutil.copyfileobj(f_in, f_out, 1024*1024)
                 os.remove(pf)
 
+    logging.info("Combining street_geom GeoJSON files...")
+    with open(geojson_level_paths['street_geom'], "w", encoding="utf-8") as f_out:
+        for sgf in street_geom_files:
+            if os.path.exists(sgf):
+                with open(sgf, "r", encoding="utf-8") as f_in:
+                    shutil.copyfileobj(f_in, f_out, 1024*1024)
+                os.remove(sgf)
+
     logging.info("Splitting and combining hull GeoJSON files by level...")
-    for lvl in ('postcode_area', 'city', 'suburb', 'street'):
+    for lvl in ('postcode_area', 'city', 'suburb', 'street_area'):
         target_path = geojson_level_paths[lvl]
         with open(target_path, "w", encoding="utf-8") as f_out:
             for hf in hulls_files_by_level.get(lvl, []):
@@ -559,7 +604,8 @@ def process() -> None:
         {"level": "postcode_area", "min_zoom": 0, "max_zoom": 14},
         {"level": "city", "min_zoom": 5, "max_zoom": 15},
         {"level": "suburb", "min_zoom": 5, "max_zoom": 15},
-        {"level": "street", "min_zoom": 9, "max_zoom": 16},
+        {"level": "street_area", "min_zoom": 9, "max_zoom": 16},
+        {"level": "street_geom", "min_zoom": 9, "max_zoom": 16},
     ]
 
     max_tp_workers = 5

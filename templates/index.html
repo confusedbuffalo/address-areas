@@ -123,6 +123,16 @@
                                 <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
+                        <div class="flex items-center justify-between gap-3 border-t border-gray-100 pt-3">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-gray-800">Use imperial units</span>
+                                <span class="text-[11px] text-gray-500 leading-tight">Show long distances in miles instead of kilometres</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input id="setting-imperial-toggle" type="checkbox" class="sr-only peer">
+                                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -170,6 +180,10 @@
                     <div id="envelope-address" class="pt-16 pb-2 text-sm font-medium text-slate-900 leading-normal space-y-1">
                         <!-- Populated dynamically -->
                     </div>
+                </div>
+                <!-- Street Info Card Overlay (positioned same as Envelope card) -->
+                <div id="street-info-card" class="hidden absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-4 sm:right-4 sm:left-auto z-20 w-full sm:w-80 h-auto max-h-[40vh] sm:max-h-[85vh] overflow-y-auto bg-white rounded-t-xl sm:rounded-lg shadow-xl border border-gray-200 font-sans pointer-events-auto text-slate-800 transition-all duration-200 select-text">
+                    <!-- Populated dynamically -->
                 </div>
             </div>
         </div>

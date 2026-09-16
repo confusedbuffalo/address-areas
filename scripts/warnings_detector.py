@@ -250,7 +250,8 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
         'unusual_street',
         'unusual_housenumber',
         'unusual_housename',
-        'unusual_address_tag'
+        'unusual_address_tag',
+        'missing_physical_road'
     ]
 
     query = "SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name, unusual_addr_tags FROM addresses"
@@ -323,6 +324,59 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
                     str(val),
                     reason,
                     str(osm_id)
+                ])
+
+    # Check if x_proj exists in addresses table and physical_highways table exists
+    cursor.execute("PRAGMA table_info(addresses)")
+    add_cols = [r[1] for r in cursor.fetchall()]
+
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='physical_highways'")
+    has_highways_table = bool(cursor.fetchone())
+
+    if 'x_proj' in add_cols and has_highways_table:
+        cursor.execute("""
+            SELECT postcode_area, street, GROUP_CONCAT(osm_id, ','), MIN(x_proj), MAX(x_proj), MIN(y_proj), MAX(y_proj)
+            FROM addresses
+            WHERE street IS NOT NULL AND TRIM(street) != ''
+              AND street NOT IN ('No street', 'no street', 'missing', 'unknown')
+              AND (street_type IS NULL OR street_type != 'place')
+            GROUP BY postcode_area, street
+        """)
+
+        missing_road_rows = cursor.fetchall()
+
+        for row in missing_road_rows:
+            pa, street_val, concat_osm_ids, min_x, max_x, min_y, max_y = row
+            pa_key = pa if pa else 'No postcode'
+
+            if min_x is None or max_x is None or min_y is None or max_y is None:
+                continue
+
+            b_min_x = min_x - 250.0
+            b_min_y = min_y - 250.0
+            b_max_x = max_x + 250.0
+            b_max_y = max_y + 250.0
+
+            cursor.execute("""
+                SELECT 1 FROM physical_highways
+                WHERE name = ?
+                  AND max_x >= ? AND min_x <= ? AND max_y >= ? AND min_y <= ?
+                LIMIT 1
+            """, (street_val, b_min_x, b_max_x, b_min_y, b_max_y))
+
+            has_match = cursor.fetchone() is not None
+
+            if not has_match:
+                raw_ids = [s.strip() for s in str(concat_osm_ids or '').split(',') if s.strip()]
+                unique_ids = list(dict.fromkeys(raw_ids))
+                ids_str = ",".join(unique_ids)
+
+                if pa_key not in warnings_by_pa:
+                    warnings_by_pa[pa_key] = {cat: [] for cat in categories}
+                warnings_by_pa[pa_key]['missing_physical_road'].append([
+                    str(street_val),
+                    "No physical highway with matching name within 250m",
+                    ids_str
                 ])
 
     conn.close()

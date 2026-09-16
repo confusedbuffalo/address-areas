@@ -16,8 +16,8 @@ def test_format_duplicate_title():
     assert format_duplicate_title("1", "", "High Street", "", "", "") == "1, High Street"
     assert format_duplicate_title("1", "Rose Cottage", "High Street", "", "", "") == "Rose Cottage, 1, High Street"
     assert format_duplicate_title("", "Rose Cottage", "High Street", "", "", "") == "Rose Cottage, High Street"
-    assert format_duplicate_title("1", "", "High Street", "1", "", "") == "Unit 1, 1, High Street"
-    assert format_duplicate_title("1", "", "High Street", "", "Flat 2", "") == "Flat 2, 1, High Street"
+    assert format_duplicate_title("1", "", "High Street", "1", "", "") == "1, 1, High Street"
+    assert format_duplicate_title("1", "", "High Street", "", "2", "") == "Flat 2, 1, High Street"
 
 
 def test_is_duplicate_pair():

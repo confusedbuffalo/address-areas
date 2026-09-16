@@ -29,7 +29,7 @@ export function countAllDescendantsAndGetIds(geojsonFeature, featuresArray, fetc
     function collectStreets(arr) {
         arr.forEach(f => {
             const props = getFeatureProperties(f);
-            if (props.level === 'street') {
+            if (props.level === 'street_area') {
                 streetObjs.push(props);
             } else if (props.suburbs) {
                 collectStreets(props.suburbs);

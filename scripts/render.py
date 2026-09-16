@@ -74,7 +74,7 @@ def build_tailwind() -> None:
         logging.error("npx not found. Please ensure Node.js and npm are installed.")
 
 
-LAYERS: list[str] = ['postcode_area', 'city', 'suburb', 'street', 'points']
+LAYERS: list[str] = ['postcode_area', 'city', 'suburb', 'street_area', 'points', 'street_geom']
 
 
 def get_pmtiles_filename_for_layer(layer: str) -> str:

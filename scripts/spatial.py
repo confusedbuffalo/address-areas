@@ -12,6 +12,8 @@ from shapely.ops import transform
 
 from config import (
     OUTPUT_DIR,
+    PATH_TYPES,
+    ROAD_ONLY_TAGS,
     TRANSFORMER_TO_4326,
     assign_colours,
     extract_postcode_sector,
@@ -286,6 +288,144 @@ def create_spatial_chunks(df_summary: pd.DataFrame, max_chunk_size: int = 40000,
     return chunks
 
 
+def match_and_aggregate_physical_highway(
+    conn: Optional[sqlite3.Connection],
+    street_name: str,
+    address_bounds: tuple[float, float, float, float],
+    child_id: str
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Matches address street to physical highways in SQLite, aggregates attributes, and generates map line features.
+
+    Returns:
+        tuple: (street_info, line_features)
+    """
+    if not conn or not street_name or street_name.strip().lower() in ('no street', 'missing', 'unknown', ''):
+        return {"has_physical_road": False}, []
+
+    clean_name = street_name.strip()
+    min_x, min_y, max_x, max_y = address_bounds
+    b_min_x = min_x - 250.0
+    b_min_y = min_y - 250.0
+    b_max_x = max_x + 250.0
+    b_max_y = max_y + 250.0
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='physical_highways'")
+    if not cursor.fetchone():
+        return {"has_physical_road": False}, []
+
+    cursor.execute("""
+        SELECT osm_id, highway_type, surface, lit, maxspeed, lanes, sidewalk, etymology_wikidata, length_m, geom_wkt
+        FROM physical_highways
+        WHERE name = ?
+          AND max_x >= ? AND min_x <= ? AND max_y >= ? AND min_y <= ?
+    """, (clean_name, b_min_x, b_max_x, b_min_y, b_max_y))
+
+    rows = cursor.fetchall()
+
+    if not rows:
+        return {"has_physical_road": False}, []
+
+    total_length = sum(r[8] for r in rows)
+    total_road_length = sum(r[8] for r in rows if r[1] not in PATH_TYPES)
+    if total_length <= 0:
+        total_length = 1.0
+
+    tag_indices = {
+        'highway': 1,
+        'surface': 2,
+        'lit': 3,
+        'maxspeed': 4,
+        'lanes': 5,
+        'sidewalk': 6
+    }
+
+    aggregated_tags: dict[str, dict[str, float]] = {}
+
+    for tag_name, idx in tag_indices.items():
+        length_map: dict[str, float] = {}
+        for row in rows:
+            # Skip length calculation for tags that make no sense on paths
+            if tag_name in ROAD_ONLY_TAGS and row[1] in PATH_TYPES:
+                continue
+
+            val = str(row[idx] or '').strip()
+            if not val:
+                val = 'unknown'
+            length_map[val] = length_map.get(val, 0.0) + row[8]
+
+        pct_map = {}
+        for val, l_sum in length_map.items():
+            if tag_name in ROAD_ONLY_TAGS:
+                pct = round((l_sum / total_road_length) * 100.0, 1)
+            else:
+                pct = round((l_sum / total_length) * 100.0, 1)
+            if pct > 0:
+                pct_map[val] = pct
+        aggregated_tags[tag_name] = pct_map
+
+    wikidata_id = ""
+    for row in rows:
+        w_id = str(row[7] or '').strip()
+        if w_id:
+            wikidata_id = w_id
+            break
+
+    segment_ids = []
+    seen_segments = set()
+    for row in rows:
+        s_id = str(row[0] or '').strip()
+        if s_id and s_id not in seen_segments:
+            seen_segments.add(s_id)
+            segment_ids.append(s_id)
+
+    street_info = {
+        "has_physical_road": True,
+        "total_length_m": round(total_length, 1),
+        "highway": aggregated_tags['highway'],
+        "surface": aggregated_tags['surface'],
+        "lit": aggregated_tags['lit'],
+        "maxspeed": aggregated_tags.get('maxspeed'),
+        "lanes": aggregated_tags.get('lanes'),
+        "sidewalk": aggregated_tags.get('sidewalk'),
+        "wikidata": wikidata_id,
+        "segments": segment_ids
+    }
+
+    line_features: list[dict[str, Any]] = []
+    for row in rows:
+        osm_id_val, h_type, surface_val, lit_val, maxspeed_val, lanes_val, sidewalk_val, _, _, wkt_str = row
+        if wkt_str and wkt_str.startswith("LINESTRING (") and wkt_str.endswith(")"):
+            coord_pairs_str = wkt_str[12:-1].split(", ")
+            coords = []
+            for pair in coord_pairs_str:
+                parts = pair.split()
+                if len(parts) == 2:
+                    coords.append([round(float(parts[0]), 5), round(float(parts[1]), 5)])
+            if len(coords) >= 2:
+                line_features.append({
+                    "type": "Feature",
+                    "properties": {
+                        "child_id": child_id,
+                        "name": clean_name,
+                        "osm_id": osm_id_val,
+                        "highway": h_type,
+                        "surface": surface_val,
+                        "lit": lit_val,
+                        "maxspeed": maxspeed_val,
+                        "lanes": lanes_val,
+                        "sidewalk": sidewalk_val,
+                        "level": "street_geom"
+                    },
+                    "geometry": {
+                        "type": "LineString",
+                        "coordinates": [[round(float(p[0]), 7), round(float(p[1]), 7)] for p in coords]
+                    }
+                })
+
+    return street_info, line_features
+
+
 def process_hierarchy(
     data_proj: gpd.GeoDataFrame,
     group_col: str,
@@ -297,7 +437,9 @@ def process_hierarchy(
     root_search_acc: Optional[list[list[Any]]] = None,
     pa_search_acc: Optional[list[list[Any]]] = None,
     sector_points_acc: Optional[dict[str, dict[str, list[list[Any]]]]] = None,
-    pa_label: str = ""
+    pa_label: str = "",
+    db_conn: Optional[sqlite3.Connection] = None,
+    all_street_geoms_acc: Optional[list[dict[str, Any]]] = None
 ) -> list[dict[str, Any]]:
     """Recursive concave hull generation with buffer and Voronoi overlap clipping in EPSG:27700.
 
@@ -330,7 +472,7 @@ def process_hierarchy(
     if sector_points_acc is None:
         sector_points_acc = {}
 
-    if group_col == 'street':
+    if group_col == 'street_area':
         groups = data_proj.groupby('street_key')
     elif group_col == 'suburb':
         groups = data_proj.groupby('suburb_key')
@@ -340,7 +482,7 @@ def process_hierarchy(
     features_for_json: list[dict[str, Any]] = []
 
     for label_key, group_data_proj in groups:
-        if group_col in ('street', 'suburb'):
+        if group_col in ('street_area', 'suburb'):
             label = label_key.split(':', 1)[1] if ':' in label_key else label_key
         else:
             label = label_key
@@ -354,7 +496,7 @@ def process_hierarchy(
             buffer_dist = 750.0
         if group_col == 'suburb':
             buffer_dist = 500.0
-        if group_col == 'street':
+        if group_col == 'street_area':
             buffer_dist = 25.0
 
         buffered_hull = hull.buffer(buffer_dist)
@@ -403,8 +545,8 @@ def process_hierarchy(
         if next_col and next_col != 'points':
             next_map = {
                 'city': 'suburb',
-                'suburb': 'street',
-                'street': 'points',
+                'suburb': 'street_area',
+                'street_area': 'points',
                 'points': None
             }
             child_id = get_clean_id(filename, label_key)
@@ -419,7 +561,9 @@ def process_hierarchy(
                 root_search_acc=root_search_acc,
                 pa_search_acc=pa_search_acc,
                 sector_points_acc=sector_points_acc,
-                pa_label=pa_label
+                pa_label=pa_label,
+                db_conn=db_conn,
+                all_street_geoms_acc=all_street_geoms_acc
             )
         elif next_col == 'points':
             child_id = get_clean_id(filename, label_key)
@@ -512,7 +656,7 @@ def process_hierarchy(
                 })
 
         display_name: str = str(label)
-        if group_col == 'street':
+        if group_col == 'street_area':
             display_name = f"{label}\n{addr_perc}%"
 
         bbox: list[float] = list(final_hull_4326.bounds)
@@ -530,8 +674,22 @@ def process_hierarchy(
 
         if child_res is not None and group_col != 'postcode_area':
             item_tuple.append(child_res)
-        elif group_col == 'street':
+        elif group_col == 'street_area':
             item_tuple.append(sorted(list(street_sector_ids)))
+            is_place = str(label_key).startswith('place:')
+            if db_conn is not None and not is_place:
+                addr_bounds = (
+                    float(group_data_proj['x_proj'].min()),
+                    float(group_data_proj['y_proj'].min()),
+                    float(group_data_proj['x_proj'].max()),
+                    float(group_data_proj['y_proj'].max())
+                )
+                s_info, s_lines = match_and_aggregate_physical_highway(
+                    db_conn, str(label), addr_bounds, child_id
+                )
+                item_tuple.append(s_info)
+                if s_lines and all_street_geoms_acc is not None:
+                    all_street_geoms_acc.extend(s_lines)
 
         features_for_json.append(item_tuple)
 

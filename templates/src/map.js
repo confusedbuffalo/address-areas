@@ -4,9 +4,49 @@
  */
 
 import { isPlaceholderExpr, state } from './config.js';
-import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeAddressLines } from './utils.js';
+import { getUrlParams, getFeaturesArray, isStreetId, decodeOsmId, buildEnvelopeAddressLines, getOsmUrl } from './utils.js';
+import { sendIdsToJosm } from './josm.js';
 
 const initialParams = getUrlParams();
+let activePinnedAttrRow = null;
+
+/**
+ * In-memory cache for fetched Wikidata etymology HTML results.
+ * @type {Map<string, string>}
+ */
+export const etymologyCache = new Map();
+
+export function updateStreetGeomHighlight(attrKey = null, pctMap = null) {
+    if (!map || !map.getLayer('street-geom-line')) return;
+
+    if (!attrKey || !pctMap) {
+        map.setPaintProperty('street-geom-line', 'line-color', '#2563eb');
+        return;
+    }
+
+    const entries = Object.entries(pctMap).filter(([_, v]) => v > 0);
+    entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
+
+    const TAG_COLOUR_MAP = {
+        lit: { 'yes': '#10b981', 'no': '#1e293b', 'unknown': '#f43f5e' },
+        sidewalk: { 'both': '#10b981', 'no': '#1e293b', 'separate': '#84cc16', 'left': '#8b5cf6', 'right': '#ec4899', 'unknown': '#f43f5e' }
+    };
+    const DEFAULT_SEGMENT_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#84cc16', '#ec4899', '#94a3b8'];
+
+    const matchCases = ['match', ['get', attrKey]];
+    entries.forEach(([val], idx) => {
+        let hexColor = TAG_COLOUR_MAP[attrKey]?.[val];
+        if (!hexColor) {
+            hexColor = val === 'unknown' ? '#f43f5e' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
+        }
+        matchCases.push(val, hexColor);
+    });
+
+    // Default color for empty / unset values: greyed out
+    matchCases.push('#94a3b8');
+
+    map.setPaintProperty('street-geom-line', 'line-color', matchCases);
+}
 
 // Register the PMTiles protocol
 if (typeof pmtiles !== 'undefined' && typeof maplibregl !== 'undefined') {
@@ -35,6 +75,59 @@ if (initialParams.lng !== null && initialParams.lat !== null) {
  * @type {maplibregl.Map}
  */
 export const map = (typeof maplibregl !== 'undefined') ? new maplibregl.Map(mapOptions) : null;
+
+if (map) {
+    map.on('load', () => {
+        if (typeof window !== 'undefined' && window.PMTILES_URLS && window.PMTILES_URLS['street_geom']) {
+            const sourceId = 'src-street_geom';
+            if (!map.getSource(sourceId)) {
+                map.addSource(sourceId, {
+                    type: 'vector',
+                    url: `pmtiles://${window.PMTILES_URLS['street_geom']}`
+                });
+            }
+            if (map.getSource(sourceId)) {
+                if (!map.getLayer('street-geom-inactive-line')) {
+                    map.addLayer({
+                        id: 'street-geom-inactive-line',
+                        type: 'line',
+                        source: sourceId,
+                        'source-layer': 'street_geom',
+                        minzoom: 17,
+                        layout: {
+                            'line-cap': 'round',
+                            'line-join': 'round',
+                            'visibility': 'none'
+                        },
+                        paint: {
+                            'line-color': '#94a3b8',
+                            'line-width': 4,
+                            'line-opacity': 0.45
+                        }
+                    });
+                }
+                if (!map.getLayer('street-geom-line')) {
+                    map.addLayer({
+                        id: 'street-geom-line',
+                        type: 'line',
+                        source: sourceId,
+                        'source-layer': 'street_geom',
+                        layout: {
+                            'line-cap': 'round',
+                            'line-join': 'round',
+                            'visibility': 'none'
+                        },
+                        paint: {
+                            'line-color': '#2563eb',
+                            'line-width': 4,
+                            'line-opacity': 0.85
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
 
 /**
  * Global Popup instance for map feature inspection.
@@ -101,7 +194,7 @@ export function getFeatureBounds(featureOrBbox) {
  * Updates MapLibre layer filter expressions and paint properties based on state.currentLevel and map zoom.
  */
 export function updateMapFilters() {
-    const hullLevels = ['postcode_area', 'city', 'suburb', 'street'];
+    const hullLevels = ['postcode_area', 'city', 'suburb', 'street_area'];
     const isStreet = isStreetId(state.currentLevel);
 
     let activeLevel = null;
@@ -112,7 +205,7 @@ export function updateMapFilters() {
             const depth = state.currentLevel.split('_').length;
             if (depth === 1) activeLevel = 'city';
             else if (depth === 2) activeLevel = 'suburb';
-            else if (depth === 3) activeLevel = 'street';
+            else if (depth === 3) activeLevel = 'street_area';
         }
     }
 
@@ -264,6 +357,49 @@ export function updateMapFilters() {
     } else {
         pointLayers.forEach(l => map.setLayoutProperty(l, 'visibility', 'none'));
     }
+
+    // --- Physical Street Line Highlight Layer ---
+    const isStreetLevel = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
+    const streetId = isStreetLevel ? state.currentLevel.split('_').slice(0, 4).join('_') : null;
+
+    if (map.getLayer('street-geom-line')) {
+        if (isStreetLevel && streetId) {
+            map.setLayoutProperty('street-geom-line', 'visibility', 'visible');
+            map.setFilter('street-geom-line', ['==', ['get', 'child_id'], streetId]);
+        } else {
+            map.setLayoutProperty('street-geom-line', 'visibility', 'none');
+        }
+    }
+
+    updateInactiveStreetFilter();
+}
+
+export function updateInactiveStreetFilter() {
+    if (!map || !map.getLayer('street-geom-inactive-line')) return;
+
+    const isStreetLevel = isStreetId(state.currentLevel) || (state.currentLevel && state.currentLevel.split('_').length === 4);
+    const streetId = isStreetLevel ? state.currentLevel.split('_').slice(0, 4).join('_') : null;
+    const currentZoom = map.getZoom();
+
+    if (isStreetLevel && streetId && currentZoom >= 17) {
+        map.setLayoutProperty('street-geom-inactive-line', 'visibility', 'visible');
+
+        const activeSegments = state.activeStreetInfo && Array.isArray(state.activeStreetInfo.segments)
+            ? state.activeStreetInfo.segments
+            : [];
+
+        if (activeSegments.length > 0) {
+            map.setFilter('street-geom-inactive-line', [
+                'all',
+                ['!=', ['get', 'child_id'], streetId],
+                ['!', ['in', ['get', 'osm_id'], ['literal', activeSegments]]]
+            ]);
+        } else {
+            map.setFilter('street-geom-inactive-line', ['!=', ['get', 'child_id'], streetId]);
+        }
+    } else {
+        map.setLayoutProperty('street-geom-inactive-line', 'visibility', 'none');
+    }
 }
 
 /**
@@ -337,6 +473,7 @@ export function updateEditButton() {
  */
 export function updateEnvelopeCard(popup_tags, osm_name) {
     const card = document.getElementById('envelope-card');
+    const streetCard = document.getElementById('street-info-card');
     const container = document.getElementById('envelope-address');
     if (!card || !container) return;
 
@@ -349,6 +486,9 @@ export function updateEnvelopeCard(popup_tags, osm_name) {
 
     if (!state.showEnvelope || !state.currentSelectedPoint) {
         card.classList.add('hidden');
+        if (state.activeStreetInfo && streetCard) {
+            streetCard.classList.remove('hidden');
+        }
         return;
     }
 
@@ -363,4 +503,347 @@ export function updateEnvelopeCard(popup_tags, osm_name) {
     }
 
     card.classList.remove('hidden');
+    if (streetCard) {
+        streetCard.classList.add('hidden');
+    }
+}
+
+/**
+ * Formats a street length in metres into human-readable metric or imperial representation.
+ *
+ * @param {number} lengthM - Distance in metres.
+ * @param {boolean} [useImperial=false] - True to convert distances >= 1000m to miles.
+ * @returns {string} Formatted length string.
+ */
+export function formatStreetLength(lengthM, useImperial = false) {
+    if (!lengthM || lengthM <= 0) return '';
+    if (lengthM < 1000) {
+        return `${Math.round(lengthM)} m`;
+    }
+    if (useImperial) {
+        const miles = lengthM / 1609.344;
+        return `${miles.toFixed(1)} mi`;
+    }
+    const km = lengthM / 1000;
+    return `${km.toFixed(1)} km`;
+}
+
+/**
+ * Renders or hides the collapsible Street Information card panel in the sidebar.
+ *
+ * @param {Object|null} streetInfo - Street attribute aggregation object.
+ * @param {string} [streetName=''] - Street display name string.
+ */
+export function renderStreetInfoCard(streetInfo, streetName = '') {
+    const container = document.getElementById('street-info-card');
+    if (!container) return;
+
+    if (!streetInfo || typeof streetInfo !== 'object' || streetInfo.has_physical_road === undefined) {
+        state.activeStreetInfo = null;
+        state.activeStreetName = '';
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        updateInactiveStreetFilter();
+        return;
+    }
+
+    state.activeStreetInfo = streetInfo;
+    state.activeStreetName = streetName;
+    updateInactiveStreetFilter();
+
+    container.classList.remove('hidden');
+
+    if (streetInfo.has_physical_road === false) {
+        container.innerHTML = `
+            <div class="p-3 bg-amber-50 text-amber-900 text-xs flex items-center gap-2 font-medium rounded-t-xl sm:rounded-lg">
+                <span class="text-amber-600 text-base">⚠️</span>
+                <span>No nearby physical road found in OpenStreetMap</span>
+            </div>
+        `;
+        return;
+    }
+
+    // Check if envelope card is currently showing
+    const envelopeCard = document.getElementById('envelope-card');
+    if (envelopeCard && !envelopeCard.classList.contains('hidden')) {
+        container.classList.add('hidden');
+        return;
+    }
+
+    const cleanStreetName = (streetName || '').split(/\r?\n/)[0].trim() || 'Street Info';
+    const totalLen = formatStreetLength(streetInfo.total_length_m, state.useImperial);
+
+    const buildBar = (attrKey, label, pctMap) => {
+        if (!pctMap || typeof pctMap !== 'object') return '';
+        const entries = Object.entries(pctMap).filter(([_, v]) => v > 0);
+        if (entries.length === 0) return '';
+
+        // Unknown values should always show last
+        entries.sort(([a], [b]) => (a === "unknown") - (b === "unknown"));
+
+        const TAG_COLOUR_MAP = {
+            lit: { 'yes': 'bg-emerald-500', 'no': 'bg-slate-800', 'unknown': 'bg-rose-400' },
+            sidewalk: { 'both': 'bg-emerald-500', 'no': 'bg-slate-800', 'separate': 'bg-lime-500', 'left': 'bg-purple-500', 'right': 'bg-pink-500', 'unknown': 'bg-rose-400' }
+        };
+        const DEFAULT_SEGMENT_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500', 'bg-lime-500', 'bg-pink-500', 'bg-slate-400'];
+
+        const segments = [];
+        const legendParts = [];
+
+        entries.forEach(([val, pct], idx) => {
+            let colorClass = TAG_COLOUR_MAP[attrKey]?.[val];
+            if (!colorClass) {
+                colorClass = val === 'unknown' ? 'bg-rose-400' : DEFAULT_SEGMENT_COLORS[idx % DEFAULT_SEGMENT_COLORS.length];
+            }
+
+            let displayVal = val;
+            if (attrKey === 'lit') {
+                if (val === 'yes') displayVal = 'lit';
+                else if (val === 'no') displayVal = 'unlit';
+            }
+
+            segments.push(`<div class="${colorClass} h-2" style="width: ${pct}%;" title="${displayVal}: ${pct}%"></div>`);
+            legendParts.push(`<span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${colorClass} inline-block shrink-0"></span>${displayVal} (${pct}%)</span>`);
+        });
+
+        return `
+            <div class="street-info-row flex flex-col gap-1 text-[11px] cursor-pointer p-1.5 rounded transition-colors hover:bg-gray-100 select-none" data-attr="${attrKey}">
+                <div class="flex justify-between items-center text-gray-700 font-medium">
+                    <span class="font-bold text-slate-700">${label}</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden flex shadow-inner">
+                    ${segments.join('')}
+                </div>
+                <div class="flex flex-wrap gap-x-2 gap-y-0.5 text-[10px] text-gray-600">
+                    ${legendParts.join(' ')}
+                </div>
+            </div>
+        `;
+    };
+
+    activePinnedAttrRow = null;
+    updateStreetGeomHighlight(null, null);
+
+    const highwayBar = buildBar('highway', 'Highway Type', streetInfo.highway);
+    const surfaceBar = buildBar('surface', 'Surface', streetInfo.surface);
+    const litBar = buildBar('lit', 'Lighting', streetInfo.lit);
+    const maxspeedBar = buildBar('maxspeed', 'Speed Limit', streetInfo.maxspeed);
+    const lanesBar = buildBar('lanes', 'Lanes', streetInfo.lanes);
+    const sidewalkBar = buildBar('sidewalk', 'Pavement', streetInfo.sidewalk);
+
+    let etymologyCardHtml = '';
+    if (!streetInfo.wikidata) {
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+                <div class="text-xs text-slate-500 italic mt-0.5">Unknown etymology</div>
+            </div>
+        `;
+    } else if (etymologyCache.has(streetInfo.wikidata)) {
+        const cachedContent = etymologyCache.get(streetInfo.wikidata);
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" data-wikidata-id="${streetInfo.wikidata}" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                ${cachedContent}
+            </div>
+        `;
+    } else {
+        etymologyCardHtml = `
+            <div id="wikidata-etymology-card" data-wikidata-id="${streetInfo.wikidata}" class="border-t border-gray-200 pt-2.5 flex flex-col gap-1">
+                <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+                <div class="flex items-start gap-2.5 mt-1 bg-slate-50 p-2 rounded border border-slate-200 animate-pulse">
+                    <div class="w-12 h-12 bg-slate-200 rounded shrink-0"></div>
+                    <div class="flex flex-col gap-1.5 min-w-0 flex-1 py-1">
+                        <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+                        <div class="h-2.5 bg-slate-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    let segmentsSectionHtml = '';
+    if (Array.isArray(streetInfo.segments) && streetInfo.segments.length > 0) {
+        const linksHtml = streetInfo.segments.map(sId => {
+            const url = getOsmUrl(sId);
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="bg-slate-100 hover:bg-blue-50 text-blue-600 hover:text-blue-800 font-mono text-[11px] px-2 py-0.5 rounded border border-slate-200 transition-colors">${sId}</a>`;
+        }).join('');
+
+        segmentsSectionHtml = `
+            <details class="border-t border-gray-200 pt-2.5 text-xs text-slate-700 group">
+                <summary class="flex items-center justify-between font-bold cursor-pointer select-none py-1 text-[11px] uppercase tracking-wider text-gray-500 hover:text-gray-800 transition-colors">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="h-3.5 w-3.5 text-gray-400 transition-transform duration-200 group-open:rotate-90 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span>Segments (${streetInfo.segments.length})</span>
+                    </span>
+                    <button type="button" class="segment-edit-all-btn bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded transition shadow-xs cursor-pointer lowercase" title="Load segments in JOSM">
+                        Edit all
+                    </button>
+                </summary>
+                <div class="flex flex-wrap gap-1.5 pt-2 pb-1">
+                    ${linksHtml}
+                </div>
+            </details>
+        `;
+    }
+
+    let html = `
+        <div class="p-4 flex flex-col gap-3 text-xs text-gray-800">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                <span class="font-bold text-slate-900 text-sm">${cleanStreetName}</span>
+                ${totalLen ? `<span class="font-semibold text-slate-500 text-xs">${totalLen}</span>` : ''}
+            </div>
+            <div class="flex flex-col gap-2.5">
+                ${highwayBar}
+                ${surfaceBar}
+                ${litBar}
+                ${maxspeedBar}
+                ${lanesBar}
+                ${sidewalkBar}
+            </div>
+            ${etymologyCardHtml}
+            ${segmentsSectionHtml}
+        </div>
+    `;
+
+    container.innerHTML = html;
+
+    const segmentEditBtn = container.querySelector('.segment-edit-all-btn');
+    if (segmentEditBtn && streetInfo.segments) {
+        segmentEditBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            sendIdsToJosm(streetInfo.segments);
+        });
+    }
+
+    const rowEls = container.querySelectorAll('.street-info-row');
+    rowEls.forEach(rowEl => {
+        const attrKey = rowEl.dataset.attr;
+        const pctMap = streetInfo[attrKey];
+        if (!pctMap) return;
+
+        rowEl.addEventListener('mouseenter', () => {
+            updateStreetGeomHighlight(attrKey, pctMap);
+        });
+
+        rowEl.addEventListener('mouseleave', () => {
+            if (activePinnedAttrRow) {
+                const pinnedAttr = activePinnedAttrRow.dataset.attr;
+                const pinnedMap = streetInfo[pinnedAttr];
+                updateStreetGeomHighlight(pinnedAttr, pinnedMap);
+            } else {
+                updateStreetGeomHighlight(null, null);
+            }
+        });
+
+        rowEl.addEventListener('click', () => {
+            if (activePinnedAttrRow === rowEl) {
+                activePinnedAttrRow.classList.remove('bg-blue-50', 'ring-1', 'ring-blue-400');
+                activePinnedAttrRow = null;
+                updateStreetGeomHighlight(null, null);
+            } else {
+                if (activePinnedAttrRow) {
+                    activePinnedAttrRow.classList.remove('bg-blue-50', 'ring-1', 'ring-blue-400');
+                }
+                activePinnedAttrRow = rowEl;
+                activePinnedAttrRow.classList.add('bg-blue-50', 'ring-1', 'ring-blue-400');
+                updateStreetGeomHighlight(attrKey, pctMap);
+            }
+        });
+    });
+
+    if (streetInfo.wikidata && !etymologyCache.has(streetInfo.wikidata)) {
+        fetchWikidataEtymology(streetInfo.wikidata);
+    }
+}
+
+/**
+ * Fetches Wikidata etymology details asynchronously via the Wikidata REST API.
+ *
+ * @param {string} wikidataId - Wikidata Q-identifier string (e.g. 'Q1234').
+ */
+if (typeof window !== 'undefined') {
+    window.renderStreetInfoCardRef = renderStreetInfoCard;
+}
+
+export async function fetchWikidataEtymology(wikidataId) {
+    const etymCard = document.getElementById('wikidata-etymology-card');
+    if (!etymCard || !wikidataId) return;
+
+    if (etymologyCache.has(wikidataId)) {
+        const cachedHtml = etymologyCache.get(wikidataId);
+        etymCard.classList.remove('hidden');
+        etymCard.innerHTML = cachedHtml;
+        return;
+    }
+
+    try {
+        const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${wikidataId}&format=json&props=labels|descriptions|claims&languages=en&origin=*`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        const entity = data?.entities?.[wikidataId];
+        if (!entity) throw new Error('Entity not found');
+
+        const label = entity.labels?.en?.value || wikidataId;
+        const description = entity.descriptions?.en?.value || '';
+
+        let imgUrl = '';
+        if (entity.claims?.P18?.[0]?.mainsnak?.datavalue?.value) {
+            const fileName = entity.claims.P18[0].mainsnak.datavalue.value;
+            try {
+                const commonsUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=File:${encodeURIComponent(fileName)}&prop=imageinfo&iiprop=url&iiurlwidth=120&format=json&origin=*`;
+                const cRes = await fetch(commonsUrl);
+                if (cRes.ok) {
+                    const cData = await cRes.json();
+                    const pages = cData?.query?.pages;
+                    if (pages) {
+                        const pageObj = Object.values(pages)[0];
+                        if (pageObj?.imageinfo?.[0]?.thumburl) {
+                            imgUrl = pageObj.imageinfo[0].thumburl;
+                        }
+                    }
+                }
+            } catch (cErr) {
+                console.warn(`Failed loading Commons thumbnail for ${fileName}:`, cErr);
+            }
+        }
+
+        const html = `
+            <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+            <div class="flex items-start gap-2.5 mt-1 bg-slate-50 p-2 rounded border border-slate-200">
+                ${imgUrl ? `<img src="${imgUrl}" alt="${label}" class="w-12 h-12 object-cover rounded shadow-xs shrink-0 border border-slate-300" />` : ''}
+                <div class="flex flex-col min-w-0">
+                    <a href="https://www.wikidata.org/wiki/${wikidataId}" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-600 hover:underline text-xs truncate">
+                        ${label}
+                    </a>
+                    ${description ? `<span class="text-[11px] text-gray-600 leading-tight line-clamp-2">${description}</span>` : ''}
+                </div>
+            </div>
+        `;
+
+        etymologyCache.set(wikidataId, html);
+
+        const currentCard = document.getElementById('wikidata-etymology-card');
+        if (currentCard && currentCard.dataset.wikidataId === wikidataId) {
+            currentCard.classList.remove('hidden');
+            currentCard.innerHTML = html;
+        }
+    } catch (err) {
+        console.warn(`Failed loading Wikidata etymology for ${wikidataId}:`, err);
+        const fallbackHtml = `
+            <div class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Named after</div>
+            <div class="text-xs text-slate-500 italic mt-0.5">Unknown etymology</div>
+        `;
+        etymologyCache.set(wikidataId, fallbackHtml);
+
+        const currentCard = document.getElementById('wikidata-etymology-card');
+        if (currentCard && currentCard.dataset.wikidataId === wikidataId) {
+            currentCard.classList.remove('hidden');
+            currentCard.innerHTML = fallbackHtml;
+        }
+    }
 }

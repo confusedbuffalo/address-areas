@@ -6,13 +6,20 @@ import sqlite3
 from typing import Any, Optional
 import osmium
 
+import math
 from config import (
-    CONSIDERED_TAGS_SET,
     FEATURE_TAG_KEYS,
+    PATH_TYPES,
     POSTCODE_AREA_REGEX,
     TRANSFORMER_TO_27700,
 )
 from warnings_detector import is_valid_address_tag
+
+PHYSICAL_HIGHWAY_TYPES: set[str] = {
+    'residential', 'unclassified', 'tertiary', 'secondary', 'primary',
+    'trunk', 'motorway', 'living_street', 'service', 'pedestrian',
+    'footway', 'cycleway', 'path'
+}
 
 
 class RelationMemberScanner(osmium.SimpleHandler):
@@ -46,11 +53,13 @@ class BaseAddressHandler(osmium.SimpleHandler):
         self.conn: sqlite3.Connection = conn
         self.cursor: sqlite3.Cursor = conn.cursor()
         self.batch: list[tuple[Any, ...]] = []
+        self.highway_batch: list[tuple[Any, ...]] = []
         self.member_way_ids: set[int] = member_way_ids if member_way_ids is not None else set()
         self.member_node_ids: set[int] = member_node_ids if member_node_ids is not None else set()
         self.relation_node_locs: dict[int, tuple[float, float]] = {}
         self.way_locs: dict[int, tuple[float, float]] = {}
         self.total_addresses: int = 0
+        self.total_highways: int = 0
 
     def add_address(self, loc: tuple[float, float], tags: Any, osm_type: str, osm_id: int) -> None:
         """Extracts and normalises address attributes from OSM tags and buffers for SQLite insertion."""
@@ -128,7 +137,7 @@ class BaseAddressHandler(osmium.SimpleHandler):
             self.flush()
 
     def flush(self) -> None:
-        """Flushes buffered address records to SQLite database."""
+        """Flushes buffered address and physical highway records to SQLite database."""
         if self.batch:
             self.cursor.executemany("""
                 INSERT INTO addresses (
@@ -142,6 +151,17 @@ class BaseAddressHandler(osmium.SimpleHandler):
             self.conn.commit()
             self.total_addresses += len(self.batch)
             self.batch.clear()
+
+        if self.highway_batch:
+            self.cursor.executemany("""
+                INSERT INTO physical_highways (
+                    osm_id, name, highway_type, surface, lit, maxspeed, lanes, sidewalk,
+                    etymology_wikidata, length_m, geom_wkt, min_x, max_x, min_y, max_y
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, self.highway_batch)
+            self.conn.commit()
+            self.total_highways += len(self.highway_batch)
+            self.highway_batch.clear()
 
 
 class NodeAddressHandler(BaseAddressHandler):
@@ -167,15 +187,32 @@ class WayAddressHandler(BaseAddressHandler):
             return
 
         has_tags: bool = any(tag.k.startswith('addr:') for tag in w.tags) if w.tags else False
+        highway_names = {'name': None, 'name:left': None, 'name:right': None}
+        if w.tags and 'highway' in w.tags and w.tags['highway'] in PHYSICAL_HIGHWAY_TYPES:
+            for tag_k in highway_names:
+                if tag_k in w.tags:
+                    val = w.tags[tag_k].strip()
+                    if val:
+                        highway_names[tag_k] = val
 
-        if has_tags or is_member:
+        is_physical_highway: bool = len([v for v in highway_names.values() if v]) > 0
+
+        if has_tags or is_member or is_physical_highway:
             lats: list[float] = []
             lons: list[float] = []
+            xs: list[float] = []
+            ys: list[float] = []
 
             for node_ref in w.nodes:
                 if node_ref.location.valid():
-                    lats.append(node_ref.location.lat)
-                    lons.append(node_ref.location.lon)
+                    lat_val = node_ref.location.lat
+                    lon_val = node_ref.location.lon
+                    lats.append(lat_val)
+                    lons.append(lon_val)
+                    if is_physical_highway:
+                        x_proj, y_proj = TRANSFORMER_TO_27700.transform(lon_val, lat_val)
+                        xs.append(float(x_proj))
+                        ys.append(float(y_proj))
 
             if lats and lons:
                 avg_lat: float = sum(lats) / len(lats)
@@ -183,6 +220,40 @@ class WayAddressHandler(BaseAddressHandler):
                 self.way_locs[w.id] = (avg_lat, avg_lon)
                 if has_tags:
                     self.add_address((avg_lat, avg_lon), w.tags, 'w', w.id)
+
+                if is_physical_highway and len(lats) >= 2 and len(xs) >= 2:
+                    length_m = 0.0
+                    for i in range(len(xs) - 1):
+                        length_m += math.hypot(xs[i + 1] - xs[i], ys[i + 1] - ys[i])
+
+                    min_x, max_x = min(xs), max(xs)
+                    min_y, max_y = min(ys), max(ys)
+
+                    geom_wkt = "LINESTRING (" + ", ".join(f"{lon:.7f} {lat:.7f}" for lat, lon in zip(lats, lons)) + ")"
+
+                    for name_tag, h_name in highway_names.items():
+                        if not h_name:
+                            continue
+                        self.highway_batch.append((
+                            f"w{w.id}",
+                            h_name,
+                            w.tags['highway'].strip(),
+                            w.tags.get('surface', 'unknown').strip(),
+                            w.tags.get('lit', 'unknown').strip(),
+                            parse_maxspeed(w.tags),
+                            parse_lanes(w.tags),
+                            parse_sidewalk(w.tags),
+                            w.tags.get(f'{name_tag}:etymology:wikidata', '').strip(),
+                            float(length_m),
+                            geom_wkt,
+                            float(min_x),
+                            float(max_x),
+                            float(min_y),
+                            float(max_y)
+                        ))
+
+                        if len(self.highway_batch) >= 10000:
+                            self.flush()
 
     def relation(self, r: osmium.osm.Relation) -> None:
         """Processes an OSM relation, calculates member centroid and extracts address tags if present."""
@@ -200,3 +271,83 @@ class WayAddressHandler(BaseAddressHandler):
                     lons.append(lon)
             if lats and lons:
                 self.add_address((sum(lats)/len(lats), sum(lons)/len(lons)), r.tags, 'r', r.id)
+
+def parse_lanes(tags):
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
+    lanes_val = tags.get('lanes', '').strip()
+    if lanes_val:
+        return lanes_val
+    lane_markings_val = tags.get('lane_markings', '').strip()
+    if lane_markings_val and lane_markings_val == 'no':
+        return 'unmarked'
+        # Marked but without a value is not useful information so should count as unknown
+    
+    return 'unknown'
+
+def parse_sidewalk(tags):
+    """Basic sidewalk tagging parser, to determine if sidewalk is both, left, right, separate or no"""
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
+    sw = tags.get('sidewalk', '').strip()
+    sw_both = tags.get('sidewalk:both', '').strip()
+    sw_left = tags.get('sidewalk:left', '').strip()
+    sw_right = tags.get('sidewalk:right', '').strip()
+
+    if sw:
+        return sw
+    if sw_both:
+        return sw_both
+    if sw_left and sw_right:
+        if sw_left == 'yes' and sw_right == 'yes':
+            return 'both'
+        if sw_left == 'yes' and sw_right == 'no':
+            return 'left'
+        if sw_left == 'no' and sw_right == 'yes':
+            return 'right'
+        if sw_left == 'no' and sw_right == 'no':
+            return 'no'
+        if sw_left == 'separate' and sw_right == 'separate':
+            return 'separate'
+        if sw_left == 'separate' and sw_right == 'no':
+            return 'separate'
+        if sw_left == 'separate' and sw_right == 'yes':
+            return 'separate'
+        if sw_left == 'no' and sw_right == 'separate':
+            return 'separate'
+        if sw_left == 'yes' and sw_right == 'separate':
+            return 'separate'
+    # Incomplete tagging treat as not tagged
+    return 'unknown'
+
+def parse_maxspeed(tags):
+    if tags.get('highway') and tags.get('highway') in PATH_TYPES:
+        return None
+
+    maxspeed_val = tags.get('maxspeed', '').strip()
+    maxspeed_type = tags.get('maxspeed:type', '').strip()
+
+    if maxspeed_type:
+        if maxspeed_type == 'sign':
+            pass
+        if maxspeed_type == 'GB:zone20':
+            return '20 mph zone'
+        if maxspeed_type == 'GB:zone40':
+            return '40 mph zone'
+        if maxspeed_type == 'GB:nsl_single':
+            return 'NSL (single carriageway)'
+        if maxspeed_type == 'GB:nsl_dual':
+            return 'NSL (dual carriageway)'
+        if maxspeed_type == 'GB:motorway':
+            return 'NSL (motorway)'
+        if maxspeed_type == 'GB-WLS:nsl_restricted':
+            return 'Implicit 20 mph'
+        if maxspeed_type == 'GB:nsl_restricted':
+            return 'Implicit 30 mph'
+
+    if maxspeed_val:
+        return maxspeed_val
+
+    return 'unknown'
