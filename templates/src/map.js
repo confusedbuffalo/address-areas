@@ -555,7 +555,7 @@ export function renderStreetInfoCard(streetInfo, streetName = '') {
 
     if (streetInfo.has_physical_road === false) {
         container.innerHTML = `
-            <div class="p-3 bg-amber-50 border-b border-amber-200 text-amber-900 text-xs flex items-center gap-2 font-medium">
+            <div class="p-3 bg-amber-50 text-amber-900 text-xs flex items-center gap-2 font-medium rounded-t-xl sm:rounded-lg">
                 <span class="text-amber-600 text-base">⚠️</span>
                 <span>No nearby physical road found in OpenStreetMap</span>
             </div>
