@@ -5,6 +5,69 @@
 
 import { updateDataDateElement, compareNames, getOsmUrl } from './utils.js';
 import { sendIdsToJosm } from './josm.js';
+import { DATA_TIMESTAMP } from './config.js';
+
+const STORAGE_KEY_PREFIX = 'warnings_clicked_links_';
+
+export let clickedLinks = new Set();
+
+export function getStorageKey() {
+    return `${STORAGE_KEY_PREFIX}${DATA_TIMESTAMP}`;
+}
+
+export function initClickedStorage() {
+    if (typeof localStorage === 'undefined') return;
+    try {
+        const currentKey = getStorageKey();
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith(STORAGE_KEY_PREFIX) && k !== currentKey) {
+                localStorage.removeItem(k);
+            }
+        }
+        const raw = localStorage.getItem(currentKey);
+        if (raw) {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr)) {
+                clickedLinks = new Set(arr);
+            } else {
+                clickedLinks = new Set();
+            }
+        } else {
+            clickedLinks = new Set();
+        }
+    } catch (e) {
+        console.error('Error initializing clicked links storage:', e);
+        clickedLinks = new Set();
+    }
+}
+
+export function saveClickedLinks() {
+    if (typeof localStorage === 'undefined') return;
+    try {
+        const currentKey = getStorageKey();
+        localStorage.setItem(currentKey, JSON.stringify(Array.from(clickedLinks)));
+    } catch (e) {
+        console.error('Error saving clicked links storage:', e);
+    }
+}
+
+export function markClicked(...keys) {
+    let changed = false;
+    for (const key of keys) {
+        if (key && !clickedLinks.has(key)) {
+            clickedLinks.add(key);
+            changed = true;
+        }
+    }
+    if (changed) {
+        saveClickedLinks();
+    }
+}
+
+export function isClicked(key) {
+    return clickedLinks.has(key);
+}
 
 const CATEGORY_ORDER = [
     'unusual_city',
@@ -67,11 +130,19 @@ function createOsmLinks(osmIds) {
         if (idx > 0) {
             fragment.appendChild(document.createTextNode(', '));
         }
+        const key = `elem:${id}`;
+        const clicked = isClicked(key);
         const link = el('a', {
             href: getOsmUrl(id),
             target: '_blank',
             rel: 'noopener noreferrer',
-            className: 'text-blue-600 hover:underline font-mono font-semibold'
+            className: clicked
+                ? 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold'
+                : 'text-blue-600 hover:underline font-mono font-semibold',
+            onclick: () => {
+                markClicked(key);
+                link.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+            }
         }, id);
         fragment.appendChild(link);
     });
@@ -165,19 +236,32 @@ function sortRowGroups(rowGroups, sortCol, sortDir) {
     return sorted;
 }
 
-function renderTableRows(catKey, rowGroups, tbody) {
+function renderTableRows(catKey, rowGroups, tbody, catId) {
     tbody.innerHTML = '';
     const isDuplicates = catKey === 'duplicates';
 
     rowGroups.forEach(group => {
         const tr = el('tr', { className: 'hover:bg-gray-50/80 transition-colors' });
+        const rowEditKey = `edit:row:${catId}:${group.value}`;
+        const isRowClicked = isClicked(rowEditKey);
 
         if (isDuplicates) {
             const tdAddress = el('td', { className: 'px-4 py-2.5 font-semibold text-slate-900' }, group.value);
             const tdElements = el('td', { className: 'px-4 py-2.5 text-slate-700' }, [createOsmLinks(group.osm_ids)]);
             const editBtn = el('button', {
-                className: 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
-                onclick: () => sendIdsToJosm(group.osm_ids)
+                className: isRowClicked
+                    ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
+                    : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
+                onclick: () => {
+                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                    markClicked(rowEditKey, ...elemKeys);
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                    const elemLinks = tdElements.querySelectorAll('a');
+                    elemLinks.forEach(a => {
+                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                    });
+                    sendIdsToJosm(group.osm_ids);
+                }
             }, 'Edit');
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
 
@@ -191,8 +275,19 @@ function renderTableRows(catKey, rowGroups, tbody) {
             const tdElements = el('td', { className: 'px-4 py-2.5 font-medium text-slate-700' }, [createOsmLinks(group.osm_ids)]);
 
             const editBtn = el('button', {
-                className: 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
-                onclick: () => sendIdsToJosm(group.osm_ids)
+                className: isRowClicked
+                    ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
+                    : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
+                onclick: () => {
+                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                    markClicked(rowEditKey, ...elemKeys);
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                    const elemLinks = tdElements.querySelectorAll('a');
+                    elemLinks.forEach(a => {
+                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                    });
+                    sendIdsToJosm(group.osm_ids);
+                }
             }, 'Edit');
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
 
@@ -241,10 +336,20 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
         onclick: () => toggleAccordion(catId)
     }, [caretSvg, titleSpan, countSpan]);
 
+    const editAllKey = `edit:all:${catId}`;
+    const isEditAllClicked = isClicked(editAllKey);
+
+    let editAllClass = 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer';
+    if (!canEditAll) {
+        editAllClass = 'bg-gray-300 text-gray-500 cursor-not-allowed';
+    } else if (isEditAllClicked) {
+        editAllClass = 'bg-gray-400 hover:bg-gray-500 text-white cursor-pointer';
+    }
+
     // Edit all button
     const editAllBtn = el('button', {
         id: `edit-all-${catId}`,
-        className: `${canEditAll ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} text-xs font-bold px-3 py-1.5 rounded transition shadow-xs`,
+        className: `${editAllClass} text-xs font-bold px-3 py-1.5 rounded transition shadow-xs`,
         disabled: !canEditAll,
         title: canEditAll ? '' : 'Too many elements',
         onclick: (e) => {
@@ -258,6 +363,20 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
                 allIds.push(...group.osm_ids);
             });
             const uniqueIds = Array.from(new Set(allIds));
+
+            const rowEditKeys = rowGroups.map(g => `edit:row:${catId}:${g.value}`);
+            const elemKeys = uniqueIds.map(id => `elem:${id}`);
+            markClicked(editAllKey, ...rowEditKeys, ...elemKeys);
+
+            editAllBtn.className = 'bg-gray-400 hover:bg-gray-500 text-white cursor-pointer text-xs font-bold px-3 py-1.5 rounded transition shadow-xs';
+            const rowBtns = contentDiv.querySelectorAll('tbody button');
+            rowBtns.forEach(btn => {
+                btn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+            });
+            const elemLinks = contentDiv.querySelectorAll('tbody a');
+            elemLinks.forEach(a => {
+                a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+            });
 
             sendIdsToJosm(uniqueIds).finally(() => {
                 editAllBtn.innerText = "Edit all";
@@ -307,7 +426,7 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
                     tableSortState.set(catId, { column: col.key, direction: newDir });
                     updateHeaderArrows();
                     const sorted = sortRowGroups(rowGroups, col.key, newDir);
-                    renderTableRows(catKey, sorted, tbody);
+                    renderTableRows(catKey, sorted, tbody, catId);
                 }
             }, `${col.label}${arrow}`);
 
@@ -320,7 +439,7 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
     // Initial table render with default sort
     const initialSort = tableSortState.get(catId) || { column: 'value', direction: 'asc' };
     const sortedRowGroups = sortRowGroups(rowGroups, initialSort.column, initialSort.direction);
-    renderTableRows(catKey, sortedRowGroups, tbody);
+    renderTableRows(catKey, sortedRowGroups, tbody, catId);
 
     const table = el('table', { className: 'w-full text-left text-xs border-collapse' }, [
         el('thead', {}, [theadTr]),
@@ -441,6 +560,7 @@ window.toggleAccordion = function(id) {
 
 document.addEventListener('DOMContentLoaded', () => {
     updateDataDateElement();
+    initClickedStorage();
     fetch('../data/warnings.json')
         .then(res => {
             if (!res.ok) throw new Error(`HTTP error ${res.status}`);
