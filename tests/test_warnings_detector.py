@@ -223,3 +223,86 @@ def test_extract_unusual_address_tags_from_db():
         items = results["SW"]["unusual_address_tag"]
         assert items[0] == ["North Island", "addr:island", "n100"]
         assert items[1] == ["Haus", "addr:housename:de", "n101"]
+
+
+def test_extract_place_with_street_from_db():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        db_path = os.path.join(temp_dir, "test_place_street.db")
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE addresses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                postcode_area TEXT,
+                city TEXT,
+                suburb TEXT,
+                street TEXT,
+                popup_tags TEXT,
+                unusual_addr_tags TEXT,
+                osm_id TEXT,
+                osm_name TEXT
+            )
+        """)
+
+        records = [
+            ("E1", "London", "Stepney", "Commercial Road", json.dumps({"addr:place": "Market Square", "addr:street": "Commercial Road"}), json.dumps({}), "n200", ""),
+            ("E1", "London", "Stepney", "Commercial Road", json.dumps({"addr:place": "Market Square", "addr:street": "Commercial Road"}), json.dumps({}), "n201", ""),
+            ("E1", "London", "Stepney", "High Street", json.dumps({"addr:place": "Market Square", "addr:street": "High Street"}), json.dumps({}), "n202", "")
+        ]
+
+        conn.executemany("""
+            INSERT INTO addresses (
+                postcode_area, city, suburb, street, popup_tags, unusual_addr_tags, osm_id, osm_name
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, records)
+        conn.commit()
+        conn.close()
+
+        results = extract_warnings_from_db(db_path)
+        assert "E1" in results
+        assert "place_with_street" in results["E1"]
+        assert len(results["E1"]["place_with_street"]) == 3
+        items = results["E1"]["place_with_street"]
+        assert items[0] == ["Market Square", "Commercial Road", "n200"]
+        assert items[1] == ["Market Square", "Commercial Road", "n201"]
+        assert items[2] == ["Market Square", "High Street", "n202"]
+
+
+def test_extract_duplicate_suburb_value_from_db():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        db_path = os.path.join(temp_dir, "test_duplicate_suburb.db")
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE addresses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                postcode_area TEXT,
+                city TEXT,
+                suburb TEXT,
+                street TEXT,
+                popup_tags TEXT,
+                unusual_addr_tags TEXT,
+                osm_id TEXT,
+                osm_name TEXT
+            )
+        """)
+
+        records = [
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:locality": "Headingley"}), json.dumps({}), "n300", ""),
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:village": "Headingley", "addr:town": "Headingley"}), json.dumps({}), "n301", ""),
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:locality": "Far Headingley"}), json.dumps({}), "n302", "")
+        ]
+
+        conn.executemany("""
+            INSERT INTO addresses (
+                postcode_area, city, suburb, street, popup_tags, unusual_addr_tags, osm_id, osm_name
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, records)
+        conn.commit()
+        conn.close()
+
+        results = extract_warnings_from_db(db_path)
+        assert "LS" in results
+        assert "duplicate_suburb_value" in results["LS"]
+        items = results["LS"]["duplicate_suburb_value"]
+        assert len(items) == 2
+        assert items[0] == ["Headingley", "addr:locality, addr:suburb", "n300"]
+        assert items[1] == ["Headingley", "addr:suburb, addr:village, addr:town", "n301"]

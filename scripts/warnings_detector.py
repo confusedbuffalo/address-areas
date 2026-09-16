@@ -250,8 +250,11 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
         'unusual_street',
         'unusual_housenumber',
         'unusual_housename',
+        'duplicates',
+        'duplicate_suburb_value',
         'unusual_address_tag',
-        'missing_physical_road'
+        'missing_physical_road',
+        'place_with_street'
     ]
 
     query = "SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name, unusual_addr_tags FROM addresses"
@@ -264,11 +267,23 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
 
         housenumber = ''
         housename = ''
-        if popup_tags_json and ('addr:housenumber' in popup_tags_json or 'addr:housename' in popup_tags_json):
+        place_val = ''
+        street_tag_val = ''
+        suburb_tag_matches: dict[str, list[str]] = {}
+
+        if popup_tags_json:
             try:
                 tags = json.loads(popup_tags_json)
                 housenumber = tags.get('addr:housenumber', '')
                 housename = tags.get('addr:housename', '')
+                place_val = str(tags.get('addr:place') or '').strip()
+                street_tag_val = str(tags.get('addr:street') or '').strip()
+
+                suburb_keys = ['addr:locality', 'addr:hamlet', 'addr:suburb', 'addr:village', 'addr:town']
+                for sk in suburb_keys:
+                    sv = str(tags.get(sk) or '').strip()
+                    if sv and not is_missing_value(sv):
+                        suburb_tag_matches.setdefault(sv, []).append(sk)
             except Exception:
                 pass
 
@@ -314,6 +329,13 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
             hname_reasons = get_reasons_for_housename(housename)
             if hname_reasons:
                 flags.append(('unusual_housename', housename, ", ".join(hname_reasons)))
+
+        if place_val and street_tag_val:
+            flags.append(('place_with_street', place_val, street_tag_val))
+
+        for sub_val, matching_keys in suburb_tag_matches.items():
+            if len(matching_keys) > 1:
+                flags.append(('duplicate_suburb_value', sub_val, ", ".join(matching_keys)))
 
         if flags:
             if pa_key not in warnings_by_pa:

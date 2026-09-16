@@ -83,6 +83,7 @@
 
     <script>
         window.DATA_TIMESTAMP = {{ data_timestamp }};
+        window.WARNINGS_SUMMARY = {{ warnings_summary | tojson if warnings_summary else 'null' }};
     </script>
     <script src="app.js"></script>
 </body>

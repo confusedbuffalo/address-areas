@@ -294,19 +294,69 @@ def process() -> None:
                     'unusual_street': [],
                     'unusual_housenumber': [],
                     'unusual_housename': [],
+                    'duplicates': [],
+                    'duplicate_suburb_value': [],
                     'unusual_address_tag': [],
-                    'duplicates': []
+                    'missing_physical_road': [],
+                    'place_with_street': []
                 }
             warnings_data[pa_key]['duplicates'] = dup_groups
 
         for pa_key in warnings_data:
             if 'duplicates' not in warnings_data[pa_key]:
                 warnings_data[pa_key]['duplicates'] = []
+            if 'duplicate_suburb_value' not in warnings_data[pa_key]:
+                warnings_data[pa_key]['duplicate_suburb_value'] = []
+            if 'place_with_street' not in warnings_data[pa_key]:
+                warnings_data[pa_key]['place_with_street'] = []
 
-        warnings_json_path = os.path.join(OUTPUT_DIR, "warnings.json")
-        with open(warnings_json_path, 'w', encoding='utf-8') as f:
-            json.dump(warnings_data, f, separators=(',', ':'))
-        logging.info(f"Saved combined QA warnings & duplicate data to {warnings_json_path}.")
+        categories_list = [
+            'unusual_city',
+            'unusual_suburb',
+            'unusual_street',
+            'unusual_housenumber',
+            'unusual_housename',
+            'duplicates',
+            'duplicate_suburb_value',
+            'unusual_address_tag',
+            'missing_physical_road',
+            'place_with_street'
+        ]
+
+        warnings_summary: dict[str, Any] = {}
+
+        for pa_key, pa_categories in warnings_data.items():
+            pa_clean_id = get_clean_id('postcode_area', pa_key)
+            counts: dict[str, int] = {}
+            total_count = 0
+
+            for cat in categories_list:
+                raw_items = pa_categories.get(cat, [])
+                if cat == 'missing_physical_road':
+                    cat_cnt = 0
+                    for item in raw_items:
+                        ids = [s.strip() for s in str(item[2] if len(item) > 2 else '').split(',') if s.strip()]
+                        cat_cnt += len(ids)
+                else:
+                    cat_cnt = len(raw_items)
+                counts[cat] = cat_cnt
+                total_count += cat_cnt
+
+            if total_count > 0:
+                warnings_summary[pa_key] = {
+                    'clean_id': pa_clean_id,
+                    'total': total_count,
+                    'counts': counts
+                }
+
+                pa_json_path = os.path.join(OUTPUT_DIR, f"warnings_{pa_clean_id}.json")
+                with open(pa_json_path, 'w', encoding='utf-8') as f:
+                    json.dump(pa_categories, f, separators=(',', ':'))
+
+        summary_json_path = os.path.join(OUTPUT_DIR, "warnings_summary.json")
+        with open(summary_json_path, 'w', encoding='utf-8') as f:
+            json.dump(warnings_summary, f, separators=(',', ':'))
+        logging.info(f"Saved warnings summary ({len(warnings_summary)} postcode areas) and per-postcode area files.")
     except Exception as e:
         logging.error(f"Failed to extract QA warnings/duplicates data: {e}")
 

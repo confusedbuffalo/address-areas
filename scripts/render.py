@@ -266,8 +266,18 @@ def render() -> None:
     if os.path.exists(warnings_template_path):
         template_warnings = env.get_template('warnings.html')
         os.makedirs(os.path.join(PUBLIC_DIRECTORY, 'warnings'), exist_ok=True)
+
+        warnings_summary = None
+        summary_path = os.path.join(PUBLIC_DIRECTORY, 'data', 'warnings_summary.json')
+        if os.path.exists(summary_path):
+            try:
+                with open(summary_path, 'r', encoding='utf-8') as sf:
+                    warnings_summary = json.load(sf)
+            except Exception as e:
+                logging.warning(f"Failed to read warnings_summary.json: {e}")
+
         with open(os.path.join(PUBLIC_DIRECTORY, 'warnings', 'index.html'), 'w', encoding='utf-8') as f:
-            f.write(template_warnings.render(data_timestamp=data_timestamp))
+            f.write(template_warnings.render(data_timestamp=data_timestamp, warnings_summary=warnings_summary))
 
 
 if __name__ == "__main__":

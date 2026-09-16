@@ -76,8 +76,10 @@ const CATEGORY_ORDER = [
     'unusual_housenumber',
     'unusual_housename',
     'duplicates',
+    'duplicate_suburb_value',
     'unusual_address_tag',
-    'missing_physical_road'
+    'missing_physical_road',
+    'place_with_street'
 ];
 
 const CATEGORY_TITLES = {
@@ -86,13 +88,19 @@ const CATEGORY_TITLES = {
     'unusual_street': 'Unusual Street',
     'unusual_housenumber': 'Unusual Housenumber',
     'unusual_housename': 'Unusual Housename',
-    'duplicates': 'Duplicates',
+    'duplicates': 'Duplicate addresses',
+    'duplicate_suburb_value': 'Duplicate suburb value',
     'unusual_address_tag': 'Unusual Address Tag',
-    'missing_physical_road': 'Missing Physical Street'
+    'missing_physical_road': 'Missing Physical Street',
+    'place_with_street': 'Place together with street'
 };
 
 // Store sort state per table category ID: Map<catId, { column: string, direction: 'asc' | 'desc' }>
 const tableSortState = new Map();
+
+// In-memory cache for loaded per-postcode-area warnings data and pending promises
+const paCache = new Map();
+const paLoadingPromises = new Map();
 
 function el(tag, attrs = {}, children = []) {
     const elem = document.createElement(tag);
@@ -172,6 +180,59 @@ function buildRowGroups(catKey, rawItems) {
         }));
     }
 
+    if (catKey === 'place_with_street') {
+        const groupedMap = new Map();
+        rawItems.forEach(item => {
+            const place = item[0] || '';
+            const street = item[1] || '';
+            const ids = parseOsmIds(item[2]);
+            const key = `${place}|||${street}`;
+
+            if (!groupedMap.has(key)) {
+                groupedMap.set(key, {
+                    place: place,
+                    street: street,
+                    value: `${place} / ${street}`,
+                    osm_ids: []
+                });
+            }
+
+            const targetIds = groupedMap.get(key).osm_ids;
+            ids.forEach(id => {
+                if (!targetIds.includes(id)) {
+                    targetIds.push(id);
+                }
+            });
+        });
+        return Array.from(groupedMap.values());
+    }
+
+    if (catKey === 'duplicate_suburb_value') {
+        const groupedMap = new Map();
+        rawItems.forEach(item => {
+            const val = item[0] || '';
+            const reason = item[1] || '';
+            const ids = parseOsmIds(item[2]);
+            const groupKey = `${val}|||${reason}`;
+
+            if (!groupedMap.has(groupKey)) {
+                groupedMap.set(groupKey, {
+                    value: val,
+                    reason: reason,
+                    osm_ids: []
+                });
+            }
+
+            const targetIds = groupedMap.get(groupKey).osm_ids;
+            ids.forEach(id => {
+                if (!targetIds.includes(id)) {
+                    targetIds.push(id);
+                }
+            });
+        });
+        return Array.from(groupedMap.values());
+    }
+
     const isGroupedCategory = catKey === 'unusual_city' || catKey === 'unusual_suburb' || catKey === 'unusual_street' || catKey === 'unusual_address_tag' || catKey === 'missing_physical_road';
     if (isGroupedCategory) {
         // Group items by unusual value
@@ -214,9 +275,29 @@ function buildRowGroups(catKey, rawItems) {
     }));
 }
 
-function sortRowGroups(rowGroups, sortCol, sortDir) {
+function sortRowGroups(rowGroups, sortCol, sortDir, catKey) {
     const isAsc = sortDir === 'asc';
     const sorted = [...rowGroups];
+
+    if (catKey === 'place_with_street') {
+        sorted.sort((a, b) => {
+            let comp = 0;
+            if (sortCol === 'place') {
+                comp = compareNames(a.place, b.place);
+            } else if (sortCol === 'street') {
+                comp = compareNames(a.street, b.street);
+            } else if (sortCol === 'elements') {
+                comp = a.osm_ids.length - b.osm_ids.length;
+            }
+            if (comp !== 0) {
+                return isAsc ? comp : -comp;
+            }
+            const placeComp = compareNames(a.place, b.place);
+            if (placeComp !== 0) return placeComp;
+            return compareNames(a.street, b.street);
+        });
+        return sorted;
+    }
 
     sorted.sort((a, b) => {
         let comp = 0;
@@ -239,10 +320,13 @@ function sortRowGroups(rowGroups, sortCol, sortDir) {
 function renderTableRows(catKey, rowGroups, tbody, catId) {
     tbody.innerHTML = '';
     const isDuplicates = catKey === 'duplicates';
+    const isPlaceWithStreet = catKey === 'place_with_street';
 
     rowGroups.forEach(group => {
         const tr = el('tr', { className: 'hover:bg-gray-50/80 transition-colors' });
-        const rowEditKey = `edit:row:${catId}:${group.value}`;
+        const rowEditKey = isPlaceWithStreet
+            ? `edit:row:${catId}:${group.place}:${group.street}`
+            : (group.reason ? `edit:row:${catId}:${group.value}:${group.reason}` : `edit:row:${catId}:${group.value}`);
         const isRowClicked = isClicked(rowEditKey);
 
         if (isDuplicates) {
@@ -266,6 +350,32 @@ function renderTableRows(catKey, rowGroups, tbody, catId) {
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
 
             tr.appendChild(tdAddress);
+            tr.appendChild(tdElements);
+            tr.appendChild(tdEdit);
+        } else if (isPlaceWithStreet) {
+            const tdPlace = el('td', { className: 'px-4 py-2.5 font-semibold text-slate-900' }, group.place);
+            const tdStreet = el('td', { className: 'px-4 py-2.5 text-slate-900 font-medium' }, group.street);
+            const tdElements = el('td', { className: 'px-4 py-2.5 font-medium text-slate-700' }, [createOsmLinks(group.osm_ids)]);
+
+            const editBtn = el('button', {
+                className: isRowClicked
+                    ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
+                    : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
+                onclick: () => {
+                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                    markClicked(rowEditKey, ...elemKeys);
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                    const elemLinks = tdElements.querySelectorAll('a');
+                    elemLinks.forEach(a => {
+                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                    });
+                    sendIdsToJosm(group.osm_ids);
+                }
+            }, 'Edit');
+            const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
+
+            tr.appendChild(tdPlace);
+            tr.appendChild(tdStreet);
             tr.appendChild(tdElements);
             tr.appendChild(tdEdit);
         } else {
@@ -301,58 +411,58 @@ function renderTableRows(catKey, rowGroups, tbody, catId) {
     });
 }
 
-function renderCategorySection(paId, catKey, catIdx, rawItems) {
-    const catId = `${paId}-cat-${catIdx}`;
-    const catTitle = CATEGORY_TITLES[catKey];
+function fetchPaData(paKey, cleanId) {
+    if (paCache.has(paKey)) {
+        return Promise.resolve(paCache.get(paKey));
+    }
+    if (paLoadingPromises.has(paKey)) {
+        return paLoadingPromises.get(paKey);
+    }
+    const promise = fetch(`../data/warnings_${cleanId}.json`)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            paCache.set(paKey, data);
+            paLoadingPromises.delete(paKey);
+            return data;
+        })
+        .catch(err => {
+            paLoadingPromises.delete(paKey);
+            throw err;
+        });
+    paLoadingPromises.set(paKey, promise);
+    return promise;
+}
+
+function populateCategoryTable(catId, catKey, rawItems) {
+    const contentDiv = document.getElementById(`content-${catId}`);
+    if (!contentDiv) return;
+
     const isDuplicates = catKey === 'duplicates';
-
+    const isPlaceWithStreet = catKey === 'place_with_street';
+    const isDuplicateSuburbValue = catKey === 'duplicate_suburb_value';
     const rowGroups = buildRowGroups(catKey, rawItems);
-
-    // Calculate total OSM elements
     const totalElements = rowGroups.reduce((sum, group) => sum + group.osm_ids.length, 0);
-
     const canEditAll = totalElements <= 400;
 
-    // Accordion caret
-    const caretSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    caretSvg.setAttribute('id', `caret-${catId}`);
-    caretSvg.setAttribute('class', 'h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-200 shrink-0');
-    caretSvg.setAttribute('fill', 'none');
-    caretSvg.setAttribute('viewBox', '0 0 24 24');
-    caretSvg.setAttribute('stroke', 'currentColor');
-    const caretPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    caretPath.setAttribute('stroke-linecap', 'round');
-    caretPath.setAttribute('stroke-linejoin', 'round');
-    caretPath.setAttribute('stroke-width', '2');
-    caretPath.setAttribute('d', 'M9 5l7 7-7 7');
-    caretSvg.appendChild(caretPath);
+    // Update edit-all button state
+    const editAllBtn = document.getElementById(`edit-all-${catId}`);
+    if (editAllBtn) {
+        const editAllKey = `edit:all:${catId}`;
+        const isEditAllClicked = isClicked(editAllKey);
+        let editAllClass = 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer';
+        if (!canEditAll) {
+            editAllClass = 'bg-gray-300 text-gray-500 cursor-not-allowed';
+        } else if (isEditAllClicked) {
+            editAllClass = 'bg-gray-400 hover:bg-gray-500 text-white cursor-pointer';
+        }
+        editAllBtn.className = `${editAllClass} text-xs font-bold px-3 py-1.5 rounded transition shadow-xs`;
+        editAllBtn.disabled = !canEditAll;
+        editAllBtn.title = canEditAll ? '' : 'Too many elements';
 
-    const titleSpan = el('span', { className: 'text-sm font-bold text-slate-800' }, catTitle);
-    const countSpan = el('span', { className: 'text-xs text-gray-500 font-medium' }, `(${isDuplicates ? rawItems.length : totalElements})`);
-
-    const accordionBtn = el('button', {
-        id: `header-${catId}`,
-        className: 'flex items-center gap-2 text-left cursor-pointer select-none group grow',
-        onclick: () => toggleAccordion(catId)
-    }, [caretSvg, titleSpan, countSpan]);
-
-    const editAllKey = `edit:all:${catId}`;
-    const isEditAllClicked = isClicked(editAllKey);
-
-    let editAllClass = 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer';
-    if (!canEditAll) {
-        editAllClass = 'bg-gray-300 text-gray-500 cursor-not-allowed';
-    } else if (isEditAllClicked) {
-        editAllClass = 'bg-gray-400 hover:bg-gray-500 text-white cursor-pointer';
-    }
-
-    // Edit all button
-    const editAllBtn = el('button', {
-        id: `edit-all-${catId}`,
-        className: `${editAllClass} text-xs font-bold px-3 py-1.5 rounded transition shadow-xs`,
-        disabled: !canEditAll,
-        title: canEditAll ? '' : 'Too many elements',
-        onclick: (e) => {
+        editAllBtn.onclick = (e) => {
             e.stopPropagation();
             if (!canEditAll) return;
             editAllBtn.innerText = "Loading...";
@@ -364,7 +474,7 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
             });
             const uniqueIds = Array.from(new Set(allIds));
 
-            const rowEditKeys = rowGroups.map(g => `edit:row:${catId}:${g.value}`);
+            const rowEditKeys = rowGroups.map(g => g.reason ? `edit:row:${catId}:${g.value}:${g.reason}` : `edit:row:${catId}:${g.value}`);
             const elemKeys = uniqueIds.map(id => `elem:${id}`);
             markClicked(editAllKey, ...rowEditKeys, ...elemKeys);
 
@@ -382,32 +492,34 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
                 editAllBtn.innerText = "Edit all";
                 editAllBtn.disabled = false;
             });
-        }
-    }, 'Edit all');
-
-    const catHeaderDiv = el('div', {
-        className: 'px-4 py-3 bg-white flex items-center justify-between border-b border-gray-200'
-    }, [accordionBtn, el('div', {}, [editAllBtn])]);
+        };
+    }
 
     // Build Table Header with sorting
     const theadTr = el('tr', { className: 'bg-gray-50 text-gray-500 uppercase font-semibold border-b border-gray-200' });
     const tbody = el('tbody', { className: 'divide-y divide-gray-100' });
 
-    // Header definition according to category
     const columnsDef = isDuplicates ? [
         { key: 'value', label: 'Address', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
         { key: 'elements', label: 'Duplicate Objects', class: 'px-4 py-2.5 select-none' },
         { key: 'edit', label: 'Edit', class: 'px-4 py-2.5 w-24 text-right select-none' }
+    ] : (isPlaceWithStreet ? [
+        { key: 'place', label: 'Place', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
+        { key: 'street', label: 'Street', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
+        { key: 'elements', label: 'Elements', class: 'px-4 py-2.5 select-none' },
+        { key: 'edit', label: 'JOSM', class: 'px-4 py-2.5 w-24 text-right select-none' }
     ] : [
-        { key: 'value', label: 'Unusual Value', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
+        { key: 'value', label: isDuplicateSuburbValue ? 'Suburb Value' : 'Unusual Value', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
         { key: 'reason', label: 'Reason', class: 'px-4 py-2.5 cursor-pointer hover:text-slate-800 select-none' },
         { key: 'elements', label: 'Elements', class: 'px-4 py-2.5 select-none' },
         { key: 'edit', label: 'JOSM', class: 'px-4 py-2.5 w-24 text-right select-none' }
-    ];
+    ]);
+
+    const defaultSortCol = isPlaceWithStreet ? 'place' : 'value';
 
     const updateHeaderArrows = () => {
         theadTr.innerHTML = '';
-        const currentSort = tableSortState.get(catId) || { column: 'value', direction: 'asc' };
+        const currentSort = tableSortState.get(catId) || { column: defaultSortCol, direction: 'asc' };
 
         columnsDef.forEach(col => {
             if (col.key === 'edit' || col.key === 'elements') {
@@ -425,7 +537,7 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
                     }
                     tableSortState.set(catId, { column: col.key, direction: newDir });
                     updateHeaderArrows();
-                    const sorted = sortRowGroups(rowGroups, col.key, newDir);
+                    const sorted = sortRowGroups(rowGroups, col.key, newDir, catKey);
                     renderTableRows(catKey, sorted, tbody, catId);
                 }
             }, `${col.label}${arrow}`);
@@ -436,9 +548,8 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
 
     updateHeaderArrows();
 
-    // Initial table render with default sort
-    const initialSort = tableSortState.get(catId) || { column: 'value', direction: 'asc' };
-    const sortedRowGroups = sortRowGroups(rowGroups, initialSort.column, initialSort.direction);
+    const initialSort = tableSortState.get(catId) || { column: defaultSortCol, direction: 'asc' };
+    const sortedRowGroups = sortRowGroups(rowGroups, initialSort.column, initialSort.direction, catKey);
     renderTableRows(catKey, sortedRowGroups, tbody, catId);
 
     const table = el('table', { className: 'w-full text-left text-xs border-collapse' }, [
@@ -446,23 +557,103 @@ function renderCategorySection(paId, catKey, catIdx, rawItems) {
         tbody
     ]);
 
+    contentDiv.innerHTML = '';
+    contentDiv.appendChild(table);
+}
+
+function renderCategorySection(paId, paKey, cleanId, catKey, catIdx, catCount) {
+    const catId = `${paId}-cat-${catIdx}`;
+    const catTitle = CATEGORY_TITLES[catKey];
+
+    // Accordion caret
+    const caretSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    caretSvg.setAttribute('id', `caret-${catId}`);
+    caretSvg.setAttribute('class', 'h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-transform duration-200 shrink-0');
+    caretSvg.setAttribute('fill', 'none');
+    caretSvg.setAttribute('viewBox', '0 0 24 24');
+    caretSvg.setAttribute('stroke', 'currentColor');
+    const caretPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    caretPath.setAttribute('stroke-linecap', 'round');
+    caretPath.setAttribute('stroke-linejoin', 'round');
+    caretPath.setAttribute('stroke-width', '2');
+    caretPath.setAttribute('d', 'M9 5l7 7-7 7');
+    caretSvg.appendChild(caretPath);
+
+    const titleSpan = el('span', { className: 'text-sm font-bold text-slate-800' }, catTitle);
+    const countSpan = el('span', { className: 'text-xs text-gray-500 font-medium' }, `(${catCount})`);
+
+    const accordionBtn = el('button', {
+        id: `header-${catId}`,
+        className: 'flex items-center gap-2 text-left cursor-pointer select-none group grow',
+        onclick: () => {
+            toggleAccordion(catId);
+            ensurePaDataLoaded(paId, paKey, cleanId);
+        }
+    }, [caretSvg, titleSpan, countSpan]);
+
+    const editAllBtn = el('button', {
+        id: `edit-all-${catId}`,
+        className: 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer text-xs font-bold px-3 py-1.5 rounded transition shadow-xs',
+        disabled: false,
+        onclick: (e) => {
+            e.stopPropagation();
+            ensurePaDataLoaded(paId, paKey, cleanId);
+        }
+    }, 'Edit all');
+
+    const catHeaderDiv = el('div', {
+        className: 'px-4 py-3 bg-white flex items-center justify-between border-b border-gray-200'
+    }, [accordionBtn, el('div', {}, [editAllBtn])]);
+
     const contentDiv = el('div', {
         id: `content-${catId}`,
-        className: 'hidden overflow-x-auto'
-    }, [table]);
+        className: 'hidden overflow-x-auto p-4 text-center text-gray-500 text-xs font-medium'
+    }, 'Loading warnings data...');
 
     return el('div', {
         className: 'bg-white rounded-lg border border-gray-200 overflow-hidden shadow-xs'
     }, [catHeaderDiv, contentDiv]);
 }
 
-function renderWarnings(warningsData) {
+function populatePaCategories(paId, paKey, paData) {
+    CATEGORY_ORDER.forEach((catKey, catIdx) => {
+        const catId = `${paId}-cat-${catIdx}`;
+        const rawItems = paData[catKey] || [];
+        const contentDiv = document.getElementById(`content-${catId}`);
+        if (contentDiv) {
+            populateCategoryTable(catId, catKey, rawItems);
+        }
+    });
+}
+
+function ensurePaDataLoaded(paId, paKey, cleanId) {
+    if (paCache.has(paKey)) {
+        return Promise.resolve(paCache.get(paKey));
+    }
+    return fetchPaData(paKey, cleanId)
+        .then(paData => {
+            populatePaCategories(paId, paKey, paData);
+            return paData;
+        })
+        .catch(err => {
+            console.error(`Failed to load warnings data for ${paKey}:`, err);
+            CATEGORY_ORDER.forEach((catKey, catIdx) => {
+                const catId = `${paId}-cat-${catIdx}`;
+                const contentDiv = document.getElementById(`content-${catId}`);
+                if (contentDiv) {
+                    contentDiv.innerHTML = '<div class="p-4 text-center text-red-600 text-xs font-medium">Failed to load warnings data.</div>';
+                }
+            });
+        });
+}
+
+function renderWarningsSummary(summaryData) {
     const container = document.getElementById('warnings-container');
     if (!container) return;
 
     container.innerHTML = '';
 
-    const paKeys = Object.keys(warningsData).sort((a, b) => {
+    const paKeys = Object.keys(summaryData).sort((a, b) => {
         if (a === 'No postcode') return 1;
         if (b === 'No postcode') return -1;
         return compareNames(a, b);
@@ -478,24 +669,12 @@ function renderWarnings(warningsData) {
     const fragment = document.createDocumentFragment();
 
     paKeys.forEach((paKey, paIdx) => {
-        const paCategories = warningsData[paKey];
-        let paTotalCount = 0;
+        const summaryInfo = summaryData[paKey];
+        const cleanId = summaryInfo.clean_id;
+        const totalCount = summaryInfo.total;
+        const counts = summaryInfo.counts || {};
 
-        CATEGORY_ORDER.forEach(cat => {
-            if (paCategories[cat]) {
-                const rawItems = paCategories[cat];
-                if (cat === 'missing_physical_road') {
-                    rawItems.forEach(item => {
-                        const ids = parseOsmIds(item[2]);
-                        paTotalCount += ids.length;
-                    });
-                } else {
-                    paTotalCount += rawItems.length;
-                }
-            }
-        });
-
-        if (paTotalCount === 0) return;
+        if (totalCount === 0) return;
 
         const paId = `pa-${paIdx}`;
 
@@ -516,12 +695,15 @@ function renderWarnings(warningsData) {
         const paTitle = el('h3', { className: 'text-base font-bold text-slate-900' }, paKey);
         const paBadge = el('span', {
             className: 'bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200'
-        }, `${paTotalCount} ${paTotalCount === 1 ? 'issue' : 'issues'}`);
+        }, `${totalCount} ${totalCount === 1 ? 'issue' : 'issues'}`);
 
         const paHeaderBtn = el('button', {
             id: `header-${paId}`,
             className: 'w-full px-5 py-4 bg-gray-50 hover:bg-gray-100 flex items-center justify-between border-b border-gray-200 text-left transition-colors cursor-pointer select-none',
-            onclick: () => toggleAccordion(paId)
+            onclick: () => {
+                toggleAccordion(paId);
+                ensurePaDataLoaded(paId, paKey, cleanId);
+            }
         }, [
             el('div', { className: 'flex items-center gap-3' }, [paCaretSvg, paTitle]),
             paBadge
@@ -533,9 +715,9 @@ function renderWarnings(warningsData) {
         });
 
         CATEGORY_ORDER.forEach((catKey, catIdx) => {
-            const rawItems = paCategories[catKey] || [];
-            if (rawItems.length === 0) return;
-            const catSection = renderCategorySection(paId, catKey, catIdx, rawItems);
+            const catCount = counts[catKey] || 0;
+            if (catCount === 0) return;
+            const catSection = renderCategorySection(paId, paKey, cleanId, catKey, catIdx, catCount);
             paContentDiv.appendChild(catSection);
         });
 
@@ -561,20 +743,25 @@ window.toggleAccordion = function(id) {
 document.addEventListener('DOMContentLoaded', () => {
     updateDataDateElement();
     initClickedStorage();
-    fetch('../data/warnings.json')
-        .then(res => {
-            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-            return res.json();
-        })
-        .then(data => renderWarnings(data))
-        .catch(err => {
-            console.error("Failed to load warnings data:", err);
-            const container = document.getElementById('warnings-container');
-            if (container) {
-                container.innerHTML = '';
-                container.appendChild(el('div', {
-                    className: 'bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center text-red-600 text-sm'
-                }, 'Failed to load address warnings & duplicates data.'));
-            }
-        });
+
+    if (window.WARNINGS_SUMMARY) {
+        renderWarningsSummary(window.WARNINGS_SUMMARY);
+    } else {
+        fetch('../data/warnings_summary.json')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                return res.json();
+            })
+            .then(data => renderWarningsSummary(data))
+            .catch(err => {
+                console.error("Failed to load warnings summary data:", err);
+                const container = document.getElementById('warnings-container');
+                if (container) {
+                    container.innerHTML = '';
+                    container.appendChild(el('div', {
+                        className: 'bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center text-red-600 text-sm'
+                    }, 'Failed to load address warnings & duplicates data.'));
+                }
+            });
+    }
 });
