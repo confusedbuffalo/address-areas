@@ -3,8 +3,6 @@ Unit tests for dated PMTiles rendering and Cloudflare R2 cleanup logic.
 """
 
 import os
-import tempfile
-import unittest
 from datetime import datetime, timezone, timedelta
 from unittest.mock import patch
 
@@ -16,144 +14,135 @@ from scripts.cleanup_r2 import (
 )
 from scripts.render import (
     get_pmtiles_filename_for_layer,
-    get_pmtiles_urls
+    get_pmtiles_urls,
 )
 
 
-class TestCleanupR2(unittest.TestCase):
-    """Tests for Cloudflare R2 cleanup and retention logic."""
-
-    def test_parse_file_timestamp_from_filename(self) -> None:
-        filename = "address_data_20250226_143000.pmtiles"
-        mod_time = "2025-02-01T00:00:00Z"
-        dt = parse_file_timestamp(filename, mod_time)
-        self.assertEqual(dt, datetime(2025, 2, 26, 14, 30, 0, tzinfo=timezone.utc))
-
-    def test_parse_file_timestamp_fallback(self) -> None:
-        filename = "address_data_invalid.pmtiles"
-        mod_time = "2025-02-26T14:30:00Z"
-        dt = parse_file_timestamp(filename, mod_time)
-        self.assertEqual(dt, datetime(2025, 2, 26, 14, 30, 0, tzinfo=timezone.utc))
-
-    def test_filter_files_for_deletion(self) -> None:
-        now = datetime.now(timezone.utc)
-
-        # Dates:
-        # File 1: current (0 hours ago)
-        # File 2: 12 hours ago (within 24h)
-        # File 3: 36 hours ago (older than 24h, but top 3) -> should be deleted if top 2 kept
-        # File 4: 48 hours ago -> should be deleted
-        file1_time = now.strftime("%Y%m%d_%H%M%S")
-        file2_time = (now - timedelta(hours=12)).strftime("%Y%m%d_%H%M%S")
-        file3_time = (now - timedelta(hours=36)).strftime("%Y%m%d_%H%M%S")
-        file4_time = (now - timedelta(hours=48)).strftime("%Y%m%d_%H%M%S")
-
-        files = [
-            {"Path": f"address_data_{file4_time}.pmtiles", "ModTime": (now - timedelta(hours=48)).isoformat()},
-            {"Path": f"address_data_{file1_time}.pmtiles", "ModTime": now.isoformat()},
-            {"Path": f"address_data_{file3_time}.pmtiles", "ModTime": (now - timedelta(hours=36)).isoformat()},
-            {"Path": f"address_data_{file2_time}.pmtiles", "ModTime": (now - timedelta(hours=12)).isoformat()},
-        ]
-
-        to_delete = filter_files_for_deletion(files)
-
-        # File 1 (newest) and File 2 (2nd newest) must be retained
-        self.assertNotIn(f"address_data_{file1_time}.pmtiles", to_delete)
-        self.assertNotIn(f"address_data_{file2_time}.pmtiles", to_delete)
-
-        # File 3 (36h ago) and File 4 (48h ago) should be deleted
-        self.assertIn(f"address_data_{file3_time}.pmtiles", to_delete)
-        self.assertIn(f"address_data_{file4_time}.pmtiles", to_delete)
-
-    def test_filter_files_retains_minimum_two(self) -> None:
-        now = datetime.now(timezone.utc)
-
-        # Two old files (> 24h)
-        file1_time = (now - timedelta(days=5)).strftime("%Y%m%d_%H%M%S")
-        file2_time = (now - timedelta(days=10)).strftime("%Y%m%d_%H%M%S")
-
-        files = [
-            {"Path": f"address_data_{file1_time}.pmtiles"},
-            {"Path": f"address_data_{file2_time}.pmtiles"},
-        ]
-
-        to_delete = filter_files_for_deletion(files)
-        self.assertEqual(to_delete, [])
-
-    def test_is_main_branch_with_ref_name(self) -> None:
-        with patch.dict(os.environ, {"GITHUB_REF_NAME": "main"}):
-            self.assertTrue(is_main_branch())
-
-        with patch.dict(os.environ, {"GITHUB_REF_NAME": "feature-branch"}):
-            self.assertFalse(is_main_branch())
-
-    def test_is_main_branch_with_github_ref(self) -> None:
-        with patch.dict(os.environ, {"GITHUB_REF_NAME": "", "GITHUB_REF": "refs/heads/main"}):
-            self.assertTrue(is_main_branch())
-
-        with patch.dict(os.environ, {"GITHUB_REF_NAME": "", "GITHUB_REF": "refs/heads/feature"}):
-            self.assertFalse(is_main_branch())
-
-    def test_cleanup_skips_on_non_main_branch(self) -> None:
-        with patch("scripts.cleanup_r2.is_main_branch", return_value=False), \
-             patch("scripts.cleanup_r2.get_r2_bucket_files") as mock_get_files:
-            cleanup()
-            mock_get_files.assert_not_called()
+def test_parse_file_timestamp_from_filename() -> None:
+    filename = "address_data_20250226_143000.pmtiles"
+    mod_time = "2025-02-01T00:00:00Z"
+    dt = parse_file_timestamp(filename, mod_time)
+    assert dt == datetime(2025, 2, 26, 14, 30, 0, tzinfo=timezone.utc)
 
 
-class TestRenderPMTilesURL(unittest.TestCase):
-    """Tests for PMTiles filename resolution and URL formatting."""
-
-    def test_get_pmtiles_filename_for_layer(self) -> None:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            data_dir = os.path.join(temp_dir, 'pmtiles')
-            os.makedirs(data_dir, exist_ok=True)
-
-            f1 = os.path.join(data_dir, 'city_20250101_100000.pmtiles')
-            f2 = os.path.join(data_dir, 'city_20250226_150000.pmtiles')
-
-            with open(f1, 'w') as f:
-                f.write('data')
-            with open(f2, 'w') as f:
-                f.write('data')
-
-            with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir):
-                filename = get_pmtiles_filename_for_layer('city')
-                self.assertEqual(filename, 'city_20250226_150000.pmtiles')
-
-    def test_get_pmtiles_filename_for_street_layer_ignores_street_geom(self) -> None:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            data_dir = os.path.join(temp_dir, 'pmtiles')
-            os.makedirs(data_dir, exist_ok=True)
-
-            f1 = os.path.join(data_dir, 'street_area_20250226_100000.pmtiles')
-            f2 = os.path.join(data_dir, 'street_geom_20250226_120000.pmtiles')
-
-            with open(f1, 'w') as f:
-                f.write('data')
-            with open(f2, 'w') as f:
-                f.write('data')
-
-            with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir):
-                street_fn = get_pmtiles_filename_for_layer('street_area')
-                street_geom_fn = get_pmtiles_filename_for_layer('street_geom')
-                self.assertEqual(street_fn, 'street_area_20250226_100000.pmtiles')
-                self.assertEqual(street_geom_fn, 'street_geom_20250226_120000.pmtiles')
-
-    def test_get_pmtiles_urls_default(self) -> None:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            data_dir = os.path.join(temp_dir, 'pmtiles')
-            os.makedirs(data_dir, exist_ok=True)
-            f1 = os.path.join(data_dir, 'city_20250226_120000.pmtiles')
-            with open(f1, 'w') as f:
-                f.write('data')
-
-            with patch('scripts.render.PUBLIC_DIRECTORY', temp_dir), \
-                 patch.dict(os.environ, {}, clear=True):
-                urls = get_pmtiles_urls()
-                self.assertEqual(urls['city'], 'pmtiles/city_20250226_120000.pmtiles')
+def test_parse_file_timestamp_fallback() -> None:
+    filename = "address_data_invalid.pmtiles"
+    mod_time = "2025-02-26T14:30:00Z"
+    dt = parse_file_timestamp(filename, mod_time)
+    assert dt == datetime(2025, 2, 26, 14, 30, 0, tzinfo=timezone.utc)
 
 
+def test_filter_files_for_deletion() -> None:
+    now = datetime.now(timezone.utc)
 
-if __name__ == '__main__':
-    unittest.main()
+    # Dates:
+    # File 1: current (0 hours ago)
+    # File 2: 12 hours ago (within 24h)
+    # File 3: 36 hours ago (older than 24h, but top 3) -> should be deleted if top 2 kept
+    # File 4: 48 hours ago -> should be deleted
+    file1_time = now.strftime("%Y%m%d_%H%M%S")
+    file2_time = (now - timedelta(hours=12)).strftime("%Y%m%d_%H%M%S")
+    file3_time = (now - timedelta(hours=36)).strftime("%Y%m%d_%H%M%S")
+    file4_time = (now - timedelta(hours=48)).strftime("%Y%m%d_%H%M%S")
+
+    files = [
+        {"Path": f"address_data_{file4_time}.pmtiles", "ModTime": (now - timedelta(hours=48)).isoformat()},
+        {"Path": f"address_data_{file1_time}.pmtiles", "ModTime": now.isoformat()},
+        {"Path": f"address_data_{file3_time}.pmtiles", "ModTime": (now - timedelta(hours=36)).isoformat()},
+        {"Path": f"address_data_{file2_time}.pmtiles", "ModTime": (now - timedelta(hours=12)).isoformat()},
+    ]
+
+    to_delete = filter_files_for_deletion(files)
+
+    # File 1 (newest) and File 2 (2nd newest) must be retained
+    assert f"address_data_{file1_time}.pmtiles" not in to_delete
+    assert f"address_data_{file2_time}.pmtiles" not in to_delete
+
+    # File 3 (36h ago) and File 4 (48h ago) should be deleted
+    assert f"address_data_{file3_time}.pmtiles" in to_delete
+    assert f"address_data_{file4_time}.pmtiles" in to_delete
+
+
+def test_filter_files_retains_minimum_two() -> None:
+    now = datetime.now(timezone.utc)
+
+    # Two old files (> 24h)
+    file1_time = (now - timedelta(days=5)).strftime("%Y%m%d_%H%M%S")
+    file2_time = (now - timedelta(days=10)).strftime("%Y%m%d_%H%M%S")
+
+    files = [
+        {"Path": f"address_data_{file1_time}.pmtiles"},
+        {"Path": f"address_data_{file2_time}.pmtiles"},
+    ]
+
+    to_delete = filter_files_for_deletion(files)
+    assert to_delete == []
+
+
+def test_is_main_branch_with_ref_name(monkeypatch) -> None:
+    monkeypatch.setenv("GITHUB_REF_NAME", "main")
+    assert is_main_branch() is True
+
+    monkeypatch.setenv("GITHUB_REF_NAME", "feature-branch")
+    assert is_main_branch() is False
+
+
+def test_is_main_branch_with_github_ref(monkeypatch) -> None:
+    monkeypatch.setenv("GITHUB_REF_NAME", "")
+    monkeypatch.setenv("GITHUB_REF", "refs/heads/main")
+    assert is_main_branch() is True
+
+    monkeypatch.setenv("GITHUB_REF_NAME", "")
+    monkeypatch.setenv("GITHUB_REF", "refs/heads/feature")
+    assert is_main_branch() is False
+
+
+def test_cleanup_skips_on_non_main_branch() -> None:
+    with patch("scripts.cleanup_r2.is_main_branch", return_value=False), \
+         patch("scripts.cleanup_r2.get_r2_bucket_files") as mock_get_files:
+        cleanup()
+        mock_get_files.assert_not_called()
+
+
+def test_get_pmtiles_filename_for_layer(tmp_path) -> None:
+    data_dir = tmp_path / "pmtiles"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    f1 = data_dir / "city_20250101_100000.pmtiles"
+    f2 = data_dir / "city_20250226_150000.pmtiles"
+
+    f1.write_text("data", encoding="utf-8")
+    f2.write_text("data", encoding="utf-8")
+
+    with patch("scripts.render.PUBLIC_DIRECTORY", str(tmp_path)):
+        filename = get_pmtiles_filename_for_layer("city")
+        assert filename == "city_20250226_150000.pmtiles"
+
+
+def test_get_pmtiles_filename_for_street_layer_ignores_street_geom(tmp_path) -> None:
+    data_dir = tmp_path / "pmtiles"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    f1 = data_dir / "street_area_20250226_100000.pmtiles"
+    f2 = data_dir / "street_geom_20250226_120000.pmtiles"
+
+    f1.write_text("data", encoding="utf-8")
+    f2.write_text("data", encoding="utf-8")
+
+    with patch("scripts.render.PUBLIC_DIRECTORY", str(tmp_path)):
+        street_fn = get_pmtiles_filename_for_layer("street_area")
+        street_geom_fn = get_pmtiles_filename_for_layer("street_geom")
+        assert street_fn == "street_area_20250226_100000.pmtiles"
+        assert street_geom_fn == "street_geom_20250226_120000.pmtiles"
+
+
+def test_get_pmtiles_urls_default(tmp_path, monkeypatch) -> None:
+    data_dir = tmp_path / "pmtiles"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    f1 = data_dir / "city_20250226_120000.pmtiles"
+    f1.write_text("data", encoding="utf-8")
+
+    monkeypatch.delenv("PMTILES_URL_PREFIX", raising=False)
+    with patch("scripts.render.PUBLIC_DIRECTORY", str(tmp_path)):
+        urls = get_pmtiles_urls()
+        assert urls["city"] == "pmtiles/city_20250226_120000.pmtiles"
