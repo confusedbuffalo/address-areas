@@ -12,9 +12,18 @@ from config import get_clean_id
 NUMBERS_REGEX: re.Pattern[str] = re.compile(r'[0-9]')
 PUNCTUATION_REGEX: re.Pattern[str] = re.compile(r'([,:;/\\]|^-| -|- |-$)')
 CAPITALISATION_REGEX: re.Pattern[str] = re.compile(r'(^[a-z]|[A-Z][A-Z])')
-ABBREVIATIONS_REGEX: re.Pattern[str] = re.compile(r' (Ave|Blvd|Cl|Cresc?|Ct|Gdns?|Grvs?|Ln|Rd|Sq|St|N|S|E|W)(\.?,? |$)', re.IGNORECASE)
 WHITESPACE_REGEX: re.Pattern[str] = re.compile(r'([\v\f\n\r\t]|  |^ | $)')
 UNUSUAL_CHARS_REGEX: re.Pattern[str] = re.compile(r'[^A-Za-z0-9 âêôŵŷë\'\.,:;()/\\-]')
+
+OTHER_ABBREVIATIONS_REGEX: re.Pattern[str] = re.compile(
+    r'(?:^| )(Ave|Blvd|Cl|Cresc?|Ct|Gdns?|Grvs?|Ln|Rd|Sq|N|S|E|W)(\.?,?)(?: |$)',
+    re.IGNORECASE
+)
+
+ST_ABBREVIATION_REGEX: re.Pattern[str] = re.compile(
+    r'(?:^| )St\.?,?(?:$| (?:North|South|East|West|N|S|E|W|NE|NW|SE|SW)(\.?,?)(?: |$))',
+    re.IGNORECASE
+)
 
 MISSING_VALUES_SET: set[str] = {
     'no city', 'no suburb', 'no street', 'no postcode', 'missing', 'unknown', ''
@@ -90,8 +99,8 @@ def is_missing_value(val: Optional[str]) -> bool:
 
 # Cache regex validation results for recurring city, suburb and street name strings across DB rows
 @lru_cache(maxsize=10000)
-def get_reasons_for_city_suburb_street(val: str) -> tuple[str, ...]:
-    """Extracts reason labels for unusual city, suburb or street strings."""
+def get_reasons_for_city_suburb(val: str) -> tuple[str, ...]:
+    """Extracts reason labels for unusual city or suburb strings (no abbreviation checks)."""
     if is_missing_value(val):
         return ()
     reasons = []
@@ -101,7 +110,26 @@ def get_reasons_for_city_suburb_street(val: str) -> tuple[str, ...]:
         reasons.append("Punctuation")
     if CAPITALISATION_REGEX.search(val):
         reasons.append("Capitalisation")
-    if ABBREVIATIONS_REGEX.search(val):
+    if WHITESPACE_REGEX.search(val):
+        reasons.append("Whitespace")
+    if UNUSUAL_CHARS_REGEX.search(val):
+        reasons.append("Unusual characters")
+    return tuple(reasons)
+
+
+@lru_cache(maxsize=10000)
+def get_reasons_for_street(val: str) -> tuple[str, ...]:
+    """Extracts reason labels for unusual street strings (including street abbreviation checks)."""
+    if is_missing_value(val):
+        return ()
+    reasons = []
+    if NUMBERS_REGEX.search(val):
+        reasons.append("Numbers")
+    if PUNCTUATION_REGEX.search(val):
+        reasons.append("Punctuation")
+    if CAPITALISATION_REGEX.search(val):
+        reasons.append("Capitalisation")
+    if OTHER_ABBREVIATIONS_REGEX.search(val) or ST_ABBREVIATION_REGEX.search(val):
         reasons.append("Abbreviation")
     if WHITESPACE_REGEX.search(val):
         reasons.append("Whitespace")
@@ -110,19 +138,24 @@ def get_reasons_for_city_suburb_street(val: str) -> tuple[str, ...]:
     return tuple(reasons)
 
 
+def get_reasons_for_city_suburb_street(val: str) -> tuple[str, ...]:
+    """Backwards-compatible wrapper: alias for get_reasons_for_street."""
+    return get_reasons_for_street(val)
+
+
 def check_unusual_city(city: str) -> bool:
     """Checks if a city string is unusual."""
-    return len(get_reasons_for_city_suburb_street(city)) > 0
+    return len(get_reasons_for_city_suburb(city)) > 0
 
 
 def check_unusual_suburb(suburb: str) -> bool:
     """Checks if a suburb string is unusual."""
-    return len(get_reasons_for_city_suburb_street(suburb)) > 0
+    return len(get_reasons_for_city_suburb(suburb)) > 0
 
 
 def check_unusual_street(street: str) -> bool:
     """Checks if a street string is unusual."""
-    return len(get_reasons_for_city_suburb_street(street)) > 0
+    return len(get_reasons_for_street(street)) > 0
 
 
 # Memoize house number and house name validation results across recurring address values
@@ -306,17 +339,17 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
                         flags.append(('unusual_address_tag', tag_val, k))
 
         if city:
-            city_reasons = get_reasons_for_city_suburb_street(city)
+            city_reasons = get_reasons_for_city_suburb(city)
             if city_reasons:
                 flags.append(('unusual_city', city, ", ".join(city_reasons)))
 
         if suburb:
-            suburb_reasons = get_reasons_for_city_suburb_street(suburb)
+            suburb_reasons = get_reasons_for_city_suburb(suburb)
             if suburb_reasons:
                 flags.append(('unusual_suburb', suburb, ", ".join(suburb_reasons)))
 
         if street:
-            street_reasons = get_reasons_for_city_suburb_street(street)
+            street_reasons = get_reasons_for_street(street)
             if street_reasons:
                 flags.append(('unusual_street', street, ", ".join(street_reasons)))
 

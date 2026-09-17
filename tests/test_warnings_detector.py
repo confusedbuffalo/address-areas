@@ -23,6 +23,8 @@ from warnings_detector import (
 def test_check_unusual_city():
     assert not check_unusual_city("Manchester")
     assert not check_unusual_city("Newcastle upon Tyne")
+    assert not check_unusual_city("Brough With St Giles")
+    assert not check_unusual_city("St Albans")
     assert not check_unusual_city("No city")
     assert not check_unusual_city("missing")
     assert not check_unusual_city("")
@@ -52,6 +54,8 @@ def test_reasons_extraction():
 
 def test_check_unusual_suburb():
     assert not check_unusual_suburb("Headingley")
+    assert not check_unusual_suburb("Brough With St Giles")
+    assert not check_unusual_suburb("St Johns")
     assert not check_unusual_suburb("No suburb")
 
     assert check_unusual_suburb("HEADINGLEY")
@@ -62,9 +66,23 @@ def test_check_unusual_suburb():
 def test_check_unusual_street():
     assert not check_unusual_street("High Street")
     assert not check_unusual_street("St. John's Road")
+    assert not check_unusual_street("St Mary's Crescent")
+    assert not check_unusual_street("St Giles Road")
     assert not check_unusual_street("No street")
 
-    assert check_unusual_street("High St") # Abbreviation
+    # Flagged St abbreviations (at end or before directional suffix)
+    assert check_unusual_street("High St") # Abbreviation at end
+    assert check_unusual_street("High St.") # Abbreviation at end with period
+    assert check_unusual_street("High St West") # St before directional suffix
+    assert check_unusual_street("High St N") # St before directional abbreviation
+
+    # Flagged other abbreviations (anywhere in street name)
+    assert check_unusual_street("Long Ave")
+    assert check_unusual_street("Long Ave West")
+    assert check_unusual_street("Station Rd")
+    assert check_unusual_street("Main Rd North")
+
+    # Other triggers
     assert check_unusual_street("1st Avenue") # Numbers in street name
     assert check_unusual_street("HIGH STREET") # All caps
     assert check_unusual_street("high street") # Lowercase start
