@@ -23,6 +23,8 @@ from warnings_detector import (
 def test_check_unusual_city():
     assert not check_unusual_city("Manchester")
     assert not check_unusual_city("Newcastle upon Tyne")
+    assert not check_unusual_city("Brough With St Giles")
+    assert not check_unusual_city("St Albans")
     assert not check_unusual_city("No city")
     assert not check_unusual_city("missing")
     assert not check_unusual_city("")
@@ -52,6 +54,8 @@ def test_reasons_extraction():
 
 def test_check_unusual_suburb():
     assert not check_unusual_suburb("Headingley")
+    assert not check_unusual_suburb("Brough With St Giles")
+    assert not check_unusual_suburb("St Johns")
     assert not check_unusual_suburb("No suburb")
 
     assert check_unusual_suburb("HEADINGLEY")
@@ -62,9 +66,23 @@ def test_check_unusual_suburb():
 def test_check_unusual_street():
     assert not check_unusual_street("High Street")
     assert not check_unusual_street("St. John's Road")
+    assert not check_unusual_street("St Mary's Crescent")
+    assert not check_unusual_street("St Giles Road")
     assert not check_unusual_street("No street")
 
-    assert check_unusual_street("High St") # Abbreviation
+    # Flagged St abbreviations (at end or before directional suffix)
+    assert check_unusual_street("High St") # Abbreviation at end
+    assert check_unusual_street("High St.") # Abbreviation at end with period
+    assert check_unusual_street("High St West") # St before directional suffix
+    assert check_unusual_street("High St N") # St before directional abbreviation
+
+    # Flagged other abbreviations (anywhere in street name)
+    assert check_unusual_street("Long Ave")
+    assert check_unusual_street("Long Ave West")
+    assert check_unusual_street("Station Rd")
+    assert check_unusual_street("Main Rd North")
+
+    # Other triggers
     assert check_unusual_street("1st Avenue") # Numbers in street name
     assert check_unusual_street("HIGH STREET") # All caps
     assert check_unusual_street("high street") # Lowercase start
@@ -223,3 +241,86 @@ def test_extract_unusual_address_tags_from_db():
         items = results["SW"]["unusual_address_tag"]
         assert items[0] == ["North Island", "addr:island", "n100"]
         assert items[1] == ["Haus", "addr:housename:de", "n101"]
+
+
+def test_extract_place_with_street_from_db():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        db_path = os.path.join(temp_dir, "test_place_street.db")
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE addresses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                postcode_area TEXT,
+                city TEXT,
+                suburb TEXT,
+                street TEXT,
+                popup_tags TEXT,
+                unusual_addr_tags TEXT,
+                osm_id TEXT,
+                osm_name TEXT
+            )
+        """)
+
+        records = [
+            ("E1", "London", "Stepney", "Commercial Road", json.dumps({"addr:place": "Market Square", "addr:street": "Commercial Road"}), json.dumps({}), "n200", ""),
+            ("E1", "London", "Stepney", "Commercial Road", json.dumps({"addr:place": "Market Square", "addr:street": "Commercial Road"}), json.dumps({}), "n201", ""),
+            ("E1", "London", "Stepney", "High Street", json.dumps({"addr:place": "Market Square", "addr:street": "High Street"}), json.dumps({}), "n202", "")
+        ]
+
+        conn.executemany("""
+            INSERT INTO addresses (
+                postcode_area, city, suburb, street, popup_tags, unusual_addr_tags, osm_id, osm_name
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, records)
+        conn.commit()
+        conn.close()
+
+        results = extract_warnings_from_db(db_path)
+        assert "E1" in results
+        assert "place_with_street" in results["E1"]
+        assert len(results["E1"]["place_with_street"]) == 3
+        items = results["E1"]["place_with_street"]
+        assert items[0] == ["Market Square", "Commercial Road", "n200"]
+        assert items[1] == ["Market Square", "Commercial Road", "n201"]
+        assert items[2] == ["Market Square", "High Street", "n202"]
+
+
+def test_extract_duplicate_suburb_value_from_db():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        db_path = os.path.join(temp_dir, "test_duplicate_suburb.db")
+        conn = sqlite3.connect(db_path)
+        conn.execute("""
+            CREATE TABLE addresses (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                postcode_area TEXT,
+                city TEXT,
+                suburb TEXT,
+                street TEXT,
+                popup_tags TEXT,
+                unusual_addr_tags TEXT,
+                osm_id TEXT,
+                osm_name TEXT
+            )
+        """)
+
+        records = [
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:locality": "Headingley"}), json.dumps({}), "n300", ""),
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:village": "Headingley", "addr:town": "Headingley"}), json.dumps({}), "n301", ""),
+            ("LS", "Leeds", "Headingley", "Otley Road", json.dumps({"addr:suburb": "Headingley", "addr:locality": "Far Headingley"}), json.dumps({}), "n302", "")
+        ]
+
+        conn.executemany("""
+            INSERT INTO addresses (
+                postcode_area, city, suburb, street, popup_tags, unusual_addr_tags, osm_id, osm_name
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, records)
+        conn.commit()
+        conn.close()
+
+        results = extract_warnings_from_db(db_path)
+        assert "LS" in results
+        assert "duplicate_suburb_value" in results["LS"]
+        items = results["LS"]["duplicate_suburb_value"]
+        assert len(items) == 2
+        assert items[0] == ["Headingley", "addr:locality, addr:suburb", "n300"]
+        assert items[1] == ["Headingley", "addr:suburb, addr:village, addr:town", "n301"]
