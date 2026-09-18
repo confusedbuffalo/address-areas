@@ -107,8 +107,8 @@ function el(tag, attrs = {}, children = []) {
     for (const [key, val] of Object.entries(attrs)) {
         if (key === 'className') {
             elem.className = val;
-        } else if (key === 'onclick') {
-            elem.onclick = val;
+        } else if (key.startsWith('on')) {
+            elem[key] = val;
         } else if (key.startsWith('data-')) {
             elem.setAttribute(key, val);
         } else if (key === 'disabled') {
@@ -140,16 +140,25 @@ function createOsmLinks(osmIds) {
         }
         const key = `elem:${id}`;
         const clicked = isClicked(key);
-        const link = el('a', {
+        let link;
+        const handleMark = () => {
+            markClicked(key);
+            if (link) {
+                link.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+            }
+        };
+        link = el('a', {
             href: getOsmUrl(id),
             target: '_blank',
             rel: 'noopener noreferrer',
             className: clicked
                 ? 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold'
                 : 'text-blue-600 hover:underline font-mono font-semibold',
-            onclick: () => {
-                markClicked(key);
-                link.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+            onclick: handleMark,
+            onauxclick: (e) => {
+                if (e.button === 1) {
+                    handleMark();
+                }
             }
         }, id);
         fragment.appendChild(link);
@@ -332,19 +341,28 @@ function renderTableRows(catKey, rowGroups, tbody, catId) {
         if (isDuplicates) {
             const tdAddress = el('td', { className: 'px-4 py-2.5 font-semibold text-slate-900' }, group.value);
             const tdElements = el('td', { className: 'px-4 py-2.5 text-slate-700' }, [createOsmLinks(group.osm_ids)]);
-            const editBtn = el('button', {
+            let editBtn;
+            const handleRowEdit = () => {
+                const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                markClicked(rowEditKey, ...elemKeys);
+                if (editBtn) {
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                }
+                const elemLinks = tdElements.querySelectorAll('a');
+                elemLinks.forEach(a => {
+                    a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                });
+                sendIdsToJosm(group.osm_ids);
+            };
+            editBtn = el('button', {
                 className: isRowClicked
                     ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
                     : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
-                onclick: () => {
-                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
-                    markClicked(rowEditKey, ...elemKeys);
-                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
-                    const elemLinks = tdElements.querySelectorAll('a');
-                    elemLinks.forEach(a => {
-                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
-                    });
-                    sendIdsToJosm(group.osm_ids);
+                onclick: handleRowEdit,
+                onauxclick: (e) => {
+                    if (e.button === 1) {
+                        handleRowEdit();
+                    }
                 }
             }, 'Edit');
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
@@ -357,19 +375,28 @@ function renderTableRows(catKey, rowGroups, tbody, catId) {
             const tdStreet = el('td', { className: 'px-4 py-2.5 text-slate-900 font-medium' }, group.street);
             const tdElements = el('td', { className: 'px-4 py-2.5 font-medium text-slate-700' }, [createOsmLinks(group.osm_ids)]);
 
-            const editBtn = el('button', {
+            let editBtn;
+            const handleRowEdit = () => {
+                const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                markClicked(rowEditKey, ...elemKeys);
+                if (editBtn) {
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                }
+                const elemLinks = tdElements.querySelectorAll('a');
+                elemLinks.forEach(a => {
+                    a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                });
+                sendIdsToJosm(group.osm_ids);
+            };
+            editBtn = el('button', {
                 className: isRowClicked
                     ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
                     : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
-                onclick: () => {
-                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
-                    markClicked(rowEditKey, ...elemKeys);
-                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
-                    const elemLinks = tdElements.querySelectorAll('a');
-                    elemLinks.forEach(a => {
-                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
-                    });
-                    sendIdsToJosm(group.osm_ids);
+                onclick: handleRowEdit,
+                onauxclick: (e) => {
+                    if (e.button === 1) {
+                        handleRowEdit();
+                    }
                 }
             }, 'Edit');
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
@@ -384,19 +411,28 @@ function renderTableRows(catKey, rowGroups, tbody, catId) {
             const tdReason = el('td', { className: 'px-4 py-2.5 text-gray-600 font-medium' }, group.reason);
             const tdElements = el('td', { className: 'px-4 py-2.5 font-medium text-slate-700' }, [createOsmLinks(group.osm_ids)]);
 
-            const editBtn = el('button', {
+            let editBtn;
+            const handleRowEdit = () => {
+                const elemKeys = group.osm_ids.map(id => `elem:${id}`);
+                markClicked(rowEditKey, ...elemKeys);
+                if (editBtn) {
+                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
+                }
+                const elemLinks = tdElements.querySelectorAll('a');
+                elemLinks.forEach(a => {
+                    a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
+                });
+                sendIdsToJosm(group.osm_ids);
+            };
+            editBtn = el('button', {
                 className: isRowClicked
                     ? 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer'
                     : 'text-blue-600 hover:text-blue-800 hover:underline font-semibold cursor-pointer',
-                onclick: () => {
-                    const elemKeys = group.osm_ids.map(id => `elem:${id}`);
-                    markClicked(rowEditKey, ...elemKeys);
-                    editBtn.className = 'text-gray-400 hover:text-gray-500 hover:underline font-semibold cursor-pointer';
-                    const elemLinks = tdElements.querySelectorAll('a');
-                    elemLinks.forEach(a => {
-                        a.className = 'text-gray-400 hover:text-gray-500 hover:underline font-mono font-semibold';
-                    });
-                    sendIdsToJosm(group.osm_ids);
+                onclick: handleRowEdit,
+                onauxclick: (e) => {
+                    if (e.button === 1) {
+                        handleRowEdit();
+                    }
                 }
             }, 'Edit');
             const tdEdit = el('td', { className: 'px-4 py-2.5 text-right font-medium' }, [editBtn]);
@@ -462,7 +498,7 @@ function populateCategoryTable(catId, catKey, rawItems) {
         editAllBtn.disabled = !canEditAll;
         editAllBtn.title = canEditAll ? '' : 'Too many elements';
 
-        editAllBtn.onclick = (e) => {
+        const handleEditAll = (e) => {
             e.stopPropagation();
             if (!canEditAll) return;
             editAllBtn.innerText = "Loading...";
@@ -492,6 +528,13 @@ function populateCategoryTable(catId, catKey, rawItems) {
                 editAllBtn.innerText = "Edit all";
                 editAllBtn.disabled = false;
             });
+        };
+
+        editAllBtn.onclick = handleEditAll;
+        editAllBtn.onauxclick = (e) => {
+            if (e.button === 1) {
+                handleEditAll(e);
+            }
         };
     }
 
@@ -598,6 +641,12 @@ function renderCategorySection(paId, paKey, cleanId, catKey, catIdx, catCount) {
         onclick: (e) => {
             e.stopPropagation();
             ensurePaDataLoaded(paId, paKey, cleanId);
+        },
+        onauxclick: (e) => {
+            if (e.button === 1) {
+                e.stopPropagation();
+                ensurePaDataLoaded(paId, paKey, cleanId);
+            }
         }
     }, 'Edit all');
 
