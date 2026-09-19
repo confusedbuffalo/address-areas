@@ -27,6 +27,7 @@ from config import (
     assign_colours,
     get_city_letter_key,
     get_clean_id,
+    get_suburb_letter_key,
 )
 from duplicates_detector import extract_duplicates_from_db
 from osm_parser import (
@@ -542,8 +543,21 @@ def process() -> None:
 
                 merged_letter_dict[c_id] = merged_suburbs
 
-            with open(f"{OUTPUT_DIR}/{no_postcode_id}_{letter_key}.json", 'w', encoding='utf-8') as f:
-                json.dump(merged_letter_dict, f, separators=(',', ':'))
+            if letter_key == 'no-city':
+                # Sub-split no-city by suburb letter key: data/{no_postcode_id}_no-city_{suburb_letter_key}.json
+                suburb_letter_map: dict[str, dict[str, list[Any]]] = {}
+                for c_id, suburbs_list in merged_letter_dict.items():
+                    for sub_tuple in suburbs_list:
+                        sub_label = sub_tuple[1]
+                        sub_key = get_suburb_letter_key(sub_label)
+                        suburb_letter_map.setdefault(sub_key, {}).setdefault(c_id, []).append(sub_tuple)
+
+                for sub_key, sub_dict in suburb_letter_map.items():
+                    with open(f"{OUTPUT_DIR}/{no_postcode_id}_no-city_{sub_key}.json", 'w', encoding='utf-8') as f:
+                        json.dump(sub_dict, f, separators=(',', ':'))
+            else:
+                with open(f"{OUTPUT_DIR}/{no_postcode_id}_{letter_key}.json", 'w', encoding='utf-8') as f:
+                    json.dump(merged_letter_dict, f, separators=(',', ':'))
 
         # Write aggregated sector points files for No postcode
         for sector_id, streets_dict in no_postcode_sector_points_acc.items():
@@ -552,8 +566,15 @@ def process() -> None:
 
         # Write search index file for No postcode: search_index_{no_postcode_id}.json
         if no_postcode_search_indices:
+            prefix_str = f"{no_postcode_id}_"
+            compact_items = []
+            for item in no_postcode_search_indices:
+                c_id = item[0]
+                stripped_id = c_id[len(prefix_str):] if c_id and c_id.startswith(prefix_str) else c_id
+                compact_items.append([stripped_id, item[1], item[2], item[3]])
+
             with open(f"{OUTPUT_DIR}/search_index_{no_postcode_id}.json", 'w', encoding='utf-8') as f:
-                json.dump({"prefix": ["No postcode"], "items": no_postcode_search_indices}, f, separators=(',', ':'))
+                json.dump({"pa_id": no_postcode_id, "prefix": ["No postcode"], "items": compact_items}, f, separators=(',', ':'))
 
     geojson_level_paths = {
         'postcode_area': os.path.join(OUTPUT_DIR, "postcode_area.geojson"),

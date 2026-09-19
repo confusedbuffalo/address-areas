@@ -99,6 +99,14 @@ def get_city_letter_key(city_name: str) -> str:
     return _get_letter_partition_key(city_name, 'no city', 'no-city')
 
 
+def get_suburb_letter_key(suburb_name: str) -> str:
+    """Returns the letter key partition for a suburb name.
+
+    Returns 'no-suburb' if missing/no suburb, 'a'-'z' if starts with letter, else 'other'.
+    """
+    return _get_letter_partition_key(suburb_name, 'no suburb', 'no-suburb')
+
+
 def get_street_letter_key(street_name: str) -> str:
     """Returns the letter key partition for a street name.
 

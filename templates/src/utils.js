@@ -116,6 +116,30 @@ export function getCityLetterKey(cityName) {
 }
 
 /**
+ * Returns the letter key partition for a suburb name.
+ *
+ * @param {string} suburbName - Suburb display or raw name.
+ * @returns {string} Letter partition key ('a'-'z', 'no-suburb', or 'other').
+ */
+export function getSuburbLetterKey(suburbNameOrId) {
+    if (!suburbNameOrId || isMissingValue(suburbNameOrId) || suburbNameOrId.trim().toLowerCase() === 'no suburb') {
+        return 'no-suburb';
+    }
+    let clean = suburbNameOrId.trim();
+    if (clean.includes('_')) {
+        clean = clean.split('_').pop();
+    }
+    if (clean.startsWith('suburb-')) {
+        clean = clean.slice('suburb-'.length);
+    }
+    const firstChar = clean.length > 0 ? clean[0].toLowerCase() : '';
+    if (firstChar >= 'a' && firstChar <= 'z') {
+        return firstChar;
+    }
+    return 'other';
+}
+
+/**
  * Decodes a single compact hierarchy tuple array into a feature object.
  *
  * @param {Array<*>|Object} item - Compact hierarchy tuple array or object.

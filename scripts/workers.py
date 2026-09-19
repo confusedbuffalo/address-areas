@@ -373,8 +373,15 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
         conn.close()
 
         if pa_search_indices:
+            prefix_str = f"{pa_id}_"
+            compact_items = []
+            for item in pa_search_indices:
+                c_id = item[0]
+                stripped_id = c_id[len(prefix_str):] if c_id and c_id.startswith(prefix_str) else c_id
+                compact_items.append([stripped_id, item[1], item[2], item[3]])
+
             with open(os.path.join(output_dir, f"search_index_{pa_id}.json"), 'w', encoding='utf-8') as f:
-                json.dump({"prefix": [pa], "items": pa_search_indices}, f, separators=(',', ':'))
+                json.dump({"pa_id": pa_id, "prefix": [pa], "items": compact_items}, f, separators=(',', ':'))
 
         for sector_id, streets_dict in sector_points_dict.items():
             with open(os.path.join(output_dir, f"{sector_id}_points.json"), 'w', encoding='utf-8') as f:

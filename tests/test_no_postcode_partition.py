@@ -13,6 +13,7 @@ from scripts.config import (
     assign_colours,
     get_clean_id,
     get_street_letter_key,
+    get_suburb_letter_key,
 )
 from scripts.workers import process_no_postcode_sub_partition_worker
 
@@ -86,6 +87,15 @@ def test_process_no_postcode_sub_partition_worker_letter_a(test_db_env) -> None:
     city_ids = [item[3] for item in city_items]
     for c_id in city_ids:
         assert c_id in letter_suburbs_dict
+
+
+def test_get_suburb_letter_key() -> None:
+    """Tests suburb name letter partition key extraction."""
+    assert get_suburb_letter_key("Rosemount") == "r"
+    assert get_suburb_letter_key("1st District") == "other"
+    assert get_suburb_letter_key("No suburb") == "no-suburb"
+    assert get_suburb_letter_key("") == "no-suburb"
+    assert get_suburb_letter_key(None) == "no-suburb"
 
 
 def test_get_street_letter_key() -> None:

@@ -4,7 +4,7 @@
  */
 
 import { state, sectorPointsCache } from './config.js';
-import { getUrlParams, getFeaturesArray, getDisplayName, isMissingValue, isStreetId, decodeHierarchyData, decodePointsData, getCityLetterKey, showToast } from './utils.js';
+import { getUrlParams, getFeaturesArray, getDisplayName, isMissingValue, isStreetId, decodeHierarchyData, decodePointsData, getCityLetterKey, getSuburbLetterKey, showToast } from './utils.js';
 import { map, popup, getLayerBounds, getFeatureBounds, updateMapFilters, updateUrlParams, updateEditButton, renderStreetInfoCard } from './map.js';
 import { populateSidebar, updateSearchAreaCheckboxState, executeSearch, fetchRootSearchIndex, fetchPostcodeSearchIndex, renderSidebarLoadingSkeleton, renderHeaders, getSidebarLevelName } from './sidebar.js';
 import { updateSidebarEditAllButton } from './josm.js';
@@ -111,35 +111,111 @@ const noPostcodeLetterCache = {};
  * @param {Object} cityObj - City feature or properties object.
  * @returns {Promise<void>}
  */
-export async function ensureNoPostcodeCityLoaded(paId, cityObj) {
+export async function ensureNoPostcodeCityLoaded(paId, cityObj, targetSuburbName) {
     if (!paId || !paId.startsWith('no-postcode') || !cityObj) return;
-    if (cityObj.suburbs) return;
+
+    if (!cityObj.suburbs) {
+        cityObj.suburbs = [];
+    }
 
     const cityName = cityObj.raw_name || cityObj.name || '';
     const letterKey = getCityLetterKey(cityName);
-    const cacheKey = `${paId}_${letterKey}`;
 
-    if (!noPostcodeLetterCache[cacheKey]) {
-        try {
-            const res = await fetch(`data/${paId}_${letterKey}.json`);
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            const rawData = await res.json();
-            const decodedDict = {};
-            for (const [cId, suburbsTuples] of Object.entries(rawData)) {
-                decodedDict[cId] = decodeHierarchyData(suburbsTuples);
-            }
-            noPostcodeLetterCache[cacheKey] = decodedDict;
-        } catch (err) {
-            console.error(`Failed to load No Postcode letter file ${cacheKey}:`, err);
-            noPostcodeLetterCache[cacheKey] = {};
-        }
+    if (!cityObj._loadedLetterKeys) {
+        cityObj._loadedLetterKeys = new Set();
     }
 
-    const letterData = noPostcodeLetterCache[cacheKey];
-    if (letterData && letterData[cityObj.child_id]) {
-        cityObj.suburbs = letterData[cityObj.child_id];
+    if (letterKey === 'no-city') {
+        let subKeysToFetch = [];
+        if (targetSuburbName) {
+            const subKey = getSuburbLetterKey(targetSuburbName);
+            subKeysToFetch = [subKey];
+        } else {
+            subKeysToFetch = [
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'no-suburb', 'other'
+            ];
+        }
+
+        const pendingKeys = subKeysToFetch.filter(k => !cityObj._loadedLetterKeys.has(k));
+        if (pendingKeys.length === 0) return;
+
+        const promises = pendingKeys.map(async (sKey) => {
+            const cacheKey = `${paId}_no-city_${sKey}`;
+            cityObj._loadedLetterKeys.add(sKey);
+
+            if (!noPostcodeLetterCache[cacheKey]) {
+                try {
+                    const res = await fetch(`data/${paId}_no-city_${sKey}.json`);
+                    if (!res.ok) {
+                        noPostcodeLetterCache[cacheKey] = {};
+                        return;
+                    }
+                    const rawData = await res.json();
+                    const decodedDict = {};
+                    if (rawData && typeof rawData === 'object') {
+                        for (const [cId, suburbsTuples] of Object.entries(rawData)) {
+                            decodedDict[cId] = decodeHierarchyData(suburbsTuples);
+                        }
+                    }
+                    noPostcodeLetterCache[cacheKey] = decodedDict;
+                } catch (err) {
+                    noPostcodeLetterCache[cacheKey] = {};
+                }
+            }
+
+            const letterData = noPostcodeLetterCache[cacheKey];
+            if (letterData && letterData[cityObj.child_id] && Array.isArray(letterData[cityObj.child_id])) {
+                const existingIds = new Set(cityObj.suburbs.map(s => (s.properties || s).child_id));
+                for (const sub of letterData[cityObj.child_id]) {
+                    const subId = (sub.properties || sub).child_id;
+                    if (subId && !existingIds.has(subId)) {
+                        existingIds.add(subId);
+                        cityObj.suburbs.push(sub);
+                    }
+                }
+            }
+        });
+
+        await Promise.all(promises);
     } else {
-        cityObj.suburbs = [];
+        const cacheKey = `${paId}_${letterKey}`;
+        if (cityObj._loadedLetterKeys.has(letterKey)) return;
+
+        cityObj._loadedLetterKeys.add(letterKey);
+
+        if (!noPostcodeLetterCache[cacheKey]) {
+            try {
+                const res = await fetch(`data/${paId}_${letterKey}.json`);
+                if (!res.ok) {
+                    noPostcodeLetterCache[cacheKey] = {};
+                    return;
+                }
+                const rawData = await res.json();
+                const decodedDict = {};
+                if (rawData && typeof rawData === 'object') {
+                    for (const [cId, suburbsTuples] of Object.entries(rawData)) {
+                        decodedDict[cId] = decodeHierarchyData(suburbsTuples);
+                    }
+                }
+                noPostcodeLetterCache[cacheKey] = decodedDict;
+            } catch (err) {
+                noPostcodeLetterCache[cacheKey] = {};
+            }
+        }
+
+        const letterData = noPostcodeLetterCache[cacheKey];
+        if (letterData && letterData[cityObj.child_id] && Array.isArray(letterData[cityObj.child_id])) {
+            const existingIds = new Set(cityObj.suburbs.map(s => (s.properties || s).child_id));
+            for (const sub of letterData[cityObj.child_id]) {
+                const subId = (sub.properties || sub).child_id;
+                if (subId && !existingIds.has(subId)) {
+                    existingIds.add(subId);
+                    cityObj.suburbs.push(sub);
+                }
+            }
+        }
     }
 }
 

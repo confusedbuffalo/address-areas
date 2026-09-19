@@ -695,14 +695,14 @@ def process_hierarchy(
 
         lower_label = str(label).strip().lower()
         if lower_label not in ('no postcode', 'no city', 'no suburb', 'no street', 'missing', 'unknown'):
-            rounded_bbox = [round(x, 5) for x in bbox]
+            search_bbox = [round(x, 4) for x in bbox]
 
             if group_col in ('postcode_area', 'city'):
                 root_search_acc.append([
                     child_id,
                     group_total,
                     current_trail,
-                    rounded_bbox
+                    search_bbox
                 ])
 
             if child_id:
@@ -710,7 +710,7 @@ def process_hierarchy(
                     child_id,
                     group_total,
                     current_trail[1:],
-                    rounded_bbox
+                    search_bbox
                 ])
 
         pm_props = {

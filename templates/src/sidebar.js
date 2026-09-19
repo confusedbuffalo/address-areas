@@ -200,13 +200,15 @@ export async function fetchPostcodeSearchIndex(postcodeAreaId) {
         const rawData = await res.json();
         let prefix = [];
         let items = [];
+        let paIdHeader = null;
         if (Array.isArray(rawData)) {
             items = rawData;
         } else if (rawData && typeof rawData === 'object') {
+            paIdHeader = rawData.pa_id || null;
             prefix = rawData.prefix || [];
             items = rawData.items || [];
         }
-        const parsed = items.map(item => parseSearchItem(item, prefix));
+        const parsed = items.map(item => parseSearchItem(item, prefix, paIdHeader));
         state.loadedPostcodeSearchIndices[postcodeAreaId] = parsed;
         return parsed;
     } catch (err) {
@@ -221,12 +223,18 @@ export async function fetchPostcodeSearchIndex(postcodeAreaId) {
  *
  * @param {Object|Array} rawItem - Search index item.
  * @param {Array<string>} [prefix=[]] - Optional trail prefix.
+ * @param {string|null} [paIdHeader=null] - Optional PA ID prefix from file header.
  * @returns {Object} Normalised search item object with pre-computed lowercase name.
  */
-export function parseSearchItem(rawItem, prefix = []) {
+export function parseSearchItem(rawItem, prefix = [], paIdHeader = null) {
     if (Array.isArray(rawItem)) {
+        let rawId = rawItem[0];
+        let id = rawId;
+        if (paIdHeader && rawId && !rawId.startsWith(paIdHeader)) {
+            id = `${paIdHeader}_${rawId}`;
+        }
+
         if (rawItem.length === 5) {
-            const id = rawItem[0];
             const parts = id ? id.split('_') : [];
             let level = 'postcode_area';
             if (parts.length === 2) level = 'city';
@@ -244,7 +252,6 @@ export function parseSearchItem(rawItem, prefix = []) {
             };
         }
 
-        const id = rawItem[0];
         const parts = id ? id.split('_') : [];
         let level = 'postcode_area';
         if (parts.length === 2) {
