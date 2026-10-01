@@ -127,16 +127,23 @@ export function sendIdsToJosm(ids) {
         return Promise.resolve();
     }
 
-    const chunk1 = ids.slice(0, 200);
-    const chunk2 = ids.slice(200, 400);
+    const chunkSize = 200;
+    const chunks = [];
+    for (let i = 0; i < ids.length; i += chunkSize) {
+        chunks.push(ids.slice(i, i + chunkSize));
+    }
 
-    return makeJosmCall(chunk1)
-        .then(() => {
-            if (chunk2.length > 0) {
-                return new Promise(resolve => setTimeout(resolve, 500))
-                    .then(() => makeJosmCall(chunk2));
+    let promise = Promise.resolve();
+    chunks.forEach((chunk, index) => {
+        promise = promise.then(() => {
+            if (index > 0) {
+                return new Promise(resolve => setTimeout(resolve, 500)).then(() => makeJosmCall(chunk));
             }
-        })
+            return makeJosmCall(chunk);
+        });
+    });
+
+    return promise
         .then(() => {
             showToast("Sent objects to JOSM!");
         })
