@@ -20,6 +20,7 @@ jobs:
               uses: actions/checkout@v5
               with:
                   token: ${{ steps.app-token-push.outputs.token }}
+                  ref: ${{ github.ref_name }}
 
             - name: Free up disk space on runner
               run: |
