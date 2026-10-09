@@ -40,7 +40,7 @@ for _prefix in LIFECYCLE_PREFIXES:
 
 CONSIDERED_TAGS_SET: set[str] = set(CONSIDERED_TAGS)
 
-PATH_TYPES = ['path', 'footway', 'cycleway']
+PATH_TYPES = ['path', 'footway', 'cycleway', 'corridor']
 ROAD_ONLY_TAGS = ['maxspeed', 'lanes', 'sidewalk']
 
 POSTCODE_AREA_REGEX: re.Pattern[str] = re.compile(r'^([A-Z]+)')

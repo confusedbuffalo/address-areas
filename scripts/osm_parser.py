@@ -18,7 +18,8 @@ from warnings_detector import is_valid_address_tag
 PHYSICAL_HIGHWAY_TYPES: set[str] = {
     'residential', 'unclassified', 'tertiary', 'secondary', 'primary',
     'trunk', 'motorway', 'living_street', 'service', 'pedestrian',
-    'footway', 'cycleway', 'path'
+    'track', 'construction',
+    'footway', 'cycleway', 'path', 'corridor'
 }
 
 
