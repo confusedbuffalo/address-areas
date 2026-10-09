@@ -33,8 +33,12 @@ def calculate_stats_from_db(db_path: str) -> Dict[str, Any]:
 
     stats: Dict[str, Any] = {}
 
+    cursor.execute("PRAGMA table_info(addresses)")
+    cols = [r[1] for r in cursor.fetchall()]
+    where_interp = " WHERE is_interpolation_only = 0" if 'is_interpolation_only' in cols else ""
+
     # 1. Calculate All UK stats
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT
             COUNT(*),
             SUM(CASE WHEN postcode IS NOT NULL AND postcode != '' AND postcode != 'No postcode' AND postcode != 'Unknown' THEN 1 ELSE 0 END),
@@ -44,6 +48,7 @@ def calculate_stats_from_db(db_path: str) -> Dict[str, Any]:
             COUNT(DISTINCT CASE WHEN street IS NOT NULL AND street != '' AND LOWER(TRIM(street)) NOT IN ('no street', 'missing', 'unknown') THEN street_key END),
             SUM(CASE WHEN is_addressed = 1 THEN 1 ELSE 0 END)
         FROM addresses
+        {where_interp}
     """)
     row = cursor.fetchone()
     total = row[0] or 0
@@ -62,7 +67,7 @@ def calculate_stats_from_db(db_path: str) -> Dict[str, Any]:
     }
 
     # 2. Calculate Per-Postcode Area stats
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT
             postcode_area,
             COUNT(*),
@@ -73,6 +78,7 @@ def calculate_stats_from_db(db_path: str) -> Dict[str, Any]:
             COUNT(DISTINCT CASE WHEN street IS NOT NULL AND street != '' AND LOWER(TRIM(street)) NOT IN ('no street', 'missing', 'unknown') THEN street_key END),
             SUM(CASE WHEN is_addressed = 1 THEN 1 ELSE 0 END)
         FROM addresses
+        {where_interp}
         GROUP BY postcode_area
     """)
 

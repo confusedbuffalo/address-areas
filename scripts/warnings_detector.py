@@ -290,7 +290,11 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
         'place_with_street'
     ]
 
-    query = "SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name, unusual_addr_tags FROM addresses"
+    cursor.execute("PRAGMA table_info(addresses)")
+    cols = [r[1] for r in cursor.fetchall()]
+    interp_clause = " WHERE is_interpolation_only = 0" if 'is_interpolation_only' in cols else ""
+
+    query = f"SELECT postcode_area, city, suburb, street, popup_tags, osm_id, osm_name, unusual_addr_tags FROM addresses{interp_clause}"
     cursor.execute(query)
 
     for row in cursor:
@@ -389,12 +393,14 @@ def extract_warnings_from_db(db_path: str) -> dict[str, dict[str, list[list[str]
     has_highways_table = bool(cursor.fetchone())
 
     if 'x_proj' in add_cols and has_highways_table:
-        cursor.execute("""
+        interp_and = " AND is_interpolation_only = 0" if 'is_interpolation_only' in add_cols else ""
+        cursor.execute(f"""
             SELECT postcode_area, street, GROUP_CONCAT(osm_id, ','), MIN(x_proj), MAX(x_proj), MIN(y_proj), MAX(y_proj)
             FROM addresses
             WHERE street IS NOT NULL AND TRIM(street) != ''
               AND street NOT IN ('No street', 'no street', 'missing', 'unknown')
               AND (street_type IS NULL OR street_type != 'place')
+              {interp_and}
             GROUP BY postcode_area, street
         """)
 

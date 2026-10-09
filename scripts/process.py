@@ -184,7 +184,8 @@ def process() -> None:
             osm_id TEXT,
             osm_name TEXT,
             is_addressed INTEGER,
-            has_feature_tag INTEGER
+            has_feature_tag INTEGER,
+            is_interpolation_only INTEGER
         )
     """)
 
@@ -240,7 +241,7 @@ def process() -> None:
     conn.execute("CREATE INDEX idx_highways_name_bbox ON physical_highways(name, min_x, max_x, min_y, max_y);")
     conn.commit()
 
-    pas_df = pd.read_sql_query("SELECT DISTINCT postcode_area FROM addresses", conn)
+    pas_df = pd.read_sql_query("SELECT DISTINCT postcode_area FROM addresses WHERE is_interpolation_only = 0", conn)
     postcode_areas = pas_df['postcode_area'].tolist()
 
     standard_pas = [pa for pa in postcode_areas if pa != 'No postcode']
@@ -250,7 +251,7 @@ def process() -> None:
     no_postcode_tasks = []
     if has_no_postcode:
         no_pc_cities_df = pd.read_sql_query(
-            "SELECT DISTINCT city FROM addresses WHERE postcode_area = 'No postcode'", conn
+            "SELECT DISTINCT city FROM addresses WHERE postcode_area = 'No postcode' AND is_interpolation_only = 0", conn
         )
         cities_list = no_pc_cities_df['city'].dropna().tolist()
 
@@ -266,11 +267,11 @@ def process() -> None:
         # Calculate spatial chunks for each letter partition to ensure max chunk size <= 40,000 points
         for letter_key, cnames in letter_map.items():
             if letter_key == 'no-city':
-                q = "SELECT x_proj, y_proj FROM addresses WHERE postcode_area = 'No postcode' AND (city IS NULL OR LOWER(TRIM(city)) IN ('', 'no city', 'missing', 'unknown'))"
+                q = "SELECT x_proj, y_proj FROM addresses WHERE postcode_area = 'No postcode' AND (city IS NULL OR LOWER(TRIM(city)) IN ('', 'no city', 'missing', 'unknown')) AND is_interpolation_only = 0"
                 p = []
             else:
                 placeholders = ', '.join(['?'] * len(cnames))
-                q = f"SELECT x_proj, y_proj FROM addresses WHERE postcode_area = 'No postcode' AND city IN ({placeholders})"
+                q = f"SELECT x_proj, y_proj FROM addresses WHERE postcode_area = 'No postcode' AND city IN ({placeholders}) AND is_interpolation_only = 0"
                 p = cnames
 
             df_summary = pd.read_sql_query(q, conn, params=p)

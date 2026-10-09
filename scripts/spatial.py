@@ -232,8 +232,13 @@ def get_nearby_buffer_points(
         y_min_b = row.y_min - buffer_dist
         y_max_b = row.y_max + buffer_dist
 
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(addresses)")
+        cols = [r[1] for r in cursor.fetchall()]
+        interp_and = " AND is_interpolation_only = 0" if 'is_interpolation_only' in cols else ""
+
         df_sub = pd.read_sql_query(
-            "SELECT id, x_proj, y_proj FROM addresses WHERE x_proj BETWEEN ? AND ? AND y_proj BETWEEN ? AND ?",
+            f"SELECT id, x_proj, y_proj FROM addresses WHERE x_proj BETWEEN ? AND ? AND y_proj BETWEEN ? AND ?{interp_and}",
             conn,
             params=[x_min_b, x_max_b, y_min_b, y_max_b]
         )

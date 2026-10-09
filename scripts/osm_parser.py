@@ -115,6 +115,15 @@ class BaseAddressHandler(osmium.SimpleHandler):
         )
         has_feature_tag: int = 1 if any(k in tags for k in FEATURE_TAG_KEYS) else 0
 
+        is_interpolation_only: int = 0
+        if osm_type == 'w' and 'addr:interpolation' in tags:
+            valid_addr_keys = {
+                tag.k for tag in tags
+                if tag.k.startswith('addr:') and is_valid_address_tag(tag.k)
+            }
+            if not (valid_addr_keys - {'addr:interpolation', 'addr:inclusion'}):
+                is_interpolation_only = 1
+
         street_key: str = street_val if street_type == 'missing' else f"{street_type}:{street_val}"
         suburb_key: str = suburb_val if suburb_type == 'missing' else f"{suburb_type}:{suburb_val}"
 
@@ -131,7 +140,8 @@ class BaseAddressHandler(osmium.SimpleHandler):
             f"{osm_type}{osm_id}",
             tags.get('name', ''),
             1 if has_address_info else 0,
-            has_feature_tag
+            has_feature_tag,
+            is_interpolation_only
         ))
 
         if len(self.batch) >= 10000:
@@ -146,8 +156,9 @@ class BaseAddressHandler(osmium.SimpleHandler):
                     postcode, postcode_area, city,
                     suburb, suburb_type, suburb_key,
                     street, street_type, street_key,
-                    popup_tags, unusual_addr_tags, osm_id, osm_name, is_addressed, has_feature_tag
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    popup_tags, unusual_addr_tags, osm_id, osm_name, is_addressed, has_feature_tag,
+                    is_interpolation_only
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, self.batch)
             self.conn.commit()
             self.total_addresses += len(self.batch)

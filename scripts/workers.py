@@ -160,7 +160,13 @@ def process_no_postcode_sub_partition_worker(
     try:
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
 
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(addresses)")
+        cols = [r[1] for r in cursor.fetchall()]
+
         where_clauses = ["postcode_area = 'No postcode'"]
+        if 'is_interpolation_only' in cols:
+            where_clauses.append("is_interpolation_only = 0")
         params: list[Any] = []
 
         if letter_key == 'no-city':
@@ -308,7 +314,12 @@ def process_postcode_area_worker(args: tuple[str, int, int, str, str]) -> tuple[
 
         conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
 
-        df_target = pd.read_sql_query("SELECT * FROM addresses WHERE postcode_area = ?", conn, params=[pa])
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(addresses)")
+        cols = [r[1] for r in cursor.fetchall()]
+        interp_and = " AND is_interpolation_only = 0" if 'is_interpolation_only' in cols else ""
+
+        df_target = pd.read_sql_query(f"SELECT * FROM addresses WHERE postcode_area = ?{interp_and}", conn, params=[pa])
         if df_target.empty:
             conn.close()
             return [], [], points_pa_path, hulls_pa_path

@@ -103,10 +103,13 @@ def extract_duplicates_from_db(db_path: str) -> dict[str, list[list[Any]]]:
     cursor.execute("PRAGMA table_info(addresses)")
     columns = [row[1] for row in cursor.fetchall()]
     has_feature_col = 'has_feature_tag' in columns
+    has_interp_col = 'is_interpolation_only' in columns
 
     query = "SELECT postcode_area, postcode, city, suburb, suburb_type, street, street_type, popup_tags, osm_id, osm_name FROM addresses WHERE postcode_area IS NOT NULL AND postcode_area != 'No postcode'"
     if has_feature_col:
         query += " AND has_feature_tag = 0"
+    if has_interp_col:
+        query += " AND is_interpolation_only = 0"
 
     cursor.execute(query)
 
