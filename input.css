@@ -2,3 +2,33 @@
 
 @source "./templates/**/*.html";
 @source "./templates/**/*.js";
+
+.date-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+}
+.date-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    pointer-events: auto;
+}
+.date-slider::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    pointer-events: auto;
+}

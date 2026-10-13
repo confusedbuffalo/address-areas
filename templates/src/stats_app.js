@@ -6,15 +6,18 @@
 let statsData = null; // Holds UK stats data structure
 let areaDataCache = {}; // Cache for per-area stats fetched on demand
 let activeArea = 'uk';
-let activeRange = 'all'; // 'month', 'year', 'all'
+let sliderStartIdx = 0;
+let sliderEndIdx = 0;
 
 const charts = {};
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await loadStatsData();
-    initControls();
-    await updateDashboard();
-});
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadStatsData();
+        initControls();
+        await updateDashboard();
+    });
+}
 
 async function loadStatsData() {
     try {
@@ -24,9 +27,66 @@ async function loadStatsData() {
         }
         statsData = await response.json();
         populateAreaSelect();
+        initAreaFromUrl();
+        initSliderDefaults();
     } catch (err) {
         console.error('Error loading stats data:', err);
     }
+}
+
+function initAreaFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const areaParam = params.get('area');
+    if (!areaParam) return;
+
+    const select = document.getElementById('area-select');
+    if (!select) return;
+
+    const paramLower = areaParam.trim().toLowerCase();
+    for (const opt of select.options) {
+        if (opt.value.toLowerCase() === paramLower ||
+            (opt.value === 'No postcode' && paramLower === 'no-postcode')) {
+            activeArea = opt.value;
+            select.value = opt.value;
+            break;
+        }
+    }
+}
+
+function updateUrlForArea(areaKey) {
+    let paramVal = 'uk';
+    if (areaKey === 'No postcode') {
+        paramVal = 'no-postcode';
+    } else if (areaKey) {
+        paramVal = areaKey.toLowerCase();
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.set('area', paramVal);
+    window.history.replaceState({}, '', url.toString());
+}
+
+function getDefaultStartIndex(dates) {
+    if (!dates || dates.length === 0) return 0;
+    const latestStr = dates[dates.length - 1];
+    const latestParts = latestStr.split('-').map(Number);
+    if (latestParts.length !== 3) return Math.max(0, dates.length - 52);
+
+    const targetDate = new Date(latestParts[0] - 1, latestParts[1] - 1, latestParts[2]);
+    for (let i = 0; i < dates.length; i++) {
+        const parts = dates[i].split('-').map(Number);
+        if (parts.length === 3) {
+            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+            if (d >= targetDate) return i;
+        }
+    }
+    return Math.max(0, dates.length - 52);
+}
+
+function initSliderDefaults() {
+    if (!statsData || !statsData.dates || statsData.dates.length === 0) return;
+    const total = statsData.dates.length;
+    sliderEndIdx = total - 1;
+    sliderStartIdx = getDefaultStartIndex(statsData.dates);
 }
 
 function getAreaFilename(areaKey) {
@@ -81,51 +141,146 @@ function populateAreaSelect() {
     });
 }
 
-function initControls() {
-    const rangeBtns = {
-        month: document.getElementById('range-month-btn'),
-        year: document.getElementById('range-year-btn'),
-        all: document.getElementById('range-all-btn')
-    };
+function formatDateStr(dStr) {
+    if (!dStr) return '';
+    const parts = dStr.split('-').map(Number);
+    if (parts.length === 3) {
+        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+        return dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    return dStr;
+}
 
-    Object.entries(rangeBtns).forEach(([rangeKey, btn]) => {
-        if (btn) {
-            btn.addEventListener('click', () => {
-                activeRange = rangeKey;
-                Object.values(rangeBtns).forEach(b => {
-                    if (b) {
-                        b.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
-                        b.classList.add('text-gray-700', 'hover:bg-gray-200');
-                    }
-                });
-                btn.classList.remove('text-gray-700', 'hover:bg-gray-200');
-                btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
-                updateDashboard();
-            });
+function renderSliderTicks() {
+    const ticksContainer = document.getElementById('slider-ticks');
+    if (!ticksContainer || !statsData || !statsData.dates || statsData.dates.length < 2) return;
+
+    ticksContainer.innerHTML = '';
+    const dates = statsData.dates;
+    const total = dates.length;
+    const denom = total - 1;
+
+    const startYear = parseInt(dates[0].split('-')[0], 10);
+    const endYear = parseInt(dates[denom].split('-')[0], 10);
+    const spanYears = endYear - startYear;
+
+    let step = 1;
+    if (spanYears > 20) step = 4;
+    else if (spanYears > 10) step = 2;
+
+    const yearsToMark = [];
+    for (let yr = startYear; yr <= endYear; yr += step) {
+        yearsToMark.push(yr);
+    }
+    if (yearsToMark[yearsToMark.length - 1] !== endYear) {
+        yearsToMark.push(endYear);
+    }
+
+    yearsToMark.forEach(yr => {
+        let idx = dates.findIndex(d => d.startsWith(`${yr}-`));
+        if (idx === -1) {
+            if (yr === endYear) idx = denom;
+            else return;
         }
+
+        const pct = (idx / denom) * 100;
+
+        const tickEl = document.createElement('div');
+        tickEl.className = 'absolute top-0 w-0.5 h-1.5 bg-gray-300 -translate-x-1/2';
+        tickEl.style.left = `${pct}%`;
+
+        const labelEl = document.createElement('span');
+        labelEl.className = 'absolute top-1.5 text-[10px] font-medium text-gray-400 -translate-x-1/2';
+        labelEl.style.left = `${pct}%`;
+        labelEl.textContent = yr;
+
+        ticksContainer.appendChild(tickEl);
+        ticksContainer.appendChild(labelEl);
     });
+}
+
+function updateSliderVisuals() {
+    const sliderStart = document.getElementById('slider-start');
+    const sliderEnd = document.getElementById('slider-end');
+    const sliderHighlight = document.getElementById('slider-highlight');
+    const rangeDisplay = document.getElementById('date-range-display');
+
+    if (!statsData || !statsData.dates || statsData.dates.length === 0) return;
+    const total = statsData.dates.length;
+    const denom = total > 1 ? total - 1 : 1;
+
+    const pctLeft = (sliderStartIdx / denom) * 100;
+    const pctWidth = ((sliderEndIdx - sliderStartIdx) / denom) * 100;
+
+    if (sliderHighlight) {
+        sliderHighlight.style.left = `${pctLeft}%`;
+        sliderHighlight.style.width = `${pctWidth}%`;
+    }
+
+    if (rangeDisplay) {
+        const startLabel = formatDateStr(statsData.dates[sliderStartIdx]);
+        const endLabel = formatDateStr(statsData.dates[sliderEndIdx]);
+        rangeDisplay.textContent = startLabel === endLabel ? startLabel : `${startLabel} – ${endLabel}`;
+    }
+
+    if (sliderStart) sliderStart.value = sliderStartIdx;
+    if (sliderEnd) sliderEnd.value = sliderEndIdx;
+}
+
+function initControls() {
+    const sliderStart = document.getElementById('slider-start');
+    const sliderEnd = document.getElementById('slider-end');
+
+    if (sliderStart && sliderEnd && statsData && statsData.dates) {
+        const total = statsData.dates.length;
+        const maxIdx = Math.max(0, total - 1);
+
+        sliderStart.min = 0;
+        sliderStart.max = maxIdx;
+        sliderStart.value = sliderStartIdx;
+
+        sliderEnd.min = 0;
+        sliderEnd.max = maxIdx;
+        sliderEnd.value = sliderEndIdx;
+
+        const onSliderInput = (e) => {
+            let valStart = parseInt(sliderStart.value, 10);
+            let valEnd = parseInt(sliderEnd.value, 10);
+
+            if (e.target === sliderStart && valStart > valEnd) {
+                sliderStart.value = valEnd;
+                valStart = valEnd;
+            } else if (e.target === sliderEnd && valEnd < valStart) {
+                sliderEnd.value = valStart;
+                valEnd = valStart;
+            }
+
+            sliderStartIdx = valStart;
+            sliderEndIdx = valEnd;
+
+            updateSliderVisuals();
+            updateDashboard();
+        };
+
+        sliderStart.addEventListener('input', onSliderInput);
+        sliderEnd.addEventListener('input', onSliderInput);
+
+        renderSliderTicks();
+        updateSliderVisuals();
+    }
 
     const select = document.getElementById('area-select');
     if (select) {
         select.addEventListener('change', async (e) => {
             activeArea = e.target.value;
+            updateUrlForArea(activeArea);
             await updateDashboard();
         });
     }
 }
 
-function filterDatesByRange(dates) {
-    if (!dates || dates.length === 0) return [];
-    if (activeRange === 'month') {
-        return dates.slice(-4);
-    } else if (activeRange === 'year') {
-        return dates.slice(-52);
-    }
-    return dates;
-}
-
 async function updateDashboard() {
-    if (!statsData || !statsData.dates) return;
+    if (!statsData || !statsData.dates || statsData.dates.length === 0) return;
 
     let areaStatsByDate = {};
     if (activeArea === 'uk') {
@@ -136,7 +291,7 @@ async function updateDashboard() {
         areaStatsByDate = await fetchAreaStats(activeArea);
     }
 
-    const filteredDates = filterDatesByRange(statsData.dates);
+    const filteredDates = statsData.dates.slice(sliderStartIdx, sliderEndIdx + 1);
 
     const totalObjectsData = [];
     const postcodeCountData = [];
@@ -198,14 +353,7 @@ async function updateDashboard() {
         document.getElementById('stat-streets').textContent = latestStreets.toLocaleString();
     }
 
-    const labels = filteredDates.map(d => {
-        const parts = d.split('-');
-        if (parts.length === 3) {
-            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
-            return dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-        return d;
-    });
+    const labels = filteredDates.map(formatDateStr);
 
     // Render Chart 1: Objects with Address Tags (Triple line graph for 'uk', double line for individual area)
     const totalObjectsDatasets = [{
@@ -255,6 +403,14 @@ async function updateDashboard() {
     renderChart('chart-cities', 'Distinct Cities', labels, citiesData, '#8b5cf6');
     renderChart('chart-suburbs', 'Distinct Suburbs', labels, suburbsData, '#f59e0b');
     renderChart('chart-streets', 'Distinct Streets', labels, streetsData, '#ec4899');
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        getDefaultStartIndex,
+        formatDateStr,
+        getAreaFilename
+    };
 }
 
 function renderMultiChart(canvasId, labels, datasets) {

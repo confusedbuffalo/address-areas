@@ -161,7 +161,10 @@ def get_data_timestamp() -> int:
 
 
 def compile_stats() -> None:
-    """Compiles UK stats into dist/stats/data.json and copies/publishes per-area stats files to dist/stats/data/."""
+    """Compiles UK stats into dist/stats/data.json and copies/publishes per-area stats files to dist/stats/data/.
+    Excludes non-existent postcode areas (areas with 0 objects in the current run) from the selection dropdown
+    and groups their historical stats into the 'unknown' area dataset.
+    """
     dist_stats_dir = os.path.join(PUBLIC_DIRECTORY, 'stats')
     dist_stats_data_dir = os.path.join(dist_stats_dir, 'data')
     os.makedirs(dist_stats_data_dir, exist_ok=True)
@@ -185,13 +188,55 @@ def compile_stats() -> None:
             except Exception as e:
                 logging.warning(f"Failed to load uk.json stats: {e}")
 
-        # List all available areas for selection dropdown and copy area JSON files to dist/stats/data/
+        latest_date = dates[-1] if dates else None
+
+        # Load all area data
+        area_datasets: dict[str, dict] = {}
         for filepath in files:
             filename = os.path.basename(filepath)
             if filename == 'uk.json':
                 continue
+            try:
+                with open(filepath, 'r', encoding='utf-8') as sf:
+                    area_datasets[filename] = json.load(sf)
+            except Exception as e:
+                logging.warning(f"Failed to read stats file {filename}: {e}")
 
-            # Map filename back to area key option for selection if needed
+        # Separate valid areas, no-postcode, unknown, and obsolete/non-existent areas
+        valid_datasets: dict[str, dict] = {}
+        unknown_data: dict = area_datasets.pop('unknown.json', {}) if 'unknown.json' in area_datasets else {}
+
+        for filename, data in area_datasets.items():
+            if filename == 'no-postcode.json':
+                valid_datasets[filename] = data
+                continue
+
+            # Standard postcode area
+            latest_metrics = data.get(latest_date, {}) if latest_date else {}
+            if latest_metrics.get('total_objects', 0) > 0:
+                valid_datasets[filename] = data
+            else:
+                # Obsolete area: aggregate historical metrics into unknown_data
+                for d_str, metrics in data.items():
+                    if d_str not in unknown_data:
+                        unknown_data[d_str] = {
+                            'addressed_count': 0,
+                            'cities': 0,
+                            'distinct_postcodes': 0,
+                            'postcode_count': 0,
+                            'streets': 0,
+                            'suburbs': 0,
+                            'total_objects': 0
+                        }
+                    for m_key in ('addressed_count', 'cities', 'distinct_postcodes', 'postcode_count', 'streets', 'suburbs', 'total_objects'):
+                        unknown_data[d_str][m_key] = unknown_data[d_str].get(m_key, 0) + metrics.get(m_key, 0)
+
+        # Include unknown.json if non-empty
+        if unknown_data:
+            valid_datasets['unknown.json'] = unknown_data
+
+        # Save published per-area JSON files and build area_keys list
+        for filename, data in valid_datasets.items():
             area_code = filename.replace('.json', '')
             if area_code == 'no-postcode':
                 area_key = 'No postcode'
@@ -201,13 +246,12 @@ def compile_stats() -> None:
                 area_key = area_code.upper()
             area_keys.append(area_key)
 
-            # Copy file to dist/stats/data/{filename}
             dest_path = os.path.join(dist_stats_data_dir, filename)
             try:
-                with open(filepath, 'r', encoding='utf-8') as sf, open(dest_path, 'w', encoding='utf-8') as df:
-                    df.write(sf.read())
+                with open(dest_path, 'w', encoding='utf-8') as df:
+                    json.dump(data, df, indent=2, sort_keys=True)
             except Exception as e:
-                logging.warning(f"Failed to copy stats file {filename} to {dest_path}: {e}")
+                logging.warning(f"Failed to write stats file {filename} to {dest_path}: {e}")
 
     output_path = os.path.join(dist_stats_dir, 'data.json')
     with open(output_path, 'w', encoding='utf-8') as f:
