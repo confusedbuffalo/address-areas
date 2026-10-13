@@ -104,23 +104,57 @@ def calculate_stats_from_db(db_path: str) -> Dict[str, Any]:
     return stats
 
 
-def save_stats_snapshot(stats: Dict[str, Any], date_str: str, output_dir: str = STATS_DIR) -> str:
-    """Saves calculated stats snapshot to stats/YYYY-MM-DD.json.
+def get_stats_area_filename(area_key: str) -> str:
+    """Returns the standardized JSON filename for a given stats area key.
 
     Args:
-        stats (Dict[str, Any]): Calculated statistics object.
-        date_str (str): Date formatted as YYYY-MM-DD.
-        output_dir (str, optional): Target output directory. Defaults to STATS_DIR.
+        area_key (str): Area key such as 'uk', 'DH', 'No postcode', or 'Unknown'.
 
     Returns:
-        str: Filepath of saved snapshot.
+        str: Standardized filename string (e.g. 'uk.json', 'DH.json', 'no-postcode.json').
+    """
+    if area_key == 'uk':
+        return 'uk.json'
+    elif area_key == 'No postcode':
+        return 'no-postcode.json'
+    elif area_key.lower() == 'unknown':
+        return 'unknown.json'
+    else:
+        clean = area_key.strip()
+        if clean.isupper() and clean.isalnum():
+            return f"{clean}.json"
+        clean_slug = clean.lower().replace(' ', '-')
+        return f"{clean_slug}.json"
+
+
+def save_stats_snapshot(stats: Dict[str, Any], date_str: str, output_dir: str = STATS_DIR) -> None:
+    """Appends/updates calculated stats snapshot for a date into per-area JSON files in output_dir.
+
+    Args:
+        stats (Dict[str, Any]): Calculated statistics object mapping area keys to metric dicts.
+        date_str (str): Date formatted as YYYY-MM-DD.
+        output_dir (str, optional): Target output directory. Defaults to STATS_DIR.
     """
     os.makedirs(output_dir, exist_ok=True)
-    filepath = os.path.join(output_dir, f"{date_str}.json")
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(stats, f, indent=2, sort_keys=True)
-    logging.info(f"Saved stats snapshot to {filepath}")
-    return filepath
+
+    for area_key, area_stats in stats.items():
+        fname = get_stats_area_filename(area_key)
+        filepath = os.path.join(output_dir, fname)
+
+        area_data: Dict[str, Any] = {}
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    area_data = json.load(f)
+            except Exception as e:
+                logging.warning(f"Could not read existing stats file {filepath}: {e}")
+
+        area_data[date_str] = area_stats
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(area_data, f, indent=2, sort_keys=True)
+
+    logging.info(f"Updated per-area stats snapshots for {date_str} across {len(stats)} areas in {output_dir}.")
 
 
 def should_collect_stats(dt: datetime = None) -> bool:

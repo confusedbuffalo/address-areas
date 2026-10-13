@@ -1,0 +1,56 @@
+{
+  "2010-12-24": {
+    "addressed_count": 1,
+    "cities": 0,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2010-12-31": {
+    "addressed_count": 1,
+    "cities": 0,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2020-12-25": {
+    "addressed_count": 1,
+    "cities": 1,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2021-01-01": {
+    "addressed_count": 1,
+    "cities": 1,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2021-01-08": {
+    "addressed_count": 1,
+    "cities": 1,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2026-02-20": {
+    "addressed_count": 2,
+    "cities": 1,
+    "distinct_postcodes": 1,
+    "postcode_count": 2,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 2
+  }
+}

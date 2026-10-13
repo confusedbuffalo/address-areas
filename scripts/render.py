@@ -161,30 +161,58 @@ def get_data_timestamp() -> int:
 
 
 def compile_stats() -> None:
-    """Aggregates all weekly stats snapshot JSON files from stats/ into dist/stats/data.json."""
+    """Compiles UK stats into dist/stats/data.json and copies/publishes per-area stats files to dist/stats/data/."""
     dist_stats_dir = os.path.join(PUBLIC_DIRECTORY, 'stats')
-    os.makedirs(dist_stats_dir, exist_ok=True)
+    dist_stats_data_dir = os.path.join(dist_stats_dir, 'data')
+    os.makedirs(dist_stats_data_dir, exist_ok=True)
 
     dates: list[str] = []
     snapshots: dict[str, dict] = {}
+    area_keys: list[str] = []
 
     if os.path.exists(STATS_DIR):
         files = sorted(glob.glob(os.path.join(STATS_DIR, '*.json')))
+
+        # Load UK stats for root dist/stats/data.json
+        uk_file = os.path.join(STATS_DIR, 'uk.json')
+        if os.path.exists(uk_file):
+            try:
+                with open(uk_file, 'r', encoding='utf-8') as f:
+                    uk_data = json.load(f)
+                dates = sorted(list(uk_data.keys()))
+                for date_str in dates:
+                    snapshots[date_str] = {'uk': uk_data[date_str]}
+            except Exception as e:
+                logging.warning(f"Failed to load uk.json stats: {e}")
+
+        # List all available areas for selection dropdown and copy area JSON files to dist/stats/data/
         for filepath in files:
             filename = os.path.basename(filepath)
-            date_key = filename.replace('.json', '')
+            if filename == 'uk.json':
+                continue
+
+            # Map filename back to area key option for selection if needed
+            area_code = filename.replace('.json', '')
+            if area_code == 'no-postcode':
+                area_key = 'No postcode'
+            elif area_code == 'unknown':
+                area_key = 'Unknown'
+            else:
+                area_key = area_code.upper()
+            area_keys.append(area_key)
+
+            # Copy file to dist/stats/data/{filename}
+            dest_path = os.path.join(dist_stats_data_dir, filename)
             try:
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                dates.append(date_key)
-                snapshots[date_key] = data
+                with open(filepath, 'r', encoding='utf-8') as sf, open(dest_path, 'w', encoding='utf-8') as df:
+                    df.write(sf.read())
             except Exception as e:
-                logging.warning(f"Failed to load stats snapshot {filepath}: {e}")
+                logging.warning(f"Failed to copy stats file {filename} to {dest_path}: {e}")
 
     output_path = os.path.join(dist_stats_dir, 'data.json')
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump({'dates': dates, 'snapshots': snapshots}, f, separators=(',', ':'))
-    logging.info(f"Compiled {len(dates)} stats snapshot(s) to {output_path}.")
+        json.dump({'dates': dates, 'snapshots': snapshots, 'area_keys': sorted(area_keys)}, f, separators=(',', ':'))
+    logging.info(f"Compiled UK stats ({len(dates)} date(s)) and {len(area_keys)} per-area stats file(s) to {dist_stats_dir}.")
 
 
 def build_js() -> None:

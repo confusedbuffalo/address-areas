@@ -74,6 +74,34 @@ def test_calculate_stats_from_db():
 
 def test_save_stats_snapshot():
     with tempfile.TemporaryDirectory() as temp_dir:
-        stats_data = {"uk": {"total_objects": 10}}
-        filepath = save_stats_snapshot(stats_data, "2026-08-29", output_dir=temp_dir)
-        assert os.path.exists(filepath)
+        stats_data = {
+            "uk": {"total_objects": 10},
+            "DH": {"total_objects": 5},
+            "No postcode": {"total_objects": 2}
+        }
+        save_stats_snapshot(stats_data, "2026-08-29", output_dir=temp_dir)
+
+        uk_file = os.path.join(temp_dir, "uk.json")
+        dh_file = os.path.join(temp_dir, "DH.json")
+        np_file = os.path.join(temp_dir, "no-postcode.json")
+
+        assert os.path.exists(uk_file)
+        assert os.path.exists(dh_file)
+        assert os.path.exists(np_file)
+
+        import json
+        with open(uk_file, 'r') as f:
+            data = json.load(f)
+            assert "2026-08-29" in data
+            assert data["2026-08-29"]["total_objects"] == 10
+
+        # Test appending a second date
+        stats_data2 = {"uk": {"total_objects": 15}}
+        save_stats_snapshot(stats_data2, "2026-09-05", output_dir=temp_dir)
+
+        with open(uk_file, 'r') as f:
+            data = json.load(f)
+            assert "2026-08-29" in data
+            assert "2026-09-05" in data
+            assert data["2026-08-29"]["total_objects"] == 10
+            assert data["2026-09-05"]["total_objects"] == 15

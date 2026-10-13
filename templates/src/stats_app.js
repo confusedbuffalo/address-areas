@@ -3,7 +3,8 @@
  * @description Application logic for Statistics & Trends dashboard page.
  */
 
-let statsData = null;
+let statsData = null; // Holds UK stats data structure
+let areaDataCache = {}; // Cache for per-area stats fetched on demand
 let activeArea = 'uk';
 let activeRange = 'all'; // 'month', 'year', 'all'
 
@@ -12,7 +13,7 @@ const charts = {};
 document.addEventListener('DOMContentLoaded', async () => {
     await loadStatsData();
     initControls();
-    updateDashboard();
+    await updateDashboard();
 });
 
 async function loadStatsData() {
@@ -28,16 +29,41 @@ async function loadStatsData() {
     }
 }
 
+function getAreaFilename(areaKey) {
+    if (areaKey === 'uk') return 'uk.json';
+    if (areaKey === 'No postcode') return 'no-postcode.json';
+    if (areaKey.toLowerCase() === 'unknown') return 'unknown.json';
+    const clean = areaKey.trim();
+    if (clean === clean.toUpperCase() && /^[A-Z0-9]+$/i.test(clean)) {
+        return `${clean}.json`;
+    }
+    return `${clean.toLowerCase().replace(/ /g, '-')}.json`;
+}
+
+async function fetchAreaStats(areaKey) {
+    if (areaKey === 'uk') return null;
+    if (areaDataCache[areaKey]) return areaDataCache[areaKey];
+
+    const filename = getAreaFilename(areaKey);
+    try {
+        const res = await fetch(`./data/${filename}`);
+        if (!res.ok) {
+            throw new Error(`Failed to fetch stats for ${areaKey}: ${res.statusText}`);
+        }
+        const data = await res.json();
+        areaDataCache[areaKey] = data;
+        return data;
+    } catch (err) {
+        console.error(`Error loading stats for ${areaKey}:`, err);
+        return {};
+    }
+}
+
 function populateAreaSelect() {
     const select = document.getElementById('area-select');
     if (!select || !statsData) return;
 
-    const areaSet = new Set();
-    Object.values(statsData.snapshots || {}).forEach(snapshot => {
-        Object.keys(snapshot || {}).forEach(k => {
-            if (k !== 'uk') areaSet.add(k);
-        });
-    });
+    const areaSet = new Set(statsData.area_keys || []);
 
     const sortedAreas = Array.from(areaSet).sort((a, b) => {
         if (a === 'No postcode') return -1;
@@ -81,9 +107,9 @@ function initControls() {
 
     const select = document.getElementById('area-select');
     if (select) {
-        select.addEventListener('change', (e) => {
+        select.addEventListener('change', async (e) => {
             activeArea = e.target.value;
-            updateDashboard();
+            await updateDashboard();
         });
     }
 }
@@ -98,8 +124,17 @@ function filterDatesByRange(dates) {
     return dates;
 }
 
-function updateDashboard() {
+async function updateDashboard() {
     if (!statsData || !statsData.dates) return;
+
+    let areaStatsByDate = {};
+    if (activeArea === 'uk') {
+        statsData.dates.forEach(d => {
+            areaStatsByDate[d] = (statsData.snapshots[d] || {}).uk || {};
+        });
+    } else {
+        areaStatsByDate = await fetchAreaStats(activeArea);
+    }
 
     const filteredDates = filterDatesByRange(statsData.dates);
 
@@ -113,8 +148,7 @@ function updateDashboard() {
     const streetsData = [];
 
     filteredDates.forEach(date => {
-        const snapshot = statsData.snapshots[date] || {};
-        const areaStats = snapshot[activeArea] || {
+        const areaStats = areaStatsByDate[date] || {
             total_objects: 0,
             postcode_count: 0,
             distinct_postcodes: 0,

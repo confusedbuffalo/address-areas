@@ -1,0 +1,29 @@
+{
+  "2017-02-24": {
+    "addressed_count": 0,
+    "cities": 0,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 0,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2017-03-03": {
+    "addressed_count": 0,
+    "cities": 0,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 0,
+    "suburbs": 0,
+    "total_objects": 1
+  },
+  "2022-06-24": {
+    "addressed_count": 0,
+    "cities": 1,
+    "distinct_postcodes": 1,
+    "postcode_count": 1,
+    "streets": 1,
+    "suburbs": 0,
+    "total_objects": 1
+  }
+}

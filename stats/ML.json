@@ -1,0 +1,7904 @@
+{
+  "2010-01-01": {
+    "addressed_count": 1253,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1315,
+    "streets": 93,
+    "suburbs": 0,
+    "total_objects": 1315
+  },
+  "2010-01-08": {
+    "addressed_count": 1253,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1315,
+    "streets": 93,
+    "suburbs": 0,
+    "total_objects": 1315
+  },
+  "2010-01-15": {
+    "addressed_count": 1253,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1315,
+    "streets": 93,
+    "suburbs": 0,
+    "total_objects": 1315
+  },
+  "2010-01-22": {
+    "addressed_count": 1256,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1318,
+    "streets": 94,
+    "suburbs": 0,
+    "total_objects": 1318
+  },
+  "2010-01-29": {
+    "addressed_count": 1256,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1318,
+    "streets": 94,
+    "suburbs": 0,
+    "total_objects": 1318
+  },
+  "2010-02-05": {
+    "addressed_count": 1256,
+    "cities": 9,
+    "distinct_postcodes": 67,
+    "postcode_count": 1318,
+    "streets": 94,
+    "suburbs": 0,
+    "total_objects": 1318
+  },
+  "2010-02-12": {
+    "addressed_count": 1258,
+    "cities": 9,
+    "distinct_postcodes": 69,
+    "postcode_count": 1322,
+    "streets": 95,
+    "suburbs": 0,
+    "total_objects": 1322
+  },
+  "2010-02-19": {
+    "addressed_count": 1259,
+    "cities": 9,
+    "distinct_postcodes": 69,
+    "postcode_count": 1325,
+    "streets": 95,
+    "suburbs": 0,
+    "total_objects": 1325
+  },
+  "2010-02-26": {
+    "addressed_count": 1259,
+    "cities": 9,
+    "distinct_postcodes": 69,
+    "postcode_count": 1325,
+    "streets": 95,
+    "suburbs": 0,
+    "total_objects": 1325
+  },
+  "2010-03-05": {
+    "addressed_count": 1259,
+    "cities": 9,
+    "distinct_postcodes": 69,
+    "postcode_count": 1325,
+    "streets": 95,
+    "suburbs": 0,
+    "total_objects": 1325
+  },
+  "2010-03-12": {
+    "addressed_count": 1285,
+    "cities": 9,
+    "distinct_postcodes": 71,
+    "postcode_count": 1369,
+    "streets": 105,
+    "suburbs": 0,
+    "total_objects": 1369
+  },
+  "2010-03-19": {
+    "addressed_count": 1285,
+    "cities": 9,
+    "distinct_postcodes": 71,
+    "postcode_count": 1371,
+    "streets": 105,
+    "suburbs": 0,
+    "total_objects": 1371
+  },
+  "2010-03-26": {
+    "addressed_count": 1300,
+    "cities": 9,
+    "distinct_postcodes": 71,
+    "postcode_count": 1386,
+    "streets": 105,
+    "suburbs": 0,
+    "total_objects": 1386
+  },
+  "2010-04-02": {
+    "addressed_count": 1312,
+    "cities": 9,
+    "distinct_postcodes": 72,
+    "postcode_count": 1398,
+    "streets": 107,
+    "suburbs": 0,
+    "total_objects": 1398
+  },
+  "2010-04-09": {
+    "addressed_count": 1335,
+    "cities": 9,
+    "distinct_postcodes": 72,
+    "postcode_count": 1421,
+    "streets": 108,
+    "suburbs": 0,
+    "total_objects": 1421
+  },
+  "2010-04-16": {
+    "addressed_count": 1337,
+    "cities": 9,
+    "distinct_postcodes": 72,
+    "postcode_count": 1426,
+    "streets": 111,
+    "suburbs": 0,
+    "total_objects": 1426
+  },
+  "2010-04-23": {
+    "addressed_count": 1336,
+    "cities": 9,
+    "distinct_postcodes": 72,
+    "postcode_count": 1425,
+    "streets": 110,
+    "suburbs": 0,
+    "total_objects": 1425
+  },
+  "2010-04-30": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-05-07": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-05-14": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-05-21": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-05-28": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-06-04": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-06-11": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-06-18": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-06-25": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-07-02": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-07-09": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1431,
+    "streets": 113,
+    "suburbs": 0,
+    "total_objects": 1431
+  },
+  "2010-07-16": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-07-23": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-07-30": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-08-06": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-08-13": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-08-20": {
+    "addressed_count": 1340,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1434,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1434
+  },
+  "2010-08-27": {
+    "addressed_count": 1341,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1435,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1435
+  },
+  "2010-09-03": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-09-10": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-09-17": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-09-24": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-10-01": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-10-08": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-10-15": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-10-22": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-10-29": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-11-05": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-11-12": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-11-19": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-11-26": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-12-03": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-12-10": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-12-17": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-12-24": {
+    "addressed_count": 1342,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1436,
+    "streets": 115,
+    "suburbs": 0,
+    "total_objects": 1436
+  },
+  "2010-12-31": {
+    "addressed_count": 1344,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1439,
+    "streets": 116,
+    "suburbs": 0,
+    "total_objects": 1439
+  },
+  "2011-01-07": {
+    "addressed_count": 1344,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1439,
+    "streets": 116,
+    "suburbs": 0,
+    "total_objects": 1439
+  },
+  "2011-01-14": {
+    "addressed_count": 1379,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1474,
+    "streets": 118,
+    "suburbs": 0,
+    "total_objects": 1474
+  },
+  "2011-01-21": {
+    "addressed_count": 1379,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1476,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1476
+  },
+  "2011-01-28": {
+    "addressed_count": 1379,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1476,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1476
+  },
+  "2011-02-04": {
+    "addressed_count": 1379,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1476,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1476
+  },
+  "2011-02-11": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-02-18": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-02-25": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-03-04": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-03-11": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-03-18": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-03-25": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-04-01": {
+    "addressed_count": 1380,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1477,
+    "streets": 120,
+    "suburbs": 0,
+    "total_objects": 1477
+  },
+  "2011-04-08": {
+    "addressed_count": 1381,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1478,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1478
+  },
+  "2011-04-15": {
+    "addressed_count": 1382,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1479,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1479
+  },
+  "2011-04-22": {
+    "addressed_count": 1382,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1479,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1479
+  },
+  "2011-04-29": {
+    "addressed_count": 1382,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1479,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1479
+  },
+  "2011-05-06": {
+    "addressed_count": 1382,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1479,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1479
+  },
+  "2011-05-13": {
+    "addressed_count": 1382,
+    "cities": 12,
+    "distinct_postcodes": 76,
+    "postcode_count": 1479,
+    "streets": 121,
+    "suburbs": 0,
+    "total_objects": 1479
+  },
+  "2011-05-20": {
+    "addressed_count": 1385,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1483,
+    "streets": 122,
+    "suburbs": 0,
+    "total_objects": 1483
+  },
+  "2011-05-27": {
+    "addressed_count": 1385,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1483,
+    "streets": 122,
+    "suburbs": 0,
+    "total_objects": 1483
+  },
+  "2011-06-03": {
+    "addressed_count": 1385,
+    "cities": 12,
+    "distinct_postcodes": 74,
+    "postcode_count": 1483,
+    "streets": 122,
+    "suburbs": 0,
+    "total_objects": 1483
+  },
+  "2011-06-10": {
+    "addressed_count": 1386,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1487,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1487
+  },
+  "2011-06-17": {
+    "addressed_count": 1386,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1488,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1488
+  },
+  "2011-06-24": {
+    "addressed_count": 1386,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1488,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1488
+  },
+  "2011-07-01": {
+    "addressed_count": 1386,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1488,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1488
+  },
+  "2011-07-08": {
+    "addressed_count": 1401,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1502,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1502
+  },
+  "2011-07-15": {
+    "addressed_count": 1401,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1503,
+    "streets": 123,
+    "suburbs": 0,
+    "total_objects": 1503
+  },
+  "2011-07-22": {
+    "addressed_count": 1533,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1635,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1635
+  },
+  "2011-07-29": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-08-05": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-08-12": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-08-19": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-08-26": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-09-02": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-09-09": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-09-16": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-09-23": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-09-30": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1659,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1659
+  },
+  "2011-10-07": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-10-14": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-10-21": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-10-28": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-11-04": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-11-11": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-11-18": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-11-25": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-12-02": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-12-09": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-12-16": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-12-23": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2011-12-30": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2012-01-06": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2012-01-13": {
+    "addressed_count": 1557,
+    "cities": 12,
+    "distinct_postcodes": 75,
+    "postcode_count": 1660,
+    "streets": 125,
+    "suburbs": 0,
+    "total_objects": 1660
+  },
+  "2012-01-20": {
+    "addressed_count": 1558,
+    "cities": 12,
+    "distinct_postcodes": 77,
+    "postcode_count": 1662,
+    "streets": 126,
+    "suburbs": 0,
+    "total_objects": 1662
+  },
+  "2012-01-27": {
+    "addressed_count": 1563,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1667,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1667
+  },
+  "2012-02-03": {
+    "addressed_count": 1563,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1667,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1667
+  },
+  "2012-02-10": {
+    "addressed_count": 1563,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1667,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1667
+  },
+  "2012-02-17": {
+    "addressed_count": 1562,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1666,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1666
+  },
+  "2012-02-24": {
+    "addressed_count": 1562,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1666,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1666
+  },
+  "2012-03-02": {
+    "addressed_count": 1562,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1666,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1666
+  },
+  "2012-03-09": {
+    "addressed_count": 1562,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1666,
+    "streets": 128,
+    "suburbs": 0,
+    "total_objects": 1666
+  },
+  "2012-03-16": {
+    "addressed_count": 1579,
+    "cities": 12,
+    "distinct_postcodes": 79,
+    "postcode_count": 1683,
+    "streets": 129,
+    "suburbs": 0,
+    "total_objects": 1683
+  },
+  "2012-03-23": {
+    "addressed_count": 1583,
+    "cities": 12,
+    "distinct_postcodes": 80,
+    "postcode_count": 1687,
+    "streets": 130,
+    "suburbs": 0,
+    "total_objects": 1687
+  },
+  "2012-03-30": {
+    "addressed_count": 1583,
+    "cities": 12,
+    "distinct_postcodes": 81,
+    "postcode_count": 1688,
+    "streets": 130,
+    "suburbs": 0,
+    "total_objects": 1688
+  },
+  "2012-04-06": {
+    "addressed_count": 1583,
+    "cities": 12,
+    "distinct_postcodes": 81,
+    "postcode_count": 1688,
+    "streets": 130,
+    "suburbs": 0,
+    "total_objects": 1688
+  },
+  "2012-04-13": {
+    "addressed_count": 1598,
+    "cities": 12,
+    "distinct_postcodes": 81,
+    "postcode_count": 1702,
+    "streets": 131,
+    "suburbs": 0,
+    "total_objects": 1702
+  },
+  "2012-04-20": {
+    "addressed_count": 1598,
+    "cities": 12,
+    "distinct_postcodes": 81,
+    "postcode_count": 1702,
+    "streets": 131,
+    "suburbs": 0,
+    "total_objects": 1702
+  },
+  "2012-04-27": {
+    "addressed_count": 1598,
+    "cities": 12,
+    "distinct_postcodes": 81,
+    "postcode_count": 1702,
+    "streets": 131,
+    "suburbs": 0,
+    "total_objects": 1702
+  },
+  "2012-05-04": {
+    "addressed_count": 1600,
+    "cities": 12,
+    "distinct_postcodes": 85,
+    "postcode_count": 1706,
+    "streets": 132,
+    "suburbs": 0,
+    "total_objects": 1706
+  },
+  "2012-05-11": {
+    "addressed_count": 1601,
+    "cities": 12,
+    "distinct_postcodes": 85,
+    "postcode_count": 1707,
+    "streets": 134,
+    "suburbs": 0,
+    "total_objects": 1707
+  },
+  "2012-05-18": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-05-25": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-06-01": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-06-08": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-06-15": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-06-22": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-06-29": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 86,
+    "postcode_count": 1712,
+    "streets": 135,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-07-06": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 87,
+    "postcode_count": 1713,
+    "streets": 136,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-07-13": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 87,
+    "postcode_count": 1713,
+    "streets": 136,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-07-20": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 87,
+    "postcode_count": 1713,
+    "streets": 136,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-07-27": {
+    "addressed_count": 1606,
+    "cities": 12,
+    "distinct_postcodes": 87,
+    "postcode_count": 1712,
+    "streets": 136,
+    "suburbs": 0,
+    "total_objects": 1712
+  },
+  "2012-08-03": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1714,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1714
+  },
+  "2012-08-10": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1714,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1714
+  },
+  "2012-08-17": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1714,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1714
+  },
+  "2012-08-24": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1713,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-08-31": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1713,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-09-07": {
+    "addressed_count": 1607,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1713,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1713
+  },
+  "2012-09-14": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1714,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1714
+  },
+  "2012-09-21": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1717,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1717
+  },
+  "2012-09-28": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1717,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1717
+  },
+  "2012-10-05": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1723,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1723
+  },
+  "2012-10-12": {
+    "addressed_count": 1608,
+    "cities": 12,
+    "distinct_postcodes": 89,
+    "postcode_count": 1723,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1723
+  },
+  "2012-10-19": {
+    "addressed_count": 1609,
+    "cities": 12,
+    "distinct_postcodes": 90,
+    "postcode_count": 1724,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1724
+  },
+  "2012-10-26": {
+    "addressed_count": 1609,
+    "cities": 12,
+    "distinct_postcodes": 90,
+    "postcode_count": 1724,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1724
+  },
+  "2012-11-02": {
+    "addressed_count": 1609,
+    "cities": 12,
+    "distinct_postcodes": 90,
+    "postcode_count": 1724,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1724
+  },
+  "2012-11-09": {
+    "addressed_count": 1609,
+    "cities": 12,
+    "distinct_postcodes": 91,
+    "postcode_count": 1723,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1723
+  },
+  "2012-11-16": {
+    "addressed_count": 1609,
+    "cities": 12,
+    "distinct_postcodes": 91,
+    "postcode_count": 1723,
+    "streets": 138,
+    "suburbs": 0,
+    "total_objects": 1723
+  },
+  "2012-11-23": {
+    "addressed_count": 1610,
+    "cities": 12,
+    "distinct_postcodes": 91,
+    "postcode_count": 1724,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1724
+  },
+  "2012-11-30": {
+    "addressed_count": 1610,
+    "cities": 12,
+    "distinct_postcodes": 91,
+    "postcode_count": 1724,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1724
+  },
+  "2012-12-07": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2012-12-14": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2012-12-21": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2012-12-28": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-01-04": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-01-11": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-01-18": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-01-25": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-02-01": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-02-08": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-02-15": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-02-22": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-03-01": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-03-08": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-03-15": {
+    "addressed_count": 1613,
+    "cities": 12,
+    "distinct_postcodes": 92,
+    "postcode_count": 1726,
+    "streets": 139,
+    "suburbs": 0,
+    "total_objects": 1726
+  },
+  "2013-03-22": {
+    "addressed_count": 1615,
+    "cities": 12,
+    "distinct_postcodes": 94,
+    "postcode_count": 1728,
+    "streets": 141,
+    "suburbs": 0,
+    "total_objects": 1728
+  },
+  "2013-03-29": {
+    "addressed_count": 1615,
+    "cities": 12,
+    "distinct_postcodes": 94,
+    "postcode_count": 1728,
+    "streets": 141,
+    "suburbs": 0,
+    "total_objects": 1728
+  },
+  "2013-04-05": {
+    "addressed_count": 1615,
+    "cities": 12,
+    "distinct_postcodes": 94,
+    "postcode_count": 1728,
+    "streets": 141,
+    "suburbs": 0,
+    "total_objects": 1728
+  },
+  "2013-04-12": {
+    "addressed_count": 1615,
+    "cities": 12,
+    "distinct_postcodes": 96,
+    "postcode_count": 1730,
+    "streets": 142,
+    "suburbs": 0,
+    "total_objects": 1730
+  },
+  "2013-04-19": {
+    "addressed_count": 1615,
+    "cities": 12,
+    "distinct_postcodes": 96,
+    "postcode_count": 1731,
+    "streets": 142,
+    "suburbs": 0,
+    "total_objects": 1731
+  },
+  "2013-04-26": {
+    "addressed_count": 1616,
+    "cities": 12,
+    "distinct_postcodes": 97,
+    "postcode_count": 1732,
+    "streets": 143,
+    "suburbs": 0,
+    "total_objects": 1732
+  },
+  "2013-05-03": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-05-10": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-05-17": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-05-24": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-05-31": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-06-07": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-06-14": {
+    "addressed_count": 1632,
+    "cities": 12,
+    "distinct_postcodes": 114,
+    "postcode_count": 1760,
+    "streets": 157,
+    "suburbs": 0,
+    "total_objects": 1760
+  },
+  "2013-06-21": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-06-28": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-07-05": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-07-12": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-07-19": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-07-26": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-08-02": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-08-09": {
+    "addressed_count": 1633,
+    "cities": 12,
+    "distinct_postcodes": 115,
+    "postcode_count": 1762,
+    "streets": 158,
+    "suburbs": 0,
+    "total_objects": 1762
+  },
+  "2013-08-16": {
+    "addressed_count": 1633,
+    "cities": 13,
+    "distinct_postcodes": 116,
+    "postcode_count": 1763,
+    "streets": 159,
+    "suburbs": 0,
+    "total_objects": 1763
+  },
+  "2013-08-23": {
+    "addressed_count": 1634,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1764,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1764
+  },
+  "2013-08-30": {
+    "addressed_count": 1634,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1764,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1764
+  },
+  "2013-09-06": {
+    "addressed_count": 1636,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1766,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1766
+  },
+  "2013-09-13": {
+    "addressed_count": 1636,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1766,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1766
+  },
+  "2013-09-20": {
+    "addressed_count": 1636,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1766,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1766
+  },
+  "2013-09-27": {
+    "addressed_count": 1636,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1766,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1766
+  },
+  "2013-10-04": {
+    "addressed_count": 1636,
+    "cities": 13,
+    "distinct_postcodes": 117,
+    "postcode_count": 1766,
+    "streets": 160,
+    "suburbs": 0,
+    "total_objects": 1766
+  },
+  "2013-10-11": {
+    "addressed_count": 1636,
+    "cities": 14,
+    "distinct_postcodes": 118,
+    "postcode_count": 1767,
+    "streets": 160,
+    "suburbs": 1,
+    "total_objects": 1767
+  },
+  "2013-10-18": {
+    "addressed_count": 1636,
+    "cities": 14,
+    "distinct_postcodes": 118,
+    "postcode_count": 1767,
+    "streets": 160,
+    "suburbs": 1,
+    "total_objects": 1767
+  },
+  "2013-10-25": {
+    "addressed_count": 1636,
+    "cities": 14,
+    "distinct_postcodes": 118,
+    "postcode_count": 1767,
+    "streets": 160,
+    "suburbs": 1,
+    "total_objects": 1767
+  },
+  "2013-11-01": {
+    "addressed_count": 1636,
+    "cities": 14,
+    "distinct_postcodes": 118,
+    "postcode_count": 1767,
+    "streets": 160,
+    "suburbs": 1,
+    "total_objects": 1767
+  },
+  "2013-11-08": {
+    "addressed_count": 1637,
+    "cities": 15,
+    "distinct_postcodes": 119,
+    "postcode_count": 1768,
+    "streets": 161,
+    "suburbs": 1,
+    "total_objects": 1768
+  },
+  "2013-11-15": {
+    "addressed_count": 1637,
+    "cities": 15,
+    "distinct_postcodes": 119,
+    "postcode_count": 1768,
+    "streets": 161,
+    "suburbs": 1,
+    "total_objects": 1768
+  },
+  "2013-11-22": {
+    "addressed_count": 1638,
+    "cities": 15,
+    "distinct_postcodes": 120,
+    "postcode_count": 1769,
+    "streets": 162,
+    "suburbs": 1,
+    "total_objects": 1769
+  },
+  "2013-11-29": {
+    "addressed_count": 1639,
+    "cities": 16,
+    "distinct_postcodes": 123,
+    "postcode_count": 1772,
+    "streets": 165,
+    "suburbs": 1,
+    "total_objects": 1772
+  },
+  "2013-12-06": {
+    "addressed_count": 1640,
+    "cities": 20,
+    "distinct_postcodes": 129,
+    "postcode_count": 1778,
+    "streets": 169,
+    "suburbs": 1,
+    "total_objects": 1778
+  },
+  "2013-12-13": {
+    "addressed_count": 1640,
+    "cities": 20,
+    "distinct_postcodes": 129,
+    "postcode_count": 1778,
+    "streets": 169,
+    "suburbs": 1,
+    "total_objects": 1778
+  },
+  "2013-12-20": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 130,
+    "postcode_count": 1779,
+    "streets": 170,
+    "suburbs": 1,
+    "total_objects": 1779
+  },
+  "2013-12-27": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 130,
+    "postcode_count": 1779,
+    "streets": 170,
+    "suburbs": 1,
+    "total_objects": 1779
+  },
+  "2014-01-03": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 130,
+    "postcode_count": 1779,
+    "streets": 170,
+    "suburbs": 1,
+    "total_objects": 1779
+  },
+  "2014-01-10": {
+    "addressed_count": 1641,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1781,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1781
+  },
+  "2014-01-17": {
+    "addressed_count": 1641,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1781,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1781
+  },
+  "2014-01-24": {
+    "addressed_count": 1641,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1781,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1781
+  },
+  "2014-01-31": {
+    "addressed_count": 1641,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1781,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1781
+  },
+  "2014-02-07": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1780,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1780
+  },
+  "2014-02-14": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1780,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1780
+  },
+  "2014-02-21": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1780,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1780
+  },
+  "2014-02-28": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1780,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1780
+  },
+  "2014-03-07": {
+    "addressed_count": 1640,
+    "cities": 21,
+    "distinct_postcodes": 132,
+    "postcode_count": 1780,
+    "streets": 172,
+    "suburbs": 2,
+    "total_objects": 1780
+  },
+  "2014-03-14": {
+    "addressed_count": 1641,
+    "cities": 22,
+    "distinct_postcodes": 133,
+    "postcode_count": 1781,
+    "streets": 173,
+    "suburbs": 2,
+    "total_objects": 1781
+  },
+  "2014-03-21": {
+    "addressed_count": 1642,
+    "cities": 22,
+    "distinct_postcodes": 134,
+    "postcode_count": 1782,
+    "streets": 174,
+    "suburbs": 2,
+    "total_objects": 1782
+  },
+  "2014-03-28": {
+    "addressed_count": 1642,
+    "cities": 22,
+    "distinct_postcodes": 134,
+    "postcode_count": 1782,
+    "streets": 174,
+    "suburbs": 2,
+    "total_objects": 1782
+  },
+  "2014-04-04": {
+    "addressed_count": 1645,
+    "cities": 22,
+    "distinct_postcodes": 135,
+    "postcode_count": 1785,
+    "streets": 175,
+    "suburbs": 2,
+    "total_objects": 1785
+  },
+  "2014-04-11": {
+    "addressed_count": 1645,
+    "cities": 22,
+    "distinct_postcodes": 135,
+    "postcode_count": 1785,
+    "streets": 175,
+    "suburbs": 2,
+    "total_objects": 1785
+  },
+  "2014-04-18": {
+    "addressed_count": 1646,
+    "cities": 22,
+    "distinct_postcodes": 139,
+    "postcode_count": 1791,
+    "streets": 178,
+    "suburbs": 2,
+    "total_objects": 1791
+  },
+  "2014-04-25": {
+    "addressed_count": 1802,
+    "cities": 23,
+    "distinct_postcodes": 158,
+    "postcode_count": 1962,
+    "streets": 197,
+    "suburbs": 2,
+    "total_objects": 1962
+  },
+  "2014-05-02": {
+    "addressed_count": 1806,
+    "cities": 23,
+    "distinct_postcodes": 164,
+    "postcode_count": 1978,
+    "streets": 204,
+    "suburbs": 2,
+    "total_objects": 1978
+  },
+  "2014-05-09": {
+    "addressed_count": 1806,
+    "cities": 23,
+    "distinct_postcodes": 164,
+    "postcode_count": 1978,
+    "streets": 204,
+    "suburbs": 2,
+    "total_objects": 1978
+  },
+  "2014-05-16": {
+    "addressed_count": 1826,
+    "cities": 23,
+    "distinct_postcodes": 165,
+    "postcode_count": 1998,
+    "streets": 205,
+    "suburbs": 2,
+    "total_objects": 1998
+  },
+  "2014-05-23": {
+    "addressed_count": 1826,
+    "cities": 23,
+    "distinct_postcodes": 165,
+    "postcode_count": 1998,
+    "streets": 205,
+    "suburbs": 2,
+    "total_objects": 1998
+  },
+  "2014-05-30": {
+    "addressed_count": 1826,
+    "cities": 24,
+    "distinct_postcodes": 167,
+    "postcode_count": 2000,
+    "streets": 207,
+    "suburbs": 2,
+    "total_objects": 2000
+  },
+  "2014-06-06": {
+    "addressed_count": 1826,
+    "cities": 24,
+    "distinct_postcodes": 167,
+    "postcode_count": 2000,
+    "streets": 207,
+    "suburbs": 2,
+    "total_objects": 2000
+  },
+  "2014-06-13": {
+    "addressed_count": 1827,
+    "cities": 24,
+    "distinct_postcodes": 168,
+    "postcode_count": 2002,
+    "streets": 207,
+    "suburbs": 2,
+    "total_objects": 2002
+  },
+  "2014-06-20": {
+    "addressed_count": 1827,
+    "cities": 24,
+    "distinct_postcodes": 168,
+    "postcode_count": 2002,
+    "streets": 207,
+    "suburbs": 2,
+    "total_objects": 2002
+  },
+  "2014-06-27": {
+    "addressed_count": 1828,
+    "cities": 24,
+    "distinct_postcodes": 169,
+    "postcode_count": 2003,
+    "streets": 208,
+    "suburbs": 2,
+    "total_objects": 2003
+  },
+  "2014-07-04": {
+    "addressed_count": 1831,
+    "cities": 24,
+    "distinct_postcodes": 172,
+    "postcode_count": 2006,
+    "streets": 211,
+    "suburbs": 2,
+    "total_objects": 2006
+  },
+  "2014-07-11": {
+    "addressed_count": 1915,
+    "cities": 24,
+    "distinct_postcodes": 176,
+    "postcode_count": 2090,
+    "streets": 214,
+    "suburbs": 2,
+    "total_objects": 2090
+  },
+  "2014-07-18": {
+    "addressed_count": 1954,
+    "cities": 24,
+    "distinct_postcodes": 181,
+    "postcode_count": 2130,
+    "streets": 219,
+    "suburbs": 2,
+    "total_objects": 2130
+  },
+  "2014-07-25": {
+    "addressed_count": 1962,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2140,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2140
+  },
+  "2014-08-01": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-08-08": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-08-15": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-08-22": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-08-29": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-09-05": {
+    "addressed_count": 1963,
+    "cities": 24,
+    "distinct_postcodes": 182,
+    "postcode_count": 2141,
+    "streets": 220,
+    "suburbs": 2,
+    "total_objects": 2141
+  },
+  "2014-09-12": {
+    "addressed_count": 2070,
+    "cities": 25,
+    "distinct_postcodes": 189,
+    "postcode_count": 2249,
+    "streets": 224,
+    "suburbs": 2,
+    "total_objects": 2249
+  },
+  "2014-09-19": {
+    "addressed_count": 2094,
+    "cities": 25,
+    "distinct_postcodes": 190,
+    "postcode_count": 2273,
+    "streets": 225,
+    "suburbs": 2,
+    "total_objects": 2273
+  },
+  "2014-09-26": {
+    "addressed_count": 2095,
+    "cities": 25,
+    "distinct_postcodes": 191,
+    "postcode_count": 2274,
+    "streets": 226,
+    "suburbs": 2,
+    "total_objects": 2274
+  },
+  "2014-10-03": {
+    "addressed_count": 2095,
+    "cities": 25,
+    "distinct_postcodes": 191,
+    "postcode_count": 2274,
+    "streets": 226,
+    "suburbs": 2,
+    "total_objects": 2274
+  },
+  "2014-10-10": {
+    "addressed_count": 2095,
+    "cities": 25,
+    "distinct_postcodes": 191,
+    "postcode_count": 2274,
+    "streets": 226,
+    "suburbs": 2,
+    "total_objects": 2274
+  },
+  "2014-10-17": {
+    "addressed_count": 2096,
+    "cities": 26,
+    "distinct_postcodes": 192,
+    "postcode_count": 2275,
+    "streets": 227,
+    "suburbs": 2,
+    "total_objects": 2275
+  },
+  "2014-10-24": {
+    "addressed_count": 2096,
+    "cities": 26,
+    "distinct_postcodes": 192,
+    "postcode_count": 2275,
+    "streets": 227,
+    "suburbs": 2,
+    "total_objects": 2275
+  },
+  "2014-10-31": {
+    "addressed_count": 2097,
+    "cities": 26,
+    "distinct_postcodes": 193,
+    "postcode_count": 2276,
+    "streets": 228,
+    "suburbs": 2,
+    "total_objects": 2276
+  },
+  "2014-11-07": {
+    "addressed_count": 2161,
+    "cities": 26,
+    "distinct_postcodes": 195,
+    "postcode_count": 2340,
+    "streets": 229,
+    "suburbs": 2,
+    "total_objects": 2340
+  },
+  "2014-11-14": {
+    "addressed_count": 2166,
+    "cities": 26,
+    "distinct_postcodes": 199,
+    "postcode_count": 2344,
+    "streets": 230,
+    "suburbs": 2,
+    "total_objects": 2344
+  },
+  "2014-11-21": {
+    "addressed_count": 2166,
+    "cities": 26,
+    "distinct_postcodes": 201,
+    "postcode_count": 2346,
+    "streets": 230,
+    "suburbs": 2,
+    "total_objects": 2346
+  },
+  "2014-11-28": {
+    "addressed_count": 2168,
+    "cities": 27,
+    "distinct_postcodes": 203,
+    "postcode_count": 2348,
+    "streets": 232,
+    "suburbs": 2,
+    "total_objects": 2348
+  },
+  "2014-12-05": {
+    "addressed_count": 2168,
+    "cities": 27,
+    "distinct_postcodes": 207,
+    "postcode_count": 2352,
+    "streets": 234,
+    "suburbs": 2,
+    "total_objects": 2352
+  },
+  "2014-12-12": {
+    "addressed_count": 2175,
+    "cities": 27,
+    "distinct_postcodes": 208,
+    "postcode_count": 2363,
+    "streets": 235,
+    "suburbs": 2,
+    "total_objects": 2363
+  },
+  "2014-12-19": {
+    "addressed_count": 2175,
+    "cities": 27,
+    "distinct_postcodes": 208,
+    "postcode_count": 2363,
+    "streets": 235,
+    "suburbs": 2,
+    "total_objects": 2363
+  },
+  "2014-12-26": {
+    "addressed_count": 2175,
+    "cities": 27,
+    "distinct_postcodes": 208,
+    "postcode_count": 2363,
+    "streets": 235,
+    "suburbs": 2,
+    "total_objects": 2363
+  },
+  "2015-01-02": {
+    "addressed_count": 2175,
+    "cities": 27,
+    "distinct_postcodes": 208,
+    "postcode_count": 2363,
+    "streets": 235,
+    "suburbs": 2,
+    "total_objects": 2363
+  },
+  "2015-01-09": {
+    "addressed_count": 2175,
+    "cities": 27,
+    "distinct_postcodes": 208,
+    "postcode_count": 2363,
+    "streets": 235,
+    "suburbs": 2,
+    "total_objects": 2363
+  },
+  "2015-01-16": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 209,
+    "postcode_count": 2364,
+    "streets": 236,
+    "suburbs": 2,
+    "total_objects": 2364
+  },
+  "2015-01-23": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 210,
+    "postcode_count": 2365,
+    "streets": 237,
+    "suburbs": 2,
+    "total_objects": 2365
+  },
+  "2015-01-30": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 210,
+    "postcode_count": 2365,
+    "streets": 237,
+    "suburbs": 2,
+    "total_objects": 2365
+  },
+  "2015-02-06": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 210,
+    "postcode_count": 2365,
+    "streets": 237,
+    "suburbs": 2,
+    "total_objects": 2365
+  },
+  "2015-02-13": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 211,
+    "postcode_count": 2366,
+    "streets": 238,
+    "suburbs": 2,
+    "total_objects": 2366
+  },
+  "2015-02-20": {
+    "addressed_count": 2176,
+    "cities": 28,
+    "distinct_postcodes": 212,
+    "postcode_count": 2367,
+    "streets": 239,
+    "suburbs": 2,
+    "total_objects": 2367
+  },
+  "2015-02-27": {
+    "addressed_count": 2177,
+    "cities": 28,
+    "distinct_postcodes": 213,
+    "postcode_count": 2369,
+    "streets": 240,
+    "suburbs": 2,
+    "total_objects": 2369
+  },
+  "2015-03-06": {
+    "addressed_count": 2328,
+    "cities": 28,
+    "distinct_postcodes": 223,
+    "postcode_count": 2519,
+    "streets": 247,
+    "suburbs": 2,
+    "total_objects": 2519
+  },
+  "2015-03-13": {
+    "addressed_count": 2489,
+    "cities": 28,
+    "distinct_postcodes": 232,
+    "postcode_count": 2681,
+    "streets": 252,
+    "suburbs": 2,
+    "total_objects": 2681
+  },
+  "2015-03-20": {
+    "addressed_count": 2489,
+    "cities": 28,
+    "distinct_postcodes": 232,
+    "postcode_count": 2681,
+    "streets": 252,
+    "suburbs": 2,
+    "total_objects": 2681
+  },
+  "2015-03-27": {
+    "addressed_count": 2489,
+    "cities": 28,
+    "distinct_postcodes": 232,
+    "postcode_count": 2681,
+    "streets": 252,
+    "suburbs": 2,
+    "total_objects": 2681
+  },
+  "2015-04-03": {
+    "addressed_count": 2489,
+    "cities": 28,
+    "distinct_postcodes": 232,
+    "postcode_count": 2681,
+    "streets": 252,
+    "suburbs": 2,
+    "total_objects": 2681
+  },
+  "2015-04-10": {
+    "addressed_count": 2489,
+    "cities": 28,
+    "distinct_postcodes": 232,
+    "postcode_count": 2681,
+    "streets": 252,
+    "suburbs": 2,
+    "total_objects": 2681
+  },
+  "2015-04-17": {
+    "addressed_count": 2926,
+    "cities": 28,
+    "distinct_postcodes": 262,
+    "postcode_count": 3116,
+    "streets": 275,
+    "suburbs": 2,
+    "total_objects": 3116
+  },
+  "2015-04-24": {
+    "addressed_count": 3021,
+    "cities": 28,
+    "distinct_postcodes": 270,
+    "postcode_count": 3210,
+    "streets": 281,
+    "suburbs": 2,
+    "total_objects": 3210
+  },
+  "2015-05-01": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-05-08": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-05-15": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-05-22": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-05-29": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-06-05": {
+    "addressed_count": 3039,
+    "cities": 29,
+    "distinct_postcodes": 273,
+    "postcode_count": 3229,
+    "streets": 282,
+    "suburbs": 2,
+    "total_objects": 3229
+  },
+  "2015-06-12": {
+    "addressed_count": 3144,
+    "cities": 29,
+    "distinct_postcodes": 277,
+    "postcode_count": 3334,
+    "streets": 286,
+    "suburbs": 2,
+    "total_objects": 3334
+  },
+  "2015-06-19": {
+    "addressed_count": 3299,
+    "cities": 29,
+    "distinct_postcodes": 287,
+    "postcode_count": 3490,
+    "streets": 297,
+    "suburbs": 2,
+    "total_objects": 3490
+  },
+  "2015-06-26": {
+    "addressed_count": 3299,
+    "cities": 29,
+    "distinct_postcodes": 287,
+    "postcode_count": 3490,
+    "streets": 297,
+    "suburbs": 2,
+    "total_objects": 3490
+  },
+  "2015-07-03": {
+    "addressed_count": 4232,
+    "cities": 29,
+    "distinct_postcodes": 329,
+    "postcode_count": 4423,
+    "streets": 329,
+    "suburbs": 1,
+    "total_objects": 4423
+  },
+  "2015-07-10": {
+    "addressed_count": 5695,
+    "cities": 29,
+    "distinct_postcodes": 391,
+    "postcode_count": 5886,
+    "streets": 366,
+    "suburbs": 1,
+    "total_objects": 5886
+  },
+  "2015-07-17": {
+    "addressed_count": 6599,
+    "cities": 29,
+    "distinct_postcodes": 428,
+    "postcode_count": 6790,
+    "streets": 391,
+    "suburbs": 1,
+    "total_objects": 6790
+  },
+  "2015-07-24": {
+    "addressed_count": 6599,
+    "cities": 29,
+    "distinct_postcodes": 428,
+    "postcode_count": 6790,
+    "streets": 391,
+    "suburbs": 1,
+    "total_objects": 6790
+  },
+  "2015-07-31": {
+    "addressed_count": 7664,
+    "cities": 29,
+    "distinct_postcodes": 468,
+    "postcode_count": 7855,
+    "streets": 419,
+    "suburbs": 1,
+    "total_objects": 7855
+  },
+  "2015-08-07": {
+    "addressed_count": 7724,
+    "cities": 29,
+    "distinct_postcodes": 469,
+    "postcode_count": 7915,
+    "streets": 420,
+    "suburbs": 1,
+    "total_objects": 7915
+  },
+  "2015-08-14": {
+    "addressed_count": 7724,
+    "cities": 29,
+    "distinct_postcodes": 469,
+    "postcode_count": 7915,
+    "streets": 420,
+    "suburbs": 1,
+    "total_objects": 7915
+  },
+  "2015-08-21": {
+    "addressed_count": 8078,
+    "cities": 29,
+    "distinct_postcodes": 482,
+    "postcode_count": 8269,
+    "streets": 429,
+    "suburbs": 1,
+    "total_objects": 8269
+  },
+  "2015-08-28": {
+    "addressed_count": 8078,
+    "cities": 29,
+    "distinct_postcodes": 482,
+    "postcode_count": 8268,
+    "streets": 429,
+    "suburbs": 1,
+    "total_objects": 8268
+  },
+  "2015-09-04": {
+    "addressed_count": 8078,
+    "cities": 29,
+    "distinct_postcodes": 482,
+    "postcode_count": 8268,
+    "streets": 429,
+    "suburbs": 1,
+    "total_objects": 8268
+  },
+  "2015-09-11": {
+    "addressed_count": 8078,
+    "cities": 29,
+    "distinct_postcodes": 482,
+    "postcode_count": 8268,
+    "streets": 429,
+    "suburbs": 1,
+    "total_objects": 8268
+  },
+  "2015-09-18": {
+    "addressed_count": 8079,
+    "cities": 30,
+    "distinct_postcodes": 483,
+    "postcode_count": 8269,
+    "streets": 430,
+    "suburbs": 1,
+    "total_objects": 8269
+  },
+  "2015-09-25": {
+    "addressed_count": 8078,
+    "cities": 30,
+    "distinct_postcodes": 483,
+    "postcode_count": 8270,
+    "streets": 430,
+    "suburbs": 1,
+    "total_objects": 8270
+  },
+  "2015-10-02": {
+    "addressed_count": 8158,
+    "cities": 30,
+    "distinct_postcodes": 488,
+    "postcode_count": 8350,
+    "streets": 435,
+    "suburbs": 1,
+    "total_objects": 8350
+  },
+  "2015-10-09": {
+    "addressed_count": 8158,
+    "cities": 30,
+    "distinct_postcodes": 488,
+    "postcode_count": 8350,
+    "streets": 435,
+    "suburbs": 1,
+    "total_objects": 8350
+  },
+  "2015-10-16": {
+    "addressed_count": 8158,
+    "cities": 30,
+    "distinct_postcodes": 488,
+    "postcode_count": 8350,
+    "streets": 435,
+    "suburbs": 1,
+    "total_objects": 8350
+  },
+  "2015-10-23": {
+    "addressed_count": 8172,
+    "cities": 30,
+    "distinct_postcodes": 492,
+    "postcode_count": 8364,
+    "streets": 436,
+    "suburbs": 1,
+    "total_objects": 8364
+  },
+  "2015-10-30": {
+    "addressed_count": 8172,
+    "cities": 30,
+    "distinct_postcodes": 492,
+    "postcode_count": 8365,
+    "streets": 436,
+    "suburbs": 1,
+    "total_objects": 8365
+  },
+  "2015-11-06": {
+    "addressed_count": 8467,
+    "cities": 30,
+    "distinct_postcodes": 502,
+    "postcode_count": 8660,
+    "streets": 442,
+    "suburbs": 1,
+    "total_objects": 8660
+  },
+  "2015-11-13": {
+    "addressed_count": 8467,
+    "cities": 30,
+    "distinct_postcodes": 502,
+    "postcode_count": 8660,
+    "streets": 442,
+    "suburbs": 1,
+    "total_objects": 8660
+  },
+  "2015-11-20": {
+    "addressed_count": 8467,
+    "cities": 30,
+    "distinct_postcodes": 502,
+    "postcode_count": 8660,
+    "streets": 442,
+    "suburbs": 1,
+    "total_objects": 8660
+  },
+  "2015-11-27": {
+    "addressed_count": 8467,
+    "cities": 30,
+    "distinct_postcodes": 502,
+    "postcode_count": 8660,
+    "streets": 442,
+    "suburbs": 1,
+    "total_objects": 8660
+  },
+  "2015-12-04": {
+    "addressed_count": 8466,
+    "cities": 30,
+    "distinct_postcodes": 502,
+    "postcode_count": 8659,
+    "streets": 442,
+    "suburbs": 1,
+    "total_objects": 8659
+  },
+  "2015-12-11": {
+    "addressed_count": 8633,
+    "cities": 30,
+    "distinct_postcodes": 510,
+    "postcode_count": 8826,
+    "streets": 447,
+    "suburbs": 1,
+    "total_objects": 8826
+  },
+  "2015-12-18": {
+    "addressed_count": 8633,
+    "cities": 30,
+    "distinct_postcodes": 510,
+    "postcode_count": 8826,
+    "streets": 447,
+    "suburbs": 1,
+    "total_objects": 8826
+  },
+  "2015-12-25": {
+    "addressed_count": 8633,
+    "cities": 30,
+    "distinct_postcodes": 510,
+    "postcode_count": 8826,
+    "streets": 447,
+    "suburbs": 1,
+    "total_objects": 8826
+  },
+  "2016-01-01": {
+    "addressed_count": 8662,
+    "cities": 30,
+    "distinct_postcodes": 512,
+    "postcode_count": 8855,
+    "streets": 448,
+    "suburbs": 1,
+    "total_objects": 8855
+  },
+  "2016-01-08": {
+    "addressed_count": 8662,
+    "cities": 31,
+    "distinct_postcodes": 513,
+    "postcode_count": 8856,
+    "streets": 449,
+    "suburbs": 1,
+    "total_objects": 8856
+  },
+  "2016-01-15": {
+    "addressed_count": 8662,
+    "cities": 31,
+    "distinct_postcodes": 513,
+    "postcode_count": 8856,
+    "streets": 449,
+    "suburbs": 1,
+    "total_objects": 8856
+  },
+  "2016-01-22": {
+    "addressed_count": 8662,
+    "cities": 32,
+    "distinct_postcodes": 520,
+    "postcode_count": 8863,
+    "streets": 455,
+    "suburbs": 5,
+    "total_objects": 8863
+  },
+  "2016-01-29": {
+    "addressed_count": 8673,
+    "cities": 32,
+    "distinct_postcodes": 561,
+    "postcode_count": 8903,
+    "streets": 482,
+    "suburbs": 20,
+    "total_objects": 8903
+  },
+  "2016-02-05": {
+    "addressed_count": 8675,
+    "cities": 32,
+    "distinct_postcodes": 579,
+    "postcode_count": 8922,
+    "streets": 499,
+    "suburbs": 26,
+    "total_objects": 8922
+  },
+  "2016-02-12": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-02-19": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-02-26": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-03-04": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-03-11": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-03-18": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-03-25": {
+    "addressed_count": 8676,
+    "cities": 32,
+    "distinct_postcodes": 589,
+    "postcode_count": 8939,
+    "streets": 505,
+    "suburbs": 32,
+    "total_objects": 8939
+  },
+  "2016-04-01": {
+    "addressed_count": 8760,
+    "cities": 32,
+    "distinct_postcodes": 596,
+    "postcode_count": 9024,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9024
+  },
+  "2016-04-08": {
+    "addressed_count": 8761,
+    "cities": 32,
+    "distinct_postcodes": 597,
+    "postcode_count": 9025,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9025
+  },
+  "2016-04-15": {
+    "addressed_count": 8761,
+    "cities": 32,
+    "distinct_postcodes": 597,
+    "postcode_count": 9025,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9025
+  },
+  "2016-04-22": {
+    "addressed_count": 8762,
+    "cities": 32,
+    "distinct_postcodes": 598,
+    "postcode_count": 9026,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9026
+  },
+  "2016-04-29": {
+    "addressed_count": 8762,
+    "cities": 32,
+    "distinct_postcodes": 598,
+    "postcode_count": 9026,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9026
+  },
+  "2016-05-06": {
+    "addressed_count": 8762,
+    "cities": 32,
+    "distinct_postcodes": 598,
+    "postcode_count": 9026,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9026
+  },
+  "2016-05-13": {
+    "addressed_count": 8762,
+    "cities": 32,
+    "distinct_postcodes": 598,
+    "postcode_count": 9026,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9026
+  },
+  "2016-05-20": {
+    "addressed_count": 8762,
+    "cities": 32,
+    "distinct_postcodes": 598,
+    "postcode_count": 9026,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9026
+  },
+  "2016-05-27": {
+    "addressed_count": 8763,
+    "cities": 32,
+    "distinct_postcodes": 599,
+    "postcode_count": 9027,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9027
+  },
+  "2016-06-03": {
+    "addressed_count": 8763,
+    "cities": 32,
+    "distinct_postcodes": 599,
+    "postcode_count": 9027,
+    "streets": 509,
+    "suburbs": 32,
+    "total_objects": 9027
+  },
+  "2016-06-10": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-06-17": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-06-24": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-07-01": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-07-08": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-07-15": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-07-22": {
+    "addressed_count": 8767,
+    "cities": 32,
+    "distinct_postcodes": 601,
+    "postcode_count": 9031,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9031
+  },
+  "2016-07-29": {
+    "addressed_count": 8768,
+    "cities": 32,
+    "distinct_postcodes": 602,
+    "postcode_count": 9032,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9032
+  },
+  "2016-08-05": {
+    "addressed_count": 8768,
+    "cities": 32,
+    "distinct_postcodes": 602,
+    "postcode_count": 9032,
+    "streets": 511,
+    "suburbs": 32,
+    "total_objects": 9032
+  },
+  "2016-08-12": {
+    "addressed_count": 8768,
+    "cities": 33,
+    "distinct_postcodes": 603,
+    "postcode_count": 9034,
+    "streets": 512,
+    "suburbs": 32,
+    "total_objects": 9034
+  },
+  "2016-08-19": {
+    "addressed_count": 8768,
+    "cities": 33,
+    "distinct_postcodes": 603,
+    "postcode_count": 9034,
+    "streets": 512,
+    "suburbs": 32,
+    "total_objects": 9034
+  },
+  "2016-08-26": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-09-02": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-09-09": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-09-16": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-09-23": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-09-30": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-10-07": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-10-14": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-10-21": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 605,
+    "postcode_count": 9036,
+    "streets": 513,
+    "suburbs": 32,
+    "total_objects": 9036
+  },
+  "2016-10-28": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 610,
+    "postcode_count": 9042,
+    "streets": 518,
+    "suburbs": 32,
+    "total_objects": 9042
+  },
+  "2016-11-04": {
+    "addressed_count": 8770,
+    "cities": 33,
+    "distinct_postcodes": 610,
+    "postcode_count": 9042,
+    "streets": 518,
+    "suburbs": 32,
+    "total_objects": 9042
+  },
+  "2016-11-11": {
+    "addressed_count": 8771,
+    "cities": 33,
+    "distinct_postcodes": 610,
+    "postcode_count": 9043,
+    "streets": 518,
+    "suburbs": 32,
+    "total_objects": 9043
+  },
+  "2016-11-18": {
+    "addressed_count": 8778,
+    "cities": 33,
+    "distinct_postcodes": 614,
+    "postcode_count": 9050,
+    "streets": 521,
+    "suburbs": 33,
+    "total_objects": 9050
+  },
+  "2016-11-25": {
+    "addressed_count": 8778,
+    "cities": 33,
+    "distinct_postcodes": 624,
+    "postcode_count": 9061,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9061
+  },
+  "2016-12-02": {
+    "addressed_count": 8779,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9062,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9062
+  },
+  "2016-12-09": {
+    "addressed_count": 8779,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9062,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9062
+  },
+  "2016-12-16": {
+    "addressed_count": 8780,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9063,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9063
+  },
+  "2016-12-23": {
+    "addressed_count": 8780,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9063,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9063
+  },
+  "2016-12-30": {
+    "addressed_count": 8780,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9063,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9063
+  },
+  "2017-01-06": {
+    "addressed_count": 8780,
+    "cities": 33,
+    "distinct_postcodes": 626,
+    "postcode_count": 9063,
+    "streets": 531,
+    "suburbs": 33,
+    "total_objects": 9063
+  },
+  "2017-01-13": {
+    "addressed_count": 8781,
+    "cities": 34,
+    "distinct_postcodes": 627,
+    "postcode_count": 9065,
+    "streets": 532,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-01-20": {
+    "addressed_count": 8781,
+    "cities": 34,
+    "distinct_postcodes": 627,
+    "postcode_count": 9065,
+    "streets": 532,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-01-27": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-02-03": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-02-10": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-02-17": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-02-24": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-03-03": {
+    "addressed_count": 8782,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9065,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9065
+  },
+  "2017-03-10": {
+    "addressed_count": 8783,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9066,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-03-17": {
+    "addressed_count": 8783,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9066,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-03-24": {
+    "addressed_count": 8783,
+    "cities": 34,
+    "distinct_postcodes": 628,
+    "postcode_count": 9066,
+    "streets": 533,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-03-31": {
+    "addressed_count": 8784,
+    "cities": 34,
+    "distinct_postcodes": 629,
+    "postcode_count": 9067,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9067
+  },
+  "2017-04-07": {
+    "addressed_count": 8784,
+    "cities": 34,
+    "distinct_postcodes": 629,
+    "postcode_count": 9067,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9067
+  },
+  "2017-04-14": {
+    "addressed_count": 8784,
+    "cities": 34,
+    "distinct_postcodes": 629,
+    "postcode_count": 9067,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9067
+  },
+  "2017-04-21": {
+    "addressed_count": 8784,
+    "cities": 34,
+    "distinct_postcodes": 629,
+    "postcode_count": 9067,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9067
+  },
+  "2017-04-28": {
+    "addressed_count": 8786,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9069,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-05-05": {
+    "addressed_count": 8786,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9069,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-05-12": {
+    "addressed_count": 8786,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9069,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-05-19": {
+    "addressed_count": 8786,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9069,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-05-26": {
+    "addressed_count": 8786,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9069,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-06-02": {
+    "addressed_count": 8783,
+    "cities": 34,
+    "distinct_postcodes": 630,
+    "postcode_count": 9066,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-06-09": {
+    "addressed_count": 8783,
+    "cities": 35,
+    "distinct_postcodes": 630,
+    "postcode_count": 9066,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-06-16": {
+    "addressed_count": 8783,
+    "cities": 35,
+    "distinct_postcodes": 630,
+    "postcode_count": 9066,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9066
+  },
+  "2017-06-23": {
+    "addressed_count": 8784,
+    "cities": 36,
+    "distinct_postcodes": 632,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-06-30": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-07-07": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-07-14": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-07-21": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-07-28": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-08-04": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-08-11": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-08-18": {
+    "addressed_count": 8785,
+    "cities": 36,
+    "distinct_postcodes": 633,
+    "postcode_count": 9068,
+    "streets": 534,
+    "suburbs": 33,
+    "total_objects": 9068
+  },
+  "2017-08-25": {
+    "addressed_count": 8786,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9069,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9069
+  },
+  "2017-09-01": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-09-08": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-09-15": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-09-22": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-09-29": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-10-06": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-10-13": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-10-20": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-10-27": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-11-03": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-11-10": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-11-17": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-11-24": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-12-01": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-12-08": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-12-15": {
+    "addressed_count": 8788,
+    "cities": 36,
+    "distinct_postcodes": 634,
+    "postcode_count": 9071,
+    "streets": 535,
+    "suburbs": 33,
+    "total_objects": 9071
+  },
+  "2017-12-22": {
+    "addressed_count": 8791,
+    "cities": 36,
+    "distinct_postcodes": 641,
+    "postcode_count": 9079,
+    "streets": 536,
+    "suburbs": 33,
+    "total_objects": 9079
+  },
+  "2017-12-29": {
+    "addressed_count": 8791,
+    "cities": 36,
+    "distinct_postcodes": 641,
+    "postcode_count": 9079,
+    "streets": 536,
+    "suburbs": 33,
+    "total_objects": 9079
+  },
+  "2018-01-05": {
+    "addressed_count": 8791,
+    "cities": 36,
+    "distinct_postcodes": 641,
+    "postcode_count": 9079,
+    "streets": 536,
+    "suburbs": 33,
+    "total_objects": 9079
+  },
+  "2018-01-12": {
+    "addressed_count": 8794,
+    "cities": 36,
+    "distinct_postcodes": 647,
+    "postcode_count": 9085,
+    "streets": 540,
+    "suburbs": 33,
+    "total_objects": 9085
+  },
+  "2018-01-19": {
+    "addressed_count": 8794,
+    "cities": 36,
+    "distinct_postcodes": 647,
+    "postcode_count": 9085,
+    "streets": 540,
+    "suburbs": 33,
+    "total_objects": 9085
+  },
+  "2018-01-26": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-02-02": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-02-09": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-02-16": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-02-23": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-03-02": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-03-09": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-03-16": {
+    "addressed_count": 8795,
+    "cities": 36,
+    "distinct_postcodes": 648,
+    "postcode_count": 9086,
+    "streets": 541,
+    "suburbs": 33,
+    "total_objects": 9086
+  },
+  "2018-03-23": {
+    "addressed_count": 8796,
+    "cities": 36,
+    "distinct_postcodes": 649,
+    "postcode_count": 9087,
+    "streets": 542,
+    "suburbs": 33,
+    "total_objects": 9087
+  },
+  "2018-03-30": {
+    "addressed_count": 8796,
+    "cities": 37,
+    "distinct_postcodes": 650,
+    "postcode_count": 9088,
+    "streets": 543,
+    "suburbs": 33,
+    "total_objects": 9088
+  },
+  "2018-04-06": {
+    "addressed_count": 8797,
+    "cities": 38,
+    "distinct_postcodes": 651,
+    "postcode_count": 9089,
+    "streets": 544,
+    "suburbs": 33,
+    "total_objects": 9089
+  },
+  "2018-04-13": {
+    "addressed_count": 8797,
+    "cities": 38,
+    "distinct_postcodes": 652,
+    "postcode_count": 9090,
+    "streets": 544,
+    "suburbs": 33,
+    "total_objects": 9090
+  },
+  "2018-04-20": {
+    "addressed_count": 8797,
+    "cities": 38,
+    "distinct_postcodes": 652,
+    "postcode_count": 9090,
+    "streets": 544,
+    "suburbs": 33,
+    "total_objects": 9090
+  },
+  "2018-04-27": {
+    "addressed_count": 8797,
+    "cities": 38,
+    "distinct_postcodes": 652,
+    "postcode_count": 9090,
+    "streets": 544,
+    "suburbs": 33,
+    "total_objects": 9090
+  },
+  "2018-05-04": {
+    "addressed_count": 8799,
+    "cities": 42,
+    "distinct_postcodes": 660,
+    "postcode_count": 9100,
+    "streets": 549,
+    "suburbs": 33,
+    "total_objects": 9100
+  },
+  "2018-05-11": {
+    "addressed_count": 8799,
+    "cities": 42,
+    "distinct_postcodes": 660,
+    "postcode_count": 9099,
+    "streets": 549,
+    "suburbs": 33,
+    "total_objects": 9099
+  },
+  "2018-05-18": {
+    "addressed_count": 8799,
+    "cities": 42,
+    "distinct_postcodes": 663,
+    "postcode_count": 9102,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9102
+  },
+  "2018-05-25": {
+    "addressed_count": 8799,
+    "cities": 42,
+    "distinct_postcodes": 663,
+    "postcode_count": 9102,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9102
+  },
+  "2018-06-01": {
+    "addressed_count": 8799,
+    "cities": 42,
+    "distinct_postcodes": 663,
+    "postcode_count": 9102,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9102
+  },
+  "2018-06-08": {
+    "addressed_count": 8800,
+    "cities": 42,
+    "distinct_postcodes": 664,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-06-15": {
+    "addressed_count": 8800,
+    "cities": 42,
+    "distinct_postcodes": 664,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-06-22": {
+    "addressed_count": 8800,
+    "cities": 42,
+    "distinct_postcodes": 664,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-06-29": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-07-06": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-07-13": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-07-20": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-07-27": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-08-03": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-08-10": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-08-17": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9103,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-08-24": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 665,
+    "postcode_count": 9102,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9102
+  },
+  "2018-08-31": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 666,
+    "postcode_count": 9103,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-09-07": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 666,
+    "postcode_count": 9103,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-09-14": {
+    "addressed_count": 8801,
+    "cities": 42,
+    "distinct_postcodes": 666,
+    "postcode_count": 9103,
+    "streets": 552,
+    "suburbs": 33,
+    "total_objects": 9103
+  },
+  "2018-09-21": {
+    "addressed_count": 8802,
+    "cities": 42,
+    "distinct_postcodes": 667,
+    "postcode_count": 9104,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9104
+  },
+  "2018-09-28": {
+    "addressed_count": 8802,
+    "cities": 42,
+    "distinct_postcodes": 667,
+    "postcode_count": 9104,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9104
+  },
+  "2018-10-05": {
+    "addressed_count": 8802,
+    "cities": 42,
+    "distinct_postcodes": 667,
+    "postcode_count": 9104,
+    "streets": 553,
+    "suburbs": 33,
+    "total_objects": 9104
+  },
+  "2018-10-12": {
+    "addressed_count": 8804,
+    "cities": 42,
+    "distinct_postcodes": 668,
+    "postcode_count": 9106,
+    "streets": 554,
+    "suburbs": 33,
+    "total_objects": 9106
+  },
+  "2018-10-19": {
+    "addressed_count": 8804,
+    "cities": 42,
+    "distinct_postcodes": 668,
+    "postcode_count": 9106,
+    "streets": 554,
+    "suburbs": 33,
+    "total_objects": 9106
+  },
+  "2018-10-26": {
+    "addressed_count": 8804,
+    "cities": 42,
+    "distinct_postcodes": 668,
+    "postcode_count": 9106,
+    "streets": 554,
+    "suburbs": 33,
+    "total_objects": 9106
+  },
+  "2018-11-02": {
+    "addressed_count": 8804,
+    "cities": 42,
+    "distinct_postcodes": 668,
+    "postcode_count": 9106,
+    "streets": 554,
+    "suburbs": 33,
+    "total_objects": 9106
+  },
+  "2018-11-09": {
+    "addressed_count": 8806,
+    "cities": 36,
+    "distinct_postcodes": 669,
+    "postcode_count": 9108,
+    "streets": 555,
+    "suburbs": 33,
+    "total_objects": 9108
+  },
+  "2018-11-16": {
+    "addressed_count": 8805,
+    "cities": 36,
+    "distinct_postcodes": 669,
+    "postcode_count": 9107,
+    "streets": 555,
+    "suburbs": 33,
+    "total_objects": 9107
+  },
+  "2018-11-23": {
+    "addressed_count": 8805,
+    "cities": 37,
+    "distinct_postcodes": 670,
+    "postcode_count": 9108,
+    "streets": 556,
+    "suburbs": 33,
+    "total_objects": 9108
+  },
+  "2018-11-30": {
+    "addressed_count": 8805,
+    "cities": 37,
+    "distinct_postcodes": 670,
+    "postcode_count": 9108,
+    "streets": 556,
+    "suburbs": 33,
+    "total_objects": 9108
+  },
+  "2018-12-07": {
+    "addressed_count": 8805,
+    "cities": 37,
+    "distinct_postcodes": 670,
+    "postcode_count": 9108,
+    "streets": 556,
+    "suburbs": 33,
+    "total_objects": 9108
+  },
+  "2018-12-14": {
+    "addressed_count": 8805,
+    "cities": 37,
+    "distinct_postcodes": 670,
+    "postcode_count": 9107,
+    "streets": 556,
+    "suburbs": 33,
+    "total_objects": 9107
+  },
+  "2018-12-21": {
+    "addressed_count": 8805,
+    "cities": 37,
+    "distinct_postcodes": 670,
+    "postcode_count": 9107,
+    "streets": 556,
+    "suburbs": 33,
+    "total_objects": 9107
+  },
+  "2018-12-28": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9111,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9111
+  },
+  "2019-01-04": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-01-11": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-01-18": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-01-25": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-02-01": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-02-08": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-02-15": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-02-22": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-03-01": {
+    "addressed_count": 8808,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9112,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9112
+  },
+  "2019-03-08": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9121,
+    "streets": 559,
+    "suburbs": 33,
+    "total_objects": 9121
+  },
+  "2019-03-15": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 673,
+    "postcode_count": 9121,
+    "streets": 559,
+    "suburbs": 33,
+    "total_objects": 9121
+  },
+  "2019-03-22": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9120,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9120
+  },
+  "2019-03-29": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9120,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9120
+  },
+  "2019-04-05": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9120,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9120
+  },
+  "2019-04-12": {
+    "addressed_count": 8813,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9120,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9120
+  },
+  "2019-04-19": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-04-26": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-05-03": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-05-10": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-05-17": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-05-24": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-05-31": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-06-07": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-06-14": {
+    "addressed_count": 8814,
+    "cities": 37,
+    "distinct_postcodes": 672,
+    "postcode_count": 9124,
+    "streets": 558,
+    "suburbs": 33,
+    "total_objects": 9124
+  },
+  "2019-06-21": {
+    "addressed_count": 8846,
+    "cities": 37,
+    "distinct_postcodes": 675,
+    "postcode_count": 9155,
+    "streets": 561,
+    "suburbs": 33,
+    "total_objects": 9155
+  },
+  "2019-06-28": {
+    "addressed_count": 8848,
+    "cities": 37,
+    "distinct_postcodes": 676,
+    "postcode_count": 9157,
+    "streets": 561,
+    "suburbs": 33,
+    "total_objects": 9157
+  },
+  "2019-07-05": {
+    "addressed_count": 8859,
+    "cities": 37,
+    "distinct_postcodes": 677,
+    "postcode_count": 9168,
+    "streets": 562,
+    "suburbs": 33,
+    "total_objects": 9168
+  },
+  "2019-07-12": {
+    "addressed_count": 8893,
+    "cities": 37,
+    "distinct_postcodes": 681,
+    "postcode_count": 9202,
+    "streets": 565,
+    "suburbs": 33,
+    "total_objects": 9202
+  },
+  "2019-07-19": {
+    "addressed_count": 8917,
+    "cities": 37,
+    "distinct_postcodes": 689,
+    "postcode_count": 9231,
+    "streets": 568,
+    "suburbs": 33,
+    "total_objects": 9231
+  },
+  "2019-07-26": {
+    "addressed_count": 8917,
+    "cities": 37,
+    "distinct_postcodes": 689,
+    "postcode_count": 9231,
+    "streets": 568,
+    "suburbs": 33,
+    "total_objects": 9231
+  },
+  "2019-08-02": {
+    "addressed_count": 8917,
+    "cities": 37,
+    "distinct_postcodes": 689,
+    "postcode_count": 9231,
+    "streets": 568,
+    "suburbs": 33,
+    "total_objects": 9231
+  },
+  "2019-08-09": {
+    "addressed_count": 8929,
+    "cities": 37,
+    "distinct_postcodes": 689,
+    "postcode_count": 9243,
+    "streets": 569,
+    "suburbs": 33,
+    "total_objects": 9243
+  },
+  "2019-08-16": {
+    "addressed_count": 8935,
+    "cities": 37,
+    "distinct_postcodes": 691,
+    "postcode_count": 9249,
+    "streets": 571,
+    "suburbs": 33,
+    "total_objects": 9249
+  },
+  "2019-08-23": {
+    "addressed_count": 8937,
+    "cities": 37,
+    "distinct_postcodes": 693,
+    "postcode_count": 9252,
+    "streets": 571,
+    "suburbs": 33,
+    "total_objects": 9252
+  },
+  "2019-08-30": {
+    "addressed_count": 8960,
+    "cities": 37,
+    "distinct_postcodes": 696,
+    "postcode_count": 9281,
+    "streets": 572,
+    "suburbs": 33,
+    "total_objects": 9281
+  },
+  "2019-09-06": {
+    "addressed_count": 8960,
+    "cities": 37,
+    "distinct_postcodes": 696,
+    "postcode_count": 9281,
+    "streets": 572,
+    "suburbs": 33,
+    "total_objects": 9281
+  },
+  "2019-09-13": {
+    "addressed_count": 8961,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-09-20": {
+    "addressed_count": 8961,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-09-27": {
+    "addressed_count": 8961,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-10-04": {
+    "addressed_count": 8961,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-10-11": {
+    "addressed_count": 8961,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-10-18": {
+    "addressed_count": 8962,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9282,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9282
+  },
+  "2019-10-25": {
+    "addressed_count": 8962,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9280,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9280
+  },
+  "2019-11-01": {
+    "addressed_count": 8962,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9280,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9280
+  },
+  "2019-11-08": {
+    "addressed_count": 8962,
+    "cities": 37,
+    "distinct_postcodes": 697,
+    "postcode_count": 9280,
+    "streets": 573,
+    "suburbs": 33,
+    "total_objects": 9280
+  },
+  "2019-11-15": {
+    "addressed_count": 9076,
+    "cities": 40,
+    "distinct_postcodes": 711,
+    "postcode_count": 9405,
+    "streets": 580,
+    "suburbs": 33,
+    "total_objects": 9405
+  },
+  "2019-11-22": {
+    "addressed_count": 9078,
+    "cities": 40,
+    "distinct_postcodes": 711,
+    "postcode_count": 9407,
+    "streets": 580,
+    "suburbs": 33,
+    "total_objects": 9407
+  },
+  "2019-11-29": {
+    "addressed_count": 9077,
+    "cities": 41,
+    "distinct_postcodes": 711,
+    "postcode_count": 9406,
+    "streets": 580,
+    "suburbs": 33,
+    "total_objects": 9406
+  },
+  "2019-12-06": {
+    "addressed_count": 9076,
+    "cities": 41,
+    "distinct_postcodes": 711,
+    "postcode_count": 9405,
+    "streets": 580,
+    "suburbs": 33,
+    "total_objects": 9405
+  },
+  "2019-12-13": {
+    "addressed_count": 9076,
+    "cities": 41,
+    "distinct_postcodes": 711,
+    "postcode_count": 9405,
+    "streets": 580,
+    "suburbs": 33,
+    "total_objects": 9405
+  },
+  "2019-12-20": {
+    "addressed_count": 9080,
+    "cities": 41,
+    "distinct_postcodes": 713,
+    "postcode_count": 9411,
+    "streets": 581,
+    "suburbs": 33,
+    "total_objects": 9411
+  },
+  "2019-12-27": {
+    "addressed_count": 9080,
+    "cities": 41,
+    "distinct_postcodes": 713,
+    "postcode_count": 9411,
+    "streets": 581,
+    "suburbs": 33,
+    "total_objects": 9411
+  },
+  "2020-01-03": {
+    "addressed_count": 9080,
+    "cities": 41,
+    "distinct_postcodes": 714,
+    "postcode_count": 9412,
+    "streets": 582,
+    "suburbs": 33,
+    "total_objects": 9412
+  },
+  "2020-01-10": {
+    "addressed_count": 9080,
+    "cities": 41,
+    "distinct_postcodes": 714,
+    "postcode_count": 9412,
+    "streets": 582,
+    "suburbs": 33,
+    "total_objects": 9412
+  },
+  "2020-01-17": {
+    "addressed_count": 9080,
+    "cities": 41,
+    "distinct_postcodes": 714,
+    "postcode_count": 9412,
+    "streets": 582,
+    "suburbs": 33,
+    "total_objects": 9412
+  },
+  "2020-01-24": {
+    "addressed_count": 9085,
+    "cities": 41,
+    "distinct_postcodes": 719,
+    "postcode_count": 9418,
+    "streets": 582,
+    "suburbs": 33,
+    "total_objects": 9418
+  },
+  "2020-01-31": {
+    "addressed_count": 9086,
+    "cities": 41,
+    "distinct_postcodes": 720,
+    "postcode_count": 9419,
+    "streets": 583,
+    "suburbs": 33,
+    "total_objects": 9419
+  },
+  "2020-02-07": {
+    "addressed_count": 9091,
+    "cities": 41,
+    "distinct_postcodes": 725,
+    "postcode_count": 9424,
+    "streets": 584,
+    "suburbs": 33,
+    "total_objects": 9424
+  },
+  "2020-02-14": {
+    "addressed_count": 9095,
+    "cities": 41,
+    "distinct_postcodes": 726,
+    "postcode_count": 9428,
+    "streets": 585,
+    "suburbs": 33,
+    "total_objects": 9428
+  },
+  "2020-02-21": {
+    "addressed_count": 9096,
+    "cities": 41,
+    "distinct_postcodes": 727,
+    "postcode_count": 9429,
+    "streets": 585,
+    "suburbs": 33,
+    "total_objects": 9429
+  },
+  "2020-02-28": {
+    "addressed_count": 9102,
+    "cities": 41,
+    "distinct_postcodes": 732,
+    "postcode_count": 9437,
+    "streets": 585,
+    "suburbs": 33,
+    "total_objects": 9437
+  },
+  "2020-03-06": {
+    "addressed_count": 9104,
+    "cities": 41,
+    "distinct_postcodes": 737,
+    "postcode_count": 9444,
+    "streets": 585,
+    "suburbs": 33,
+    "total_objects": 9444
+  },
+  "2020-03-13": {
+    "addressed_count": 9104,
+    "cities": 41,
+    "distinct_postcodes": 737,
+    "postcode_count": 9444,
+    "streets": 585,
+    "suburbs": 33,
+    "total_objects": 9444
+  },
+  "2020-03-20": {
+    "addressed_count": 9109,
+    "cities": 41,
+    "distinct_postcodes": 737,
+    "postcode_count": 9449,
+    "streets": 586,
+    "suburbs": 33,
+    "total_objects": 9449
+  },
+  "2020-03-27": {
+    "addressed_count": 9109,
+    "cities": 41,
+    "distinct_postcodes": 737,
+    "postcode_count": 9449,
+    "streets": 586,
+    "suburbs": 33,
+    "total_objects": 9449
+  },
+  "2020-04-03": {
+    "addressed_count": 9110,
+    "cities": 41,
+    "distinct_postcodes": 738,
+    "postcode_count": 9451,
+    "streets": 587,
+    "suburbs": 33,
+    "total_objects": 9451
+  },
+  "2020-04-10": {
+    "addressed_count": 9109,
+    "cities": 41,
+    "distinct_postcodes": 738,
+    "postcode_count": 9451,
+    "streets": 586,
+    "suburbs": 33,
+    "total_objects": 9451
+  },
+  "2020-04-17": {
+    "addressed_count": 9111,
+    "cities": 41,
+    "distinct_postcodes": 740,
+    "postcode_count": 9453,
+    "streets": 587,
+    "suburbs": 33,
+    "total_objects": 9453
+  },
+  "2020-04-24": {
+    "addressed_count": 9113,
+    "cities": 42,
+    "distinct_postcodes": 744,
+    "postcode_count": 9457,
+    "streets": 589,
+    "suburbs": 33,
+    "total_objects": 9457
+  },
+  "2020-05-01": {
+    "addressed_count": 9118,
+    "cities": 42,
+    "distinct_postcodes": 751,
+    "postcode_count": 9464,
+    "streets": 591,
+    "suburbs": 33,
+    "total_objects": 9464
+  },
+  "2020-05-08": {
+    "addressed_count": 9118,
+    "cities": 42,
+    "distinct_postcodes": 751,
+    "postcode_count": 9464,
+    "streets": 591,
+    "suburbs": 33,
+    "total_objects": 9464
+  },
+  "2020-05-15": {
+    "addressed_count": 9118,
+    "cities": 42,
+    "distinct_postcodes": 751,
+    "postcode_count": 9463,
+    "streets": 590,
+    "suburbs": 32,
+    "total_objects": 9463
+  },
+  "2020-05-22": {
+    "addressed_count": 9118,
+    "cities": 42,
+    "distinct_postcodes": 752,
+    "postcode_count": 9463,
+    "streets": 590,
+    "suburbs": 32,
+    "total_objects": 9463
+  },
+  "2020-05-29": {
+    "addressed_count": 9118,
+    "cities": 42,
+    "distinct_postcodes": 752,
+    "postcode_count": 9463,
+    "streets": 590,
+    "suburbs": 32,
+    "total_objects": 9463
+  },
+  "2020-06-05": {
+    "addressed_count": 9123,
+    "cities": 42,
+    "distinct_postcodes": 753,
+    "postcode_count": 9468,
+    "streets": 590,
+    "suburbs": 33,
+    "total_objects": 9468
+  },
+  "2020-06-12": {
+    "addressed_count": 9123,
+    "cities": 42,
+    "distinct_postcodes": 754,
+    "postcode_count": 9469,
+    "streets": 590,
+    "suburbs": 33,
+    "total_objects": 9469
+  },
+  "2020-06-19": {
+    "addressed_count": 9124,
+    "cities": 43,
+    "distinct_postcodes": 755,
+    "postcode_count": 9470,
+    "streets": 591,
+    "suburbs": 33,
+    "total_objects": 9470
+  },
+  "2020-06-26": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 756,
+    "postcode_count": 9471,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9471
+  },
+  "2020-07-03": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 759,
+    "postcode_count": 9474,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9474
+  },
+  "2020-07-10": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 760,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-07-17": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 760,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-07-24": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 760,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-07-31": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-08-07": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-08-14": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-08-21": {
+    "addressed_count": 9125,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9475,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9475
+  },
+  "2020-08-28": {
+    "addressed_count": 9126,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9476,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9476
+  },
+  "2020-09-04": {
+    "addressed_count": 9126,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9476,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9476
+  },
+  "2020-09-11": {
+    "addressed_count": 9126,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9476,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9476
+  },
+  "2020-09-18": {
+    "addressed_count": 9126,
+    "cities": 43,
+    "distinct_postcodes": 761,
+    "postcode_count": 9476,
+    "streets": 592,
+    "suburbs": 33,
+    "total_objects": 9476
+  },
+  "2020-09-25": {
+    "addressed_count": 9133,
+    "cities": 43,
+    "distinct_postcodes": 767,
+    "postcode_count": 9487,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9487
+  },
+  "2020-10-02": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9494,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9494
+  },
+  "2020-10-09": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9494,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9494
+  },
+  "2020-10-16": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9494,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9494
+  },
+  "2020-10-23": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9494,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9494
+  },
+  "2020-10-30": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9495,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9495
+  },
+  "2020-11-06": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 771,
+    "postcode_count": 9495,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9495
+  },
+  "2020-11-13": {
+    "addressed_count": 9139,
+    "cities": 43,
+    "distinct_postcodes": 772,
+    "postcode_count": 9496,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9496
+  },
+  "2020-11-20": {
+    "addressed_count": 9140,
+    "cities": 43,
+    "distinct_postcodes": 773,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2020-11-27": {
+    "addressed_count": 9140,
+    "cities": 43,
+    "distinct_postcodes": 773,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2020-12-04": {
+    "addressed_count": 9141,
+    "cities": 43,
+    "distinct_postcodes": 772,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2020-12-11": {
+    "addressed_count": 9141,
+    "cities": 43,
+    "distinct_postcodes": 772,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2020-12-18": {
+    "addressed_count": 9141,
+    "cities": 43,
+    "distinct_postcodes": 772,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2020-12-25": {
+    "addressed_count": 9141,
+    "cities": 43,
+    "distinct_postcodes": 772,
+    "postcode_count": 9497,
+    "streets": 594,
+    "suburbs": 33,
+    "total_objects": 9497
+  },
+  "2021-01-01": {
+    "addressed_count": 9383,
+    "cities": 43,
+    "distinct_postcodes": 773,
+    "postcode_count": 9738,
+    "streets": 601,
+    "suburbs": 33,
+    "total_objects": 9738
+  },
+  "2021-01-08": {
+    "addressed_count": 9383,
+    "cities": 43,
+    "distinct_postcodes": 773,
+    "postcode_count": 9738,
+    "streets": 601,
+    "suburbs": 33,
+    "total_objects": 9738
+  },
+  "2021-01-15": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 774,
+    "postcode_count": 9737,
+    "streets": 600,
+    "suburbs": 33,
+    "total_objects": 9737
+  },
+  "2021-01-22": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 774,
+    "postcode_count": 9737,
+    "streets": 600,
+    "suburbs": 33,
+    "total_objects": 9737
+  },
+  "2021-01-29": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 774,
+    "postcode_count": 9737,
+    "streets": 600,
+    "suburbs": 33,
+    "total_objects": 9737
+  },
+  "2021-02-05": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 775,
+    "postcode_count": 9738,
+    "streets": 601,
+    "suburbs": 33,
+    "total_objects": 9738
+  },
+  "2021-02-12": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 775,
+    "postcode_count": 9738,
+    "streets": 601,
+    "suburbs": 33,
+    "total_objects": 9738
+  },
+  "2021-02-19": {
+    "addressed_count": 9384,
+    "cities": 44,
+    "distinct_postcodes": 775,
+    "postcode_count": 9738,
+    "streets": 601,
+    "suburbs": 33,
+    "total_objects": 9738
+  },
+  "2021-02-26": {
+    "addressed_count": 9385,
+    "cities": 44,
+    "distinct_postcodes": 776,
+    "postcode_count": 9739,
+    "streets": 602,
+    "suburbs": 33,
+    "total_objects": 9739
+  },
+  "2021-03-05": {
+    "addressed_count": 9386,
+    "cities": 44,
+    "distinct_postcodes": 777,
+    "postcode_count": 9740,
+    "streets": 602,
+    "suburbs": 33,
+    "total_objects": 9740
+  },
+  "2021-03-12": {
+    "addressed_count": 9387,
+    "cities": 45,
+    "distinct_postcodes": 778,
+    "postcode_count": 9741,
+    "streets": 603,
+    "suburbs": 33,
+    "total_objects": 9741
+  },
+  "2021-03-19": {
+    "addressed_count": 9387,
+    "cities": 45,
+    "distinct_postcodes": 778,
+    "postcode_count": 9741,
+    "streets": 603,
+    "suburbs": 33,
+    "total_objects": 9741
+  },
+  "2021-03-26": {
+    "addressed_count": 9387,
+    "cities": 45,
+    "distinct_postcodes": 778,
+    "postcode_count": 9741,
+    "streets": 603,
+    "suburbs": 33,
+    "total_objects": 9741
+  },
+  "2021-04-02": {
+    "addressed_count": 9418,
+    "cities": 46,
+    "distinct_postcodes": 782,
+    "postcode_count": 9772,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9772
+  },
+  "2021-04-09": {
+    "addressed_count": 9418,
+    "cities": 46,
+    "distinct_postcodes": 782,
+    "postcode_count": 9772,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9772
+  },
+  "2021-04-16": {
+    "addressed_count": 9418,
+    "cities": 46,
+    "distinct_postcodes": 781,
+    "postcode_count": 9771,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9771
+  },
+  "2021-04-23": {
+    "addressed_count": 9419,
+    "cities": 46,
+    "distinct_postcodes": 782,
+    "postcode_count": 9772,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9772
+  },
+  "2021-04-30": {
+    "addressed_count": 9419,
+    "cities": 46,
+    "distinct_postcodes": 782,
+    "postcode_count": 9772,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9772
+  },
+  "2021-05-07": {
+    "addressed_count": 9419,
+    "cities": 46,
+    "distinct_postcodes": 782,
+    "postcode_count": 9772,
+    "streets": 606,
+    "suburbs": 33,
+    "total_objects": 9772
+  },
+  "2021-05-14": {
+    "addressed_count": 9421,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9773,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9773
+  },
+  "2021-05-21": {
+    "addressed_count": 9421,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9773,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9773
+  },
+  "2021-05-28": {
+    "addressed_count": 9421,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9773,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9773
+  },
+  "2021-06-04": {
+    "addressed_count": 9421,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9773,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9773
+  },
+  "2021-06-11": {
+    "addressed_count": 9422,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9774,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9774
+  },
+  "2021-06-18": {
+    "addressed_count": 9422,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9774,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9774
+  },
+  "2021-06-25": {
+    "addressed_count": 9422,
+    "cities": 46,
+    "distinct_postcodes": 784,
+    "postcode_count": 9774,
+    "streets": 607,
+    "suburbs": 33,
+    "total_objects": 9774
+  },
+  "2021-07-02": {
+    "addressed_count": 9424,
+    "cities": 46,
+    "distinct_postcodes": 785,
+    "postcode_count": 9778,
+    "streets": 608,
+    "suburbs": 33,
+    "total_objects": 9778
+  },
+  "2021-07-09": {
+    "addressed_count": 9424,
+    "cities": 46,
+    "distinct_postcodes": 785,
+    "postcode_count": 9777,
+    "streets": 608,
+    "suburbs": 33,
+    "total_objects": 9777
+  },
+  "2021-07-16": {
+    "addressed_count": 9424,
+    "cities": 46,
+    "distinct_postcodes": 785,
+    "postcode_count": 9777,
+    "streets": 608,
+    "suburbs": 33,
+    "total_objects": 9777
+  },
+  "2021-07-23": {
+    "addressed_count": 9424,
+    "cities": 46,
+    "distinct_postcodes": 785,
+    "postcode_count": 9777,
+    "streets": 608,
+    "suburbs": 33,
+    "total_objects": 9777
+  },
+  "2021-07-30": {
+    "addressed_count": 9424,
+    "cities": 46,
+    "distinct_postcodes": 785,
+    "postcode_count": 9777,
+    "streets": 608,
+    "suburbs": 33,
+    "total_objects": 9777
+  },
+  "2021-08-06": {
+    "addressed_count": 9426,
+    "cities": 46,
+    "distinct_postcodes": 787,
+    "postcode_count": 9779,
+    "streets": 610,
+    "suburbs": 33,
+    "total_objects": 9779
+  },
+  "2021-08-13": {
+    "addressed_count": 9428,
+    "cities": 46,
+    "distinct_postcodes": 789,
+    "postcode_count": 9782,
+    "streets": 611,
+    "suburbs": 33,
+    "total_objects": 9782
+  },
+  "2021-08-20": {
+    "addressed_count": 9429,
+    "cities": 46,
+    "distinct_postcodes": 790,
+    "postcode_count": 9783,
+    "streets": 612,
+    "suburbs": 33,
+    "total_objects": 9783
+  },
+  "2021-08-27": {
+    "addressed_count": 9428,
+    "cities": 46,
+    "distinct_postcodes": 790,
+    "postcode_count": 9783,
+    "streets": 612,
+    "suburbs": 33,
+    "total_objects": 9783
+  },
+  "2021-09-03": {
+    "addressed_count": 9428,
+    "cities": 46,
+    "distinct_postcodes": 790,
+    "postcode_count": 9783,
+    "streets": 612,
+    "suburbs": 33,
+    "total_objects": 9783
+  },
+  "2021-09-10": {
+    "addressed_count": 9428,
+    "cities": 46,
+    "distinct_postcodes": 790,
+    "postcode_count": 9783,
+    "streets": 612,
+    "suburbs": 33,
+    "total_objects": 9783
+  },
+  "2021-09-17": {
+    "addressed_count": 9429,
+    "cities": 46,
+    "distinct_postcodes": 791,
+    "postcode_count": 9784,
+    "streets": 613,
+    "suburbs": 33,
+    "total_objects": 9784
+  },
+  "2021-09-24": {
+    "addressed_count": 9430,
+    "cities": 46,
+    "distinct_postcodes": 795,
+    "postcode_count": 9794,
+    "streets": 613,
+    "suburbs": 33,
+    "total_objects": 9794
+  },
+  "2021-10-01": {
+    "addressed_count": 9431,
+    "cities": 46,
+    "distinct_postcodes": 898,
+    "postcode_count": 9851,
+    "streets": 614,
+    "suburbs": 33,
+    "total_objects": 9851
+  },
+  "2021-10-08": {
+    "addressed_count": 9432,
+    "cities": 46,
+    "distinct_postcodes": 905,
+    "postcode_count": 9849,
+    "streets": 614,
+    "suburbs": 33,
+    "total_objects": 9849
+  },
+  "2021-10-15": {
+    "addressed_count": 9435,
+    "cities": 46,
+    "distinct_postcodes": 909,
+    "postcode_count": 9853,
+    "streets": 617,
+    "suburbs": 33,
+    "total_objects": 9853
+  },
+  "2021-10-22": {
+    "addressed_count": 9435,
+    "cities": 46,
+    "distinct_postcodes": 909,
+    "postcode_count": 9851,
+    "streets": 616,
+    "suburbs": 33,
+    "total_objects": 9851
+  },
+  "2021-10-29": {
+    "addressed_count": 9434,
+    "cities": 46,
+    "distinct_postcodes": 909,
+    "postcode_count": 9850,
+    "streets": 616,
+    "suburbs": 33,
+    "total_objects": 9850
+  },
+  "2021-11-05": {
+    "addressed_count": 9435,
+    "cities": 46,
+    "distinct_postcodes": 910,
+    "postcode_count": 9851,
+    "streets": 617,
+    "suburbs": 33,
+    "total_objects": 9851
+  },
+  "2021-11-12": {
+    "addressed_count": 9436,
+    "cities": 46,
+    "distinct_postcodes": 911,
+    "postcode_count": 9852,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9852
+  },
+  "2021-11-19": {
+    "addressed_count": 9436,
+    "cities": 46,
+    "distinct_postcodes": 911,
+    "postcode_count": 9852,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9852
+  },
+  "2021-11-26": {
+    "addressed_count": 9436,
+    "cities": 46,
+    "distinct_postcodes": 911,
+    "postcode_count": 9852,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9852
+  },
+  "2021-12-03": {
+    "addressed_count": 9436,
+    "cities": 46,
+    "distinct_postcodes": 911,
+    "postcode_count": 9853,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9853
+  },
+  "2021-12-10": {
+    "addressed_count": 9436,
+    "cities": 46,
+    "distinct_postcodes": 912,
+    "postcode_count": 9856,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9856
+  },
+  "2021-12-17": {
+    "addressed_count": 9437,
+    "cities": 46,
+    "distinct_postcodes": 912,
+    "postcode_count": 9857,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9857
+  },
+  "2021-12-24": {
+    "addressed_count": 9437,
+    "cities": 46,
+    "distinct_postcodes": 912,
+    "postcode_count": 9858,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9858
+  },
+  "2021-12-31": {
+    "addressed_count": 9438,
+    "cities": 46,
+    "distinct_postcodes": 913,
+    "postcode_count": 9859,
+    "streets": 618,
+    "suburbs": 33,
+    "total_objects": 9859
+  },
+  "2022-01-07": {
+    "addressed_count": 9438,
+    "cities": 46,
+    "distinct_postcodes": 913,
+    "postcode_count": 9859,
+    "streets": 619,
+    "suburbs": 33,
+    "total_objects": 9859
+  },
+  "2022-01-14": {
+    "addressed_count": 9437,
+    "cities": 46,
+    "distinct_postcodes": 919,
+    "postcode_count": 9864,
+    "streets": 624,
+    "suburbs": 33,
+    "total_objects": 9864
+  },
+  "2022-01-21": {
+    "addressed_count": 9442,
+    "cities": 47,
+    "distinct_postcodes": 924,
+    "postcode_count": 9869,
+    "streets": 624,
+    "suburbs": 33,
+    "total_objects": 9869
+  },
+  "2022-01-28": {
+    "addressed_count": 9443,
+    "cities": 47,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-02-04": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-02-11": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-02-18": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-02-25": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-03-04": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 925,
+    "postcode_count": 9870,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9870
+  },
+  "2022-03-11": {
+    "addressed_count": 9444,
+    "cities": 48,
+    "distinct_postcodes": 926,
+    "postcode_count": 9873,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9873
+  },
+  "2022-03-18": {
+    "addressed_count": 9444,
+    "cities": 48,
+    "distinct_postcodes": 926,
+    "postcode_count": 9873,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9873
+  },
+  "2022-03-25": {
+    "addressed_count": 9444,
+    "cities": 48,
+    "distinct_postcodes": 926,
+    "postcode_count": 9873,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9873
+  },
+  "2022-04-01": {
+    "addressed_count": 9435,
+    "cities": 48,
+    "distinct_postcodes": 926,
+    "postcode_count": 9873,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9873
+  },
+  "2022-04-08": {
+    "addressed_count": 9435,
+    "cities": 48,
+    "distinct_postcodes": 926,
+    "postcode_count": 9873,
+    "streets": 625,
+    "suburbs": 33,
+    "total_objects": 9873
+  },
+  "2022-04-15": {
+    "addressed_count": 9438,
+    "cities": 48,
+    "distinct_postcodes": 927,
+    "postcode_count": 9877,
+    "streets": 627,
+    "suburbs": 33,
+    "total_objects": 9877
+  },
+  "2022-04-22": {
+    "addressed_count": 9440,
+    "cities": 48,
+    "distinct_postcodes": 928,
+    "postcode_count": 9879,
+    "streets": 629,
+    "suburbs": 33,
+    "total_objects": 9879
+  },
+  "2022-04-29": {
+    "addressed_count": 9441,
+    "cities": 48,
+    "distinct_postcodes": 929,
+    "postcode_count": 9880,
+    "streets": 629,
+    "suburbs": 33,
+    "total_objects": 9880
+  },
+  "2022-05-06": {
+    "addressed_count": 9441,
+    "cities": 48,
+    "distinct_postcodes": 929,
+    "postcode_count": 9880,
+    "streets": 629,
+    "suburbs": 33,
+    "total_objects": 9880
+  },
+  "2022-05-13": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 631,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-05-20": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 631,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-05-27": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 631,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-06-03": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 631,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-06-10": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-06-17": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-06-24": {
+    "addressed_count": 9442,
+    "cities": 48,
+    "distinct_postcodes": 937,
+    "postcode_count": 9890,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9890
+  },
+  "2022-07-01": {
+    "addressed_count": 9442,
+    "cities": 49,
+    "distinct_postcodes": 945,
+    "postcode_count": 9899,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9899
+  },
+  "2022-07-08": {
+    "addressed_count": 9443,
+    "cities": 49,
+    "distinct_postcodes": 945,
+    "postcode_count": 9900,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9900
+  },
+  "2022-07-15": {
+    "addressed_count": 9443,
+    "cities": 49,
+    "distinct_postcodes": 945,
+    "postcode_count": 9900,
+    "streets": 630,
+    "suburbs": 33,
+    "total_objects": 9900
+  },
+  "2022-07-22": {
+    "addressed_count": 9452,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9912,
+    "streets": 631,
+    "suburbs": 33,
+    "total_objects": 9912
+  },
+  "2022-07-29": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9923,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9923
+  },
+  "2022-08-05": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9924,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9924
+  },
+  "2022-08-12": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9924,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9924
+  },
+  "2022-08-19": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9924,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9924
+  },
+  "2022-08-26": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9924,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9924
+  },
+  "2022-09-02": {
+    "addressed_count": 9459,
+    "cities": 49,
+    "distinct_postcodes": 954,
+    "postcode_count": 9924,
+    "streets": 632,
+    "suburbs": 33,
+    "total_objects": 9924
+  },
+  "2022-09-09": {
+    "addressed_count": 9463,
+    "cities": 49,
+    "distinct_postcodes": 956,
+    "postcode_count": 9928,
+    "streets": 635,
+    "suburbs": 33,
+    "total_objects": 9928
+  },
+  "2022-09-16": {
+    "addressed_count": 9465,
+    "cities": 50,
+    "distinct_postcodes": 959,
+    "postcode_count": 9938,
+    "streets": 635,
+    "suburbs": 33,
+    "total_objects": 9938
+  },
+  "2022-09-23": {
+    "addressed_count": 9465,
+    "cities": 50,
+    "distinct_postcodes": 959,
+    "postcode_count": 9938,
+    "streets": 635,
+    "suburbs": 33,
+    "total_objects": 9938
+  },
+  "2022-09-30": {
+    "addressed_count": 9465,
+    "cities": 50,
+    "distinct_postcodes": 959,
+    "postcode_count": 9938,
+    "streets": 635,
+    "suburbs": 33,
+    "total_objects": 9938
+  },
+  "2022-10-07": {
+    "addressed_count": 9471,
+    "cities": 50,
+    "distinct_postcodes": 960,
+    "postcode_count": 9944,
+    "streets": 635,
+    "suburbs": 33,
+    "total_objects": 9944
+  },
+  "2022-10-14": {
+    "addressed_count": 9474,
+    "cities": 50,
+    "distinct_postcodes": 963,
+    "postcode_count": 9947,
+    "streets": 636,
+    "suburbs": 33,
+    "total_objects": 9947
+  },
+  "2022-10-21": {
+    "addressed_count": 9477,
+    "cities": 51,
+    "distinct_postcodes": 964,
+    "postcode_count": 9950,
+    "streets": 637,
+    "suburbs": 33,
+    "total_objects": 9950
+  },
+  "2022-10-28": {
+    "addressed_count": 9478,
+    "cities": 51,
+    "distinct_postcodes": 965,
+    "postcode_count": 9951,
+    "streets": 638,
+    "suburbs": 33,
+    "total_objects": 9951
+  },
+  "2022-11-04": {
+    "addressed_count": 9479,
+    "cities": 51,
+    "distinct_postcodes": 965,
+    "postcode_count": 9952,
+    "streets": 638,
+    "suburbs": 33,
+    "total_objects": 9952
+  },
+  "2022-11-11": {
+    "addressed_count": 9479,
+    "cities": 51,
+    "distinct_postcodes": 965,
+    "postcode_count": 9952,
+    "streets": 638,
+    "suburbs": 33,
+    "total_objects": 9952
+  },
+  "2022-11-18": {
+    "addressed_count": 9479,
+    "cities": 51,
+    "distinct_postcodes": 965,
+    "postcode_count": 9952,
+    "streets": 638,
+    "suburbs": 33,
+    "total_objects": 9952
+  },
+  "2022-11-25": {
+    "addressed_count": 9479,
+    "cities": 51,
+    "distinct_postcodes": 965,
+    "postcode_count": 9952,
+    "streets": 638,
+    "suburbs": 33,
+    "total_objects": 9952
+  },
+  "2022-12-02": {
+    "addressed_count": 9480,
+    "cities": 52,
+    "distinct_postcodes": 966,
+    "postcode_count": 9953,
+    "streets": 639,
+    "suburbs": 33,
+    "total_objects": 9953
+  },
+  "2022-12-09": {
+    "addressed_count": 9480,
+    "cities": 52,
+    "distinct_postcodes": 967,
+    "postcode_count": 9954,
+    "streets": 640,
+    "suburbs": 33,
+    "total_objects": 9954
+  },
+  "2022-12-16": {
+    "addressed_count": 9480,
+    "cities": 52,
+    "distinct_postcodes": 967,
+    "postcode_count": 9954,
+    "streets": 640,
+    "suburbs": 33,
+    "total_objects": 9954
+  },
+  "2022-12-23": {
+    "addressed_count": 9480,
+    "cities": 52,
+    "distinct_postcodes": 967,
+    "postcode_count": 9954,
+    "streets": 640,
+    "suburbs": 33,
+    "total_objects": 9954
+  },
+  "2022-12-30": {
+    "addressed_count": 9481,
+    "cities": 53,
+    "distinct_postcodes": 969,
+    "postcode_count": 9958,
+    "streets": 642,
+    "suburbs": 33,
+    "total_objects": 9958
+  },
+  "2023-01-06": {
+    "addressed_count": 9496,
+    "cities": 54,
+    "distinct_postcodes": 970,
+    "postcode_count": 9962,
+    "streets": 644,
+    "suburbs": 33,
+    "total_objects": 9962
+  },
+  "2023-01-13": {
+    "addressed_count": 9579,
+    "cities": 54,
+    "distinct_postcodes": 977,
+    "postcode_count": 10049,
+    "streets": 650,
+    "suburbs": 33,
+    "total_objects": 10049
+  },
+  "2023-01-20": {
+    "addressed_count": 9585,
+    "cities": 54,
+    "distinct_postcodes": 980,
+    "postcode_count": 10055,
+    "streets": 650,
+    "suburbs": 33,
+    "total_objects": 10055
+  },
+  "2023-01-27": {
+    "addressed_count": 9585,
+    "cities": 54,
+    "distinct_postcodes": 980,
+    "postcode_count": 10055,
+    "streets": 650,
+    "suburbs": 33,
+    "total_objects": 10055
+  },
+  "2023-02-03": {
+    "addressed_count": 9585,
+    "cities": 54,
+    "distinct_postcodes": 980,
+    "postcode_count": 10055,
+    "streets": 650,
+    "suburbs": 33,
+    "total_objects": 10055
+  },
+  "2023-02-10": {
+    "addressed_count": 9608,
+    "cities": 54,
+    "distinct_postcodes": 983,
+    "postcode_count": 10078,
+    "streets": 653,
+    "suburbs": 33,
+    "total_objects": 10078
+  },
+  "2023-02-17": {
+    "addressed_count": 9608,
+    "cities": 54,
+    "distinct_postcodes": 983,
+    "postcode_count": 10078,
+    "streets": 653,
+    "suburbs": 33,
+    "total_objects": 10078
+  },
+  "2023-02-24": {
+    "addressed_count": 9608,
+    "cities": 54,
+    "distinct_postcodes": 983,
+    "postcode_count": 10078,
+    "streets": 653,
+    "suburbs": 33,
+    "total_objects": 10078
+  },
+  "2023-03-03": {
+    "addressed_count": 9608,
+    "cities": 54,
+    "distinct_postcodes": 983,
+    "postcode_count": 10078,
+    "streets": 653,
+    "suburbs": 33,
+    "total_objects": 10078
+  },
+  "2023-03-10": {
+    "addressed_count": 9610,
+    "cities": 54,
+    "distinct_postcodes": 984,
+    "postcode_count": 10081,
+    "streets": 654,
+    "suburbs": 33,
+    "total_objects": 10081
+  },
+  "2023-03-17": {
+    "addressed_count": 9749,
+    "cities": 57,
+    "distinct_postcodes": 994,
+    "postcode_count": 10245,
+    "streets": 661,
+    "suburbs": 33,
+    "total_objects": 10245
+  },
+  "2023-03-24": {
+    "addressed_count": 9809,
+    "cities": 57,
+    "distinct_postcodes": 997,
+    "postcode_count": 10305,
+    "streets": 663,
+    "suburbs": 33,
+    "total_objects": 10305
+  },
+  "2023-03-31": {
+    "addressed_count": 9811,
+    "cities": 57,
+    "distinct_postcodes": 997,
+    "postcode_count": 10305,
+    "streets": 662,
+    "suburbs": 33,
+    "total_objects": 10305
+  },
+  "2023-04-07": {
+    "addressed_count": 9881,
+    "cities": 57,
+    "distinct_postcodes": 1001,
+    "postcode_count": 10393,
+    "streets": 662,
+    "suburbs": 33,
+    "total_objects": 10393
+  },
+  "2023-04-14": {
+    "addressed_count": 9924,
+    "cities": 57,
+    "distinct_postcodes": 1009,
+    "postcode_count": 10477,
+    "streets": 668,
+    "suburbs": 34,
+    "total_objects": 10477
+  },
+  "2023-04-21": {
+    "addressed_count": 10013,
+    "cities": 57,
+    "distinct_postcodes": 1024,
+    "postcode_count": 10602,
+    "streets": 674,
+    "suburbs": 34,
+    "total_objects": 10602
+  },
+  "2023-04-28": {
+    "addressed_count": 10019,
+    "cities": 57,
+    "distinct_postcodes": 1024,
+    "postcode_count": 10608,
+    "streets": 674,
+    "suburbs": 34,
+    "total_objects": 10608
+  },
+  "2023-05-05": {
+    "addressed_count": 10029,
+    "cities": 57,
+    "distinct_postcodes": 1026,
+    "postcode_count": 10621,
+    "streets": 675,
+    "suburbs": 34,
+    "total_objects": 10621
+  },
+  "2023-05-12": {
+    "addressed_count": 10029,
+    "cities": 57,
+    "distinct_postcodes": 1026,
+    "postcode_count": 10621,
+    "streets": 675,
+    "suburbs": 34,
+    "total_objects": 10621
+  },
+  "2023-05-19": {
+    "addressed_count": 10030,
+    "cities": 57,
+    "distinct_postcodes": 1027,
+    "postcode_count": 10622,
+    "streets": 675,
+    "suburbs": 34,
+    "total_objects": 10622
+  },
+  "2023-05-26": {
+    "addressed_count": 10030,
+    "cities": 57,
+    "distinct_postcodes": 1027,
+    "postcode_count": 10622,
+    "streets": 675,
+    "suburbs": 34,
+    "total_objects": 10622
+  },
+  "2023-06-02": {
+    "addressed_count": 10044,
+    "cities": 57,
+    "distinct_postcodes": 1034,
+    "postcode_count": 10637,
+    "streets": 676,
+    "suburbs": 34,
+    "total_objects": 10637
+  },
+  "2023-06-09": {
+    "addressed_count": 10053,
+    "cities": 59,
+    "distinct_postcodes": 1040,
+    "postcode_count": 10649,
+    "streets": 679,
+    "suburbs": 34,
+    "total_objects": 10649
+  },
+  "2023-06-16": {
+    "addressed_count": 10053,
+    "cities": 59,
+    "distinct_postcodes": 1040,
+    "postcode_count": 10649,
+    "streets": 679,
+    "suburbs": 34,
+    "total_objects": 10649
+  },
+  "2023-06-23": {
+    "addressed_count": 10053,
+    "cities": 59,
+    "distinct_postcodes": 1051,
+    "postcode_count": 10660,
+    "streets": 689,
+    "suburbs": 34,
+    "total_objects": 10660
+  },
+  "2023-06-30": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10664,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10664
+  },
+  "2023-07-07": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10664,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10664
+  },
+  "2023-07-14": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10667,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10667
+  },
+  "2023-07-21": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10667,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10667
+  },
+  "2023-07-28": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10668,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10668
+  },
+  "2023-08-04": {
+    "addressed_count": 10056,
+    "cities": 59,
+    "distinct_postcodes": 1053,
+    "postcode_count": 10671,
+    "streets": 691,
+    "suburbs": 34,
+    "total_objects": 10671
+  },
+  "2023-08-11": {
+    "addressed_count": 10058,
+    "cities": 59,
+    "distinct_postcodes": 1055,
+    "postcode_count": 10700,
+    "streets": 693,
+    "suburbs": 34,
+    "total_objects": 10700
+  },
+  "2023-08-18": {
+    "addressed_count": 10062,
+    "cities": 59,
+    "distinct_postcodes": 1066,
+    "postcode_count": 10758,
+    "streets": 694,
+    "suburbs": 34,
+    "total_objects": 10758
+  },
+  "2023-08-25": {
+    "addressed_count": 10064,
+    "cities": 59,
+    "distinct_postcodes": 1068,
+    "postcode_count": 10760,
+    "streets": 695,
+    "suburbs": 34,
+    "total_objects": 10760
+  },
+  "2023-09-01": {
+    "addressed_count": 10106,
+    "cities": 59,
+    "distinct_postcodes": 1073,
+    "postcode_count": 10799,
+    "streets": 696,
+    "suburbs": 34,
+    "total_objects": 10799
+  },
+  "2023-09-08": {
+    "addressed_count": 10108,
+    "cities": 59,
+    "distinct_postcodes": 1075,
+    "postcode_count": 10801,
+    "streets": 696,
+    "suburbs": 34,
+    "total_objects": 10801
+  },
+  "2023-09-15": {
+    "addressed_count": 10107,
+    "cities": 59,
+    "distinct_postcodes": 1073,
+    "postcode_count": 10799,
+    "streets": 695,
+    "suburbs": 34,
+    "total_objects": 10799
+  },
+  "2023-09-22": {
+    "addressed_count": 10107,
+    "cities": 59,
+    "distinct_postcodes": 1073,
+    "postcode_count": 10799,
+    "streets": 695,
+    "suburbs": 34,
+    "total_objects": 10799
+  },
+  "2023-09-29": {
+    "addressed_count": 10109,
+    "cities": 59,
+    "distinct_postcodes": 1073,
+    "postcode_count": 10799,
+    "streets": 695,
+    "suburbs": 34,
+    "total_objects": 10799
+  },
+  "2023-10-06": {
+    "addressed_count": 10114,
+    "cities": 59,
+    "distinct_postcodes": 1078,
+    "postcode_count": 10810,
+    "streets": 700,
+    "suburbs": 36,
+    "total_objects": 10810
+  },
+  "2023-10-13": {
+    "addressed_count": 10126,
+    "cities": 59,
+    "distinct_postcodes": 1088,
+    "postcode_count": 10831,
+    "streets": 701,
+    "suburbs": 36,
+    "total_objects": 10831
+  },
+  "2023-10-20": {
+    "addressed_count": 10127,
+    "cities": 59,
+    "distinct_postcodes": 1092,
+    "postcode_count": 10837,
+    "streets": 702,
+    "suburbs": 36,
+    "total_objects": 10837
+  },
+  "2023-10-27": {
+    "addressed_count": 10126,
+    "cities": 59,
+    "distinct_postcodes": 1092,
+    "postcode_count": 10836,
+    "streets": 702,
+    "suburbs": 36,
+    "total_objects": 10836
+  },
+  "2023-11-03": {
+    "addressed_count": 10126,
+    "cities": 59,
+    "distinct_postcodes": 1093,
+    "postcode_count": 10837,
+    "streets": 703,
+    "suburbs": 36,
+    "total_objects": 10837
+  },
+  "2023-11-10": {
+    "addressed_count": 10129,
+    "cities": 59,
+    "distinct_postcodes": 1096,
+    "postcode_count": 10843,
+    "streets": 705,
+    "suburbs": 38,
+    "total_objects": 10843
+  },
+  "2023-11-17": {
+    "addressed_count": 10134,
+    "cities": 59,
+    "distinct_postcodes": 1101,
+    "postcode_count": 10849,
+    "streets": 709,
+    "suburbs": 39,
+    "total_objects": 10849
+  },
+  "2023-11-24": {
+    "addressed_count": 10134,
+    "cities": 59,
+    "distinct_postcodes": 1101,
+    "postcode_count": 10850,
+    "streets": 709,
+    "suburbs": 39,
+    "total_objects": 10850
+  },
+  "2023-12-01": {
+    "addressed_count": 10134,
+    "cities": 59,
+    "distinct_postcodes": 1101,
+    "postcode_count": 10850,
+    "streets": 709,
+    "suburbs": 39,
+    "total_objects": 10850
+  },
+  "2023-12-08": {
+    "addressed_count": 10135,
+    "cities": 59,
+    "distinct_postcodes": 1101,
+    "postcode_count": 10851,
+    "streets": 709,
+    "suburbs": 39,
+    "total_objects": 10851
+  },
+  "2023-12-15": {
+    "addressed_count": 10136,
+    "cities": 59,
+    "distinct_postcodes": 1102,
+    "postcode_count": 10852,
+    "streets": 710,
+    "suburbs": 39,
+    "total_objects": 10852
+  },
+  "2023-12-22": {
+    "addressed_count": 10137,
+    "cities": 59,
+    "distinct_postcodes": 1105,
+    "postcode_count": 10856,
+    "streets": 713,
+    "suburbs": 40,
+    "total_objects": 10856
+  },
+  "2023-12-29": {
+    "addressed_count": 10140,
+    "cities": 59,
+    "distinct_postcodes": 1106,
+    "postcode_count": 10860,
+    "streets": 715,
+    "suburbs": 40,
+    "total_objects": 10860
+  },
+  "2024-01-05": {
+    "addressed_count": 10142,
+    "cities": 59,
+    "distinct_postcodes": 1108,
+    "postcode_count": 10862,
+    "streets": 717,
+    "suburbs": 40,
+    "total_objects": 10862
+  },
+  "2024-01-12": {
+    "addressed_count": 10145,
+    "cities": 59,
+    "distinct_postcodes": 1110,
+    "postcode_count": 10865,
+    "streets": 720,
+    "suburbs": 40,
+    "total_objects": 10865
+  },
+  "2024-01-19": {
+    "addressed_count": 10146,
+    "cities": 59,
+    "distinct_postcodes": 1111,
+    "postcode_count": 10866,
+    "streets": 721,
+    "suburbs": 40,
+    "total_objects": 10866
+  },
+  "2024-01-26": {
+    "addressed_count": 10180,
+    "cities": 59,
+    "distinct_postcodes": 1113,
+    "postcode_count": 10902,
+    "streets": 724,
+    "suburbs": 40,
+    "total_objects": 10902
+  },
+  "2024-02-02": {
+    "addressed_count": 10197,
+    "cities": 60,
+    "distinct_postcodes": 1115,
+    "postcode_count": 10920,
+    "streets": 724,
+    "suburbs": 40,
+    "total_objects": 10920
+  },
+  "2024-02-09": {
+    "addressed_count": 10203,
+    "cities": 60,
+    "distinct_postcodes": 1118,
+    "postcode_count": 11083,
+    "streets": 728,
+    "suburbs": 40,
+    "total_objects": 11083
+  },
+  "2024-02-16": {
+    "addressed_count": 10319,
+    "cities": 60,
+    "distinct_postcodes": 1125,
+    "postcode_count": 11197,
+    "streets": 735,
+    "suburbs": 40,
+    "total_objects": 11197
+  },
+  "2024-02-23": {
+    "addressed_count": 10393,
+    "cities": 60,
+    "distinct_postcodes": 1130,
+    "postcode_count": 11293,
+    "streets": 740,
+    "suburbs": 40,
+    "total_objects": 11293
+  },
+  "2024-03-01": {
+    "addressed_count": 10395,
+    "cities": 60,
+    "distinct_postcodes": 1132,
+    "postcode_count": 11299,
+    "streets": 742,
+    "suburbs": 40,
+    "total_objects": 11299
+  },
+  "2024-03-08": {
+    "addressed_count": 10401,
+    "cities": 61,
+    "distinct_postcodes": 1135,
+    "postcode_count": 11306,
+    "streets": 745,
+    "suburbs": 40,
+    "total_objects": 11306
+  },
+  "2024-03-15": {
+    "addressed_count": 10519,
+    "cities": 61,
+    "distinct_postcodes": 1141,
+    "postcode_count": 11417,
+    "streets": 750,
+    "suburbs": 40,
+    "total_objects": 11417
+  },
+  "2024-03-22": {
+    "addressed_count": 10519,
+    "cities": 61,
+    "distinct_postcodes": 1142,
+    "postcode_count": 11418,
+    "streets": 751,
+    "suburbs": 41,
+    "total_objects": 11418
+  },
+  "2024-03-29": {
+    "addressed_count": 10635,
+    "cities": 61,
+    "distinct_postcodes": 1167,
+    "postcode_count": 11535,
+    "streets": 770,
+    "suburbs": 41,
+    "total_objects": 11535
+  },
+  "2024-04-05": {
+    "addressed_count": 10635,
+    "cities": 61,
+    "distinct_postcodes": 1167,
+    "postcode_count": 11535,
+    "streets": 770,
+    "suburbs": 41,
+    "total_objects": 11535
+  },
+  "2024-04-12": {
+    "addressed_count": 10636,
+    "cities": 61,
+    "distinct_postcodes": 1170,
+    "postcode_count": 11539,
+    "streets": 771,
+    "suburbs": 43,
+    "total_objects": 11539
+  },
+  "2024-04-19": {
+    "addressed_count": 10669,
+    "cities": 61,
+    "distinct_postcodes": 1172,
+    "postcode_count": 11573,
+    "streets": 772,
+    "suburbs": 43,
+    "total_objects": 11573
+  },
+  "2024-04-26": {
+    "addressed_count": 10674,
+    "cities": 61,
+    "distinct_postcodes": 1177,
+    "postcode_count": 11579,
+    "streets": 775,
+    "suburbs": 43,
+    "total_objects": 11579
+  },
+  "2024-05-03": {
+    "addressed_count": 10674,
+    "cities": 61,
+    "distinct_postcodes": 1177,
+    "postcode_count": 11579,
+    "streets": 774,
+    "suburbs": 43,
+    "total_objects": 11579
+  },
+  "2024-05-10": {
+    "addressed_count": 10682,
+    "cities": 61,
+    "distinct_postcodes": 1177,
+    "postcode_count": 11580,
+    "streets": 774,
+    "suburbs": 43,
+    "total_objects": 11580
+  },
+  "2024-05-17": {
+    "addressed_count": 10682,
+    "cities": 61,
+    "distinct_postcodes": 1179,
+    "postcode_count": 11582,
+    "streets": 775,
+    "suburbs": 45,
+    "total_objects": 11582
+  },
+  "2024-05-24": {
+    "addressed_count": 10682,
+    "cities": 61,
+    "distinct_postcodes": 1179,
+    "postcode_count": 11582,
+    "streets": 775,
+    "suburbs": 45,
+    "total_objects": 11582
+  },
+  "2024-05-31": {
+    "addressed_count": 10683,
+    "cities": 61,
+    "distinct_postcodes": 1180,
+    "postcode_count": 11584,
+    "streets": 776,
+    "suburbs": 45,
+    "total_objects": 11584
+  },
+  "2024-06-07": {
+    "addressed_count": 10684,
+    "cities": 61,
+    "distinct_postcodes": 1180,
+    "postcode_count": 11585,
+    "streets": 776,
+    "suburbs": 46,
+    "total_objects": 11585
+  },
+  "2024-06-14": {
+    "addressed_count": 10685,
+    "cities": 61,
+    "distinct_postcodes": 1182,
+    "postcode_count": 11588,
+    "streets": 777,
+    "suburbs": 47,
+    "total_objects": 11588
+  },
+  "2024-06-21": {
+    "addressed_count": 10685,
+    "cities": 61,
+    "distinct_postcodes": 1182,
+    "postcode_count": 11588,
+    "streets": 777,
+    "suburbs": 47,
+    "total_objects": 11588
+  },
+  "2024-06-28": {
+    "addressed_count": 10685,
+    "cities": 61,
+    "distinct_postcodes": 1184,
+    "postcode_count": 11590,
+    "streets": 779,
+    "suburbs": 48,
+    "total_objects": 11590
+  },
+  "2024-07-05": {
+    "addressed_count": 10686,
+    "cities": 61,
+    "distinct_postcodes": 1188,
+    "postcode_count": 11595,
+    "streets": 781,
+    "suburbs": 52,
+    "total_objects": 11595
+  },
+  "2024-07-12": {
+    "addressed_count": 10680,
+    "cities": 61,
+    "distinct_postcodes": 1191,
+    "postcode_count": 11592,
+    "streets": 781,
+    "suburbs": 55,
+    "total_objects": 11592
+  },
+  "2024-07-19": {
+    "addressed_count": 10680,
+    "cities": 61,
+    "distinct_postcodes": 1191,
+    "postcode_count": 11592,
+    "streets": 781,
+    "suburbs": 55,
+    "total_objects": 11592
+  },
+  "2024-07-26": {
+    "addressed_count": 10680,
+    "cities": 61,
+    "distinct_postcodes": 1191,
+    "postcode_count": 11592,
+    "streets": 782,
+    "suburbs": 55,
+    "total_objects": 11592
+  },
+  "2024-08-02": {
+    "addressed_count": 10684,
+    "cities": 62,
+    "distinct_postcodes": 1193,
+    "postcode_count": 11596,
+    "streets": 785,
+    "suburbs": 55,
+    "total_objects": 11596
+  },
+  "2024-08-09": {
+    "addressed_count": 10682,
+    "cities": 61,
+    "distinct_postcodes": 1192,
+    "postcode_count": 11593,
+    "streets": 783,
+    "suburbs": 55,
+    "total_objects": 11593
+  },
+  "2024-08-16": {
+    "addressed_count": 10682,
+    "cities": 61,
+    "distinct_postcodes": 1192,
+    "postcode_count": 11593,
+    "streets": 783,
+    "suburbs": 55,
+    "total_objects": 11593
+  },
+  "2024-08-23": {
+    "addressed_count": 10683,
+    "cities": 61,
+    "distinct_postcodes": 1194,
+    "postcode_count": 11594,
+    "streets": 785,
+    "suburbs": 55,
+    "total_objects": 11594
+  },
+  "2024-08-30": {
+    "addressed_count": 10683,
+    "cities": 61,
+    "distinct_postcodes": 1194,
+    "postcode_count": 11594,
+    "streets": 785,
+    "suburbs": 55,
+    "total_objects": 11594
+  },
+  "2024-09-06": {
+    "addressed_count": 10683,
+    "cities": 61,
+    "distinct_postcodes": 1194,
+    "postcode_count": 11594,
+    "streets": 785,
+    "suburbs": 55,
+    "total_objects": 11594
+  },
+  "2024-09-13": {
+    "addressed_count": 10685,
+    "cities": 61,
+    "distinct_postcodes": 1196,
+    "postcode_count": 11596,
+    "streets": 787,
+    "suburbs": 55,
+    "total_objects": 11596
+  },
+  "2024-09-20": {
+    "addressed_count": 10679,
+    "cities": 61,
+    "distinct_postcodes": 1195,
+    "postcode_count": 11590,
+    "streets": 787,
+    "suburbs": 55,
+    "total_objects": 11590
+  },
+  "2024-09-27": {
+    "addressed_count": 10679,
+    "cities": 61,
+    "distinct_postcodes": 1195,
+    "postcode_count": 11590,
+    "streets": 787,
+    "suburbs": 55,
+    "total_objects": 11590
+  },
+  "2024-10-04": {
+    "addressed_count": 10687,
+    "cities": 61,
+    "distinct_postcodes": 1196,
+    "postcode_count": 11598,
+    "streets": 788,
+    "suburbs": 56,
+    "total_objects": 11598
+  },
+  "2024-10-11": {
+    "addressed_count": 10704,
+    "cities": 61,
+    "distinct_postcodes": 1197,
+    "postcode_count": 11615,
+    "streets": 789,
+    "suburbs": 56,
+    "total_objects": 11615
+  },
+  "2024-10-18": {
+    "addressed_count": 10701,
+    "cities": 61,
+    "distinct_postcodes": 1198,
+    "postcode_count": 11613,
+    "streets": 789,
+    "suburbs": 56,
+    "total_objects": 11613
+  },
+  "2024-10-25": {
+    "addressed_count": 10733,
+    "cities": 61,
+    "distinct_postcodes": 1194,
+    "postcode_count": 11651,
+    "streets": 783,
+    "suburbs": 56,
+    "total_objects": 11651
+  },
+  "2024-11-01": {
+    "addressed_count": 10886,
+    "cities": 61,
+    "distinct_postcodes": 1208,
+    "postcode_count": 11804,
+    "streets": 794,
+    "suburbs": 56,
+    "total_objects": 11804
+  },
+  "2024-11-08": {
+    "addressed_count": 10962,
+    "cities": 61,
+    "distinct_postcodes": 1214,
+    "postcode_count": 11880,
+    "streets": 800,
+    "suburbs": 56,
+    "total_objects": 11880
+  },
+  "2024-11-15": {
+    "addressed_count": 11041,
+    "cities": 61,
+    "distinct_postcodes": 1218,
+    "postcode_count": 11959,
+    "streets": 804,
+    "suburbs": 56,
+    "total_objects": 11959
+  },
+  "2024-11-22": {
+    "addressed_count": 11129,
+    "cities": 61,
+    "distinct_postcodes": 1223,
+    "postcode_count": 12043,
+    "streets": 808,
+    "suburbs": 56,
+    "total_objects": 12043
+  },
+  "2024-11-29": {
+    "addressed_count": 11154,
+    "cities": 61,
+    "distinct_postcodes": 1227,
+    "postcode_count": 12071,
+    "streets": 810,
+    "suburbs": 58,
+    "total_objects": 12071
+  },
+  "2024-12-06": {
+    "addressed_count": 11250,
+    "cities": 61,
+    "distinct_postcodes": 1233,
+    "postcode_count": 12168,
+    "streets": 813,
+    "suburbs": 60,
+    "total_objects": 12168
+  },
+  "2024-12-13": {
+    "addressed_count": 11264,
+    "cities": 61,
+    "distinct_postcodes": 1236,
+    "postcode_count": 12183,
+    "streets": 815,
+    "suburbs": 61,
+    "total_objects": 12183
+  },
+  "2024-12-20": {
+    "addressed_count": 11288,
+    "cities": 61,
+    "distinct_postcodes": 1242,
+    "postcode_count": 12210,
+    "streets": 819,
+    "suburbs": 62,
+    "total_objects": 12210
+  },
+  "2024-12-27": {
+    "addressed_count": 11320,
+    "cities": 61,
+    "distinct_postcodes": 1249,
+    "postcode_count": 12246,
+    "streets": 823,
+    "suburbs": 64,
+    "total_objects": 12246
+  },
+  "2025-01-03": {
+    "addressed_count": 11621,
+    "cities": 61,
+    "distinct_postcodes": 1263,
+    "postcode_count": 12392,
+    "streets": 830,
+    "suburbs": 64,
+    "total_objects": 12392
+  },
+  "2025-01-10": {
+    "addressed_count": 11669,
+    "cities": 61,
+    "distinct_postcodes": 1267,
+    "postcode_count": 12440,
+    "streets": 833,
+    "suburbs": 64,
+    "total_objects": 12440
+  },
+  "2025-01-17": {
+    "addressed_count": 11875,
+    "cities": 61,
+    "distinct_postcodes": 1267,
+    "postcode_count": 12670,
+    "streets": 833,
+    "suburbs": 64,
+    "total_objects": 12670
+  },
+  "2025-01-24": {
+    "addressed_count": 11875,
+    "cities": 61,
+    "distinct_postcodes": 1267,
+    "postcode_count": 12669,
+    "streets": 833,
+    "suburbs": 64,
+    "total_objects": 12669
+  },
+  "2025-01-31": {
+    "addressed_count": 11898,
+    "cities": 61,
+    "distinct_postcodes": 1273,
+    "postcode_count": 12691,
+    "streets": 835,
+    "suburbs": 64,
+    "total_objects": 12691
+  },
+  "2025-02-07": {
+    "addressed_count": 11976,
+    "cities": 62,
+    "distinct_postcodes": 1286,
+    "postcode_count": 12771,
+    "streets": 847,
+    "suburbs": 64,
+    "total_objects": 12771
+  },
+  "2025-02-14": {
+    "addressed_count": 12067,
+    "cities": 62,
+    "distinct_postcodes": 1291,
+    "postcode_count": 12865,
+    "streets": 853,
+    "suburbs": 64,
+    "total_objects": 12865
+  },
+  "2025-02-21": {
+    "addressed_count": 12077,
+    "cities": 62,
+    "distinct_postcodes": 1295,
+    "postcode_count": 12875,
+    "streets": 857,
+    "suburbs": 64,
+    "total_objects": 12875
+  },
+  "2025-02-28": {
+    "addressed_count": 12078,
+    "cities": 62,
+    "distinct_postcodes": 1295,
+    "postcode_count": 12875,
+    "streets": 857,
+    "suburbs": 64,
+    "total_objects": 12875
+  },
+  "2025-03-07": {
+    "addressed_count": 12078,
+    "cities": 62,
+    "distinct_postcodes": 1295,
+    "postcode_count": 12877,
+    "streets": 857,
+    "suburbs": 64,
+    "total_objects": 12877
+  },
+  "2025-03-14": {
+    "addressed_count": 12120,
+    "cities": 62,
+    "distinct_postcodes": 1302,
+    "postcode_count": 12921,
+    "streets": 862,
+    "suburbs": 64,
+    "total_objects": 12921
+  },
+  "2025-03-21": {
+    "addressed_count": 12134,
+    "cities": 62,
+    "distinct_postcodes": 1303,
+    "postcode_count": 12935,
+    "streets": 863,
+    "suburbs": 64,
+    "total_objects": 12935
+  },
+  "2025-03-28": {
+    "addressed_count": 12190,
+    "cities": 62,
+    "distinct_postcodes": 1309,
+    "postcode_count": 12993,
+    "streets": 868,
+    "suburbs": 64,
+    "total_objects": 12993
+  },
+  "2025-04-04": {
+    "addressed_count": 12242,
+    "cities": 63,
+    "distinct_postcodes": 1317,
+    "postcode_count": 13049,
+    "streets": 875,
+    "suburbs": 64,
+    "total_objects": 13049
+  },
+  "2025-04-11": {
+    "addressed_count": 12251,
+    "cities": 63,
+    "distinct_postcodes": 1318,
+    "postcode_count": 13058,
+    "streets": 875,
+    "suburbs": 64,
+    "total_objects": 13058
+  },
+  "2025-04-18": {
+    "addressed_count": 12267,
+    "cities": 63,
+    "distinct_postcodes": 1319,
+    "postcode_count": 13074,
+    "streets": 876,
+    "suburbs": 64,
+    "total_objects": 13074
+  },
+  "2025-04-25": {
+    "addressed_count": 12363,
+    "cities": 63,
+    "distinct_postcodes": 1329,
+    "postcode_count": 13170,
+    "streets": 886,
+    "suburbs": 64,
+    "total_objects": 13170
+  },
+  "2025-05-02": {
+    "addressed_count": 12399,
+    "cities": 63,
+    "distinct_postcodes": 1333,
+    "postcode_count": 13208,
+    "streets": 888,
+    "suburbs": 64,
+    "total_objects": 13208
+  },
+  "2025-05-09": {
+    "addressed_count": 12399,
+    "cities": 63,
+    "distinct_postcodes": 1333,
+    "postcode_count": 13208,
+    "streets": 888,
+    "suburbs": 64,
+    "total_objects": 13208
+  },
+  "2025-05-16": {
+    "addressed_count": 12432,
+    "cities": 63,
+    "distinct_postcodes": 1334,
+    "postcode_count": 13241,
+    "streets": 889,
+    "suburbs": 64,
+    "total_objects": 13241
+  },
+  "2025-05-23": {
+    "addressed_count": 12432,
+    "cities": 63,
+    "distinct_postcodes": 1334,
+    "postcode_count": 13241,
+    "streets": 889,
+    "suburbs": 64,
+    "total_objects": 13241
+  },
+  "2025-05-30": {
+    "addressed_count": 12484,
+    "cities": 63,
+    "distinct_postcodes": 1338,
+    "postcode_count": 13292,
+    "streets": 891,
+    "suburbs": 64,
+    "total_objects": 13292
+  },
+  "2025-06-06": {
+    "addressed_count": 12524,
+    "cities": 63,
+    "distinct_postcodes": 1341,
+    "postcode_count": 13332,
+    "streets": 894,
+    "suburbs": 64,
+    "total_objects": 13332
+  },
+  "2025-06-13": {
+    "addressed_count": 12610,
+    "cities": 63,
+    "distinct_postcodes": 1348,
+    "postcode_count": 13418,
+    "streets": 900,
+    "suburbs": 64,
+    "total_objects": 13418
+  },
+  "2025-06-20": {
+    "addressed_count": 12670,
+    "cities": 63,
+    "distinct_postcodes": 1354,
+    "postcode_count": 13478,
+    "streets": 906,
+    "suburbs": 64,
+    "total_objects": 13478
+  },
+  "2025-06-27": {
+    "addressed_count": 12672,
+    "cities": 63,
+    "distinct_postcodes": 1354,
+    "postcode_count": 13480,
+    "streets": 906,
+    "suburbs": 64,
+    "total_objects": 13480
+  },
+  "2025-07-04": {
+    "addressed_count": 12673,
+    "cities": 63,
+    "distinct_postcodes": 1353,
+    "postcode_count": 13480,
+    "streets": 906,
+    "suburbs": 64,
+    "total_objects": 13480
+  },
+  "2025-07-11": {
+    "addressed_count": 12673,
+    "cities": 63,
+    "distinct_postcodes": 1353,
+    "postcode_count": 13480,
+    "streets": 906,
+    "suburbs": 64,
+    "total_objects": 13480
+  },
+  "2025-07-18": {
+    "addressed_count": 12674,
+    "cities": 63,
+    "distinct_postcodes": 1354,
+    "postcode_count": 13481,
+    "streets": 906,
+    "suburbs": 64,
+    "total_objects": 13481
+  },
+  "2025-07-25": {
+    "addressed_count": 12680,
+    "cities": 63,
+    "distinct_postcodes": 1355,
+    "postcode_count": 13487,
+    "streets": 907,
+    "suburbs": 64,
+    "total_objects": 13487
+  },
+  "2025-08-01": {
+    "addressed_count": 12680,
+    "cities": 63,
+    "distinct_postcodes": 1355,
+    "postcode_count": 13487,
+    "streets": 907,
+    "suburbs": 64,
+    "total_objects": 13487
+  },
+  "2025-08-08": {
+    "addressed_count": 12793,
+    "cities": 63,
+    "distinct_postcodes": 1358,
+    "postcode_count": 13600,
+    "streets": 910,
+    "suburbs": 64,
+    "total_objects": 13600
+  },
+  "2025-08-15": {
+    "addressed_count": 12935,
+    "cities": 63,
+    "distinct_postcodes": 1371,
+    "postcode_count": 13743,
+    "streets": 921,
+    "suburbs": 64,
+    "total_objects": 13743
+  },
+  "2025-08-22": {
+    "addressed_count": 13004,
+    "cities": 63,
+    "distinct_postcodes": 1380,
+    "postcode_count": 13814,
+    "streets": 929,
+    "suburbs": 64,
+    "total_objects": 13814
+  },
+  "2025-08-29": {
+    "addressed_count": 13135,
+    "cities": 63,
+    "distinct_postcodes": 1391,
+    "postcode_count": 13946,
+    "streets": 940,
+    "suburbs": 64,
+    "total_objects": 13946
+  },
+  "2025-09-05": {
+    "addressed_count": 13179,
+    "cities": 63,
+    "distinct_postcodes": 1399,
+    "postcode_count": 13990,
+    "streets": 946,
+    "suburbs": 64,
+    "total_objects": 13990
+  },
+  "2025-09-12": {
+    "addressed_count": 13257,
+    "cities": 63,
+    "distinct_postcodes": 1404,
+    "postcode_count": 14065,
+    "streets": 951,
+    "suburbs": 64,
+    "total_objects": 14065
+  },
+  "2025-09-19": {
+    "addressed_count": 13272,
+    "cities": 63,
+    "distinct_postcodes": 1407,
+    "postcode_count": 14080,
+    "streets": 954,
+    "suburbs": 64,
+    "total_objects": 14080
+  },
+  "2025-09-26": {
+    "addressed_count": 13273,
+    "cities": 63,
+    "distinct_postcodes": 1407,
+    "postcode_count": 14081,
+    "streets": 954,
+    "suburbs": 64,
+    "total_objects": 14081
+  },
+  "2025-10-03": {
+    "addressed_count": 13299,
+    "cities": 63,
+    "distinct_postcodes": 1408,
+    "postcode_count": 14108,
+    "streets": 955,
+    "suburbs": 64,
+    "total_objects": 14108
+  },
+  "2025-10-10": {
+    "addressed_count": 13300,
+    "cities": 63,
+    "distinct_postcodes": 1409,
+    "postcode_count": 14109,
+    "streets": 955,
+    "suburbs": 64,
+    "total_objects": 14109
+  },
+  "2025-10-17": {
+    "addressed_count": 13300,
+    "cities": 63,
+    "distinct_postcodes": 1409,
+    "postcode_count": 14109,
+    "streets": 955,
+    "suburbs": 64,
+    "total_objects": 14109
+  },
+  "2025-10-24": {
+    "addressed_count": 13301,
+    "cities": 63,
+    "distinct_postcodes": 1410,
+    "postcode_count": 14110,
+    "streets": 956,
+    "suburbs": 64,
+    "total_objects": 14110
+  },
+  "2025-10-31": {
+    "addressed_count": 13301,
+    "cities": 63,
+    "distinct_postcodes": 1410,
+    "postcode_count": 14110,
+    "streets": 956,
+    "suburbs": 65,
+    "total_objects": 14110
+  },
+  "2025-11-07": {
+    "addressed_count": 13303,
+    "cities": 63,
+    "distinct_postcodes": 1410,
+    "postcode_count": 14112,
+    "streets": 957,
+    "suburbs": 65,
+    "total_objects": 14112
+  },
+  "2025-11-14": {
+    "addressed_count": 13303,
+    "cities": 63,
+    "distinct_postcodes": 1411,
+    "postcode_count": 14112,
+    "streets": 957,
+    "suburbs": 65,
+    "total_objects": 14112
+  },
+  "2025-11-21": {
+    "addressed_count": 13303,
+    "cities": 63,
+    "distinct_postcodes": 1411,
+    "postcode_count": 14112,
+    "streets": 957,
+    "suburbs": 65,
+    "total_objects": 14112
+  },
+  "2025-11-28": {
+    "addressed_count": 13355,
+    "cities": 63,
+    "distinct_postcodes": 1415,
+    "postcode_count": 14164,
+    "streets": 960,
+    "suburbs": 65,
+    "total_objects": 14164
+  },
+  "2025-12-05": {
+    "addressed_count": 14996,
+    "cities": 65,
+    "distinct_postcodes": 4441,
+    "postcode_count": 53104,
+    "streets": 1157,
+    "suburbs": 65,
+    "total_objects": 53104
+  },
+  "2025-12-12": {
+    "addressed_count": 15020,
+    "cities": 66,
+    "distinct_postcodes": 4971,
+    "postcode_count": 58095,
+    "streets": 1296,
+    "suburbs": 65,
+    "total_objects": 58095
+  },
+  "2025-12-19": {
+    "addressed_count": 15020,
+    "cities": 66,
+    "distinct_postcodes": 4971,
+    "postcode_count": 58095,
+    "streets": 1296,
+    "suburbs": 65,
+    "total_objects": 58095
+  },
+  "2025-12-26": {
+    "addressed_count": 15020,
+    "cities": 66,
+    "distinct_postcodes": 4971,
+    "postcode_count": 58095,
+    "streets": 1296,
+    "suburbs": 65,
+    "total_objects": 58095
+  },
+  "2026-01-02": {
+    "addressed_count": 15035,
+    "cities": 66,
+    "distinct_postcodes": 4973,
+    "postcode_count": 58113,
+    "streets": 1297,
+    "suburbs": 65,
+    "total_objects": 58113
+  },
+  "2026-01-09": {
+    "addressed_count": 15034,
+    "cities": 66,
+    "distinct_postcodes": 4973,
+    "postcode_count": 58110,
+    "streets": 1297,
+    "suburbs": 65,
+    "total_objects": 58110
+  },
+  "2026-01-16": {
+    "addressed_count": 15123,
+    "cities": 66,
+    "distinct_postcodes": 4976,
+    "postcode_count": 58199,
+    "streets": 1300,
+    "suburbs": 65,
+    "total_objects": 58199
+  },
+  "2026-01-23": {
+    "addressed_count": 15130,
+    "cities": 66,
+    "distinct_postcodes": 4978,
+    "postcode_count": 58206,
+    "streets": 1300,
+    "suburbs": 65,
+    "total_objects": 58206
+  },
+  "2026-01-30": {
+    "addressed_count": 15130,
+    "cities": 66,
+    "distinct_postcodes": 4978,
+    "postcode_count": 58208,
+    "streets": 1303,
+    "suburbs": 65,
+    "total_objects": 58208
+  },
+  "2026-02-06": {
+    "addressed_count": 15131,
+    "cities": 66,
+    "distinct_postcodes": 4978,
+    "postcode_count": 58209,
+    "streets": 1303,
+    "suburbs": 65,
+    "total_objects": 58209
+  },
+  "2026-02-13": {
+    "addressed_count": 15218,
+    "cities": 66,
+    "distinct_postcodes": 4990,
+    "postcode_count": 58273,
+    "streets": 1313,
+    "suburbs": 78,
+    "total_objects": 58273
+  },
+  "2026-02-20": {
+    "addressed_count": 15259,
+    "cities": 66,
+    "distinct_postcodes": 5008,
+    "postcode_count": 58323,
+    "streets": 1325,
+    "suburbs": 85,
+    "total_objects": 58323
+  },
+  "2026-02-27": {
+    "addressed_count": 15293,
+    "cities": 67,
+    "distinct_postcodes": 5014,
+    "postcode_count": 58356,
+    "streets": 1332,
+    "suburbs": 88,
+    "total_objects": 58356
+  },
+  "2026-03-06": {
+    "addressed_count": 15301,
+    "cities": 67,
+    "distinct_postcodes": 5016,
+    "postcode_count": 58362,
+    "streets": 1336,
+    "suburbs": 88,
+    "total_objects": 58362
+  },
+  "2026-03-13": {
+    "addressed_count": 15331,
+    "cities": 67,
+    "distinct_postcodes": 5035,
+    "postcode_count": 58395,
+    "streets": 1347,
+    "suburbs": 92,
+    "total_objects": 58395
+  },
+  "2026-03-20": {
+    "addressed_count": 15333,
+    "cities": 67,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58397,
+    "streets": 1347,
+    "suburbs": 92,
+    "total_objects": 58397
+  },
+  "2026-03-27": {
+    "addressed_count": 15333,
+    "cities": 67,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58393,
+    "streets": 1346,
+    "suburbs": 93,
+    "total_objects": 58393
+  },
+  "2026-04-03": {
+    "addressed_count": 15333,
+    "cities": 67,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58393,
+    "streets": 1346,
+    "suburbs": 93,
+    "total_objects": 58393
+  },
+  "2026-04-10": {
+    "addressed_count": 15335,
+    "cities": 67,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58396,
+    "streets": 1346,
+    "suburbs": 93,
+    "total_objects": 58396
+  },
+  "2026-04-17": {
+    "addressed_count": 15353,
+    "cities": 19,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58396,
+    "streets": 1350,
+    "suburbs": 122,
+    "total_objects": 58396
+  },
+  "2026-04-24": {
+    "addressed_count": 15354,
+    "cities": 13,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58396,
+    "streets": 1351,
+    "suburbs": 123,
+    "total_objects": 58396
+  },
+  "2026-05-01": {
+    "addressed_count": 15366,
+    "cities": 12,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58405,
+    "streets": 1351,
+    "suburbs": 125,
+    "total_objects": 58405
+  },
+  "2026-05-08": {
+    "addressed_count": 15366,
+    "cities": 12,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58405,
+    "streets": 1351,
+    "suburbs": 125,
+    "total_objects": 58405
+  },
+  "2026-05-15": {
+    "addressed_count": 15368,
+    "cities": 12,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58407,
+    "streets": 1351,
+    "suburbs": 125,
+    "total_objects": 58407
+  },
+  "2026-05-22": {
+    "addressed_count": 15368,
+    "cities": 12,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58408,
+    "streets": 1351,
+    "suburbs": 125,
+    "total_objects": 58408
+  },
+  "2026-05-29": {
+    "addressed_count": 15370,
+    "cities": 12,
+    "distinct_postcodes": 5032,
+    "postcode_count": 58409,
+    "streets": 1351,
+    "suburbs": 125,
+    "total_objects": 58409
+  },
+  "2026-06-05": {
+    "addressed_count": 15378,
+    "cities": 12,
+    "distinct_postcodes": 5033,
+    "postcode_count": 58419,
+    "streets": 1352,
+    "suburbs": 125,
+    "total_objects": 58419
+  },
+  "2026-06-12": {
+    "addressed_count": 15381,
+    "cities": 12,
+    "distinct_postcodes": 5033,
+    "postcode_count": 58420,
+    "streets": 1353,
+    "suburbs": 125,
+    "total_objects": 58420
+  },
+  "2026-06-19": {
+    "addressed_count": 15390,
+    "cities": 12,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58428,
+    "streets": 1355,
+    "suburbs": 125,
+    "total_objects": 58428
+  },
+  "2026-06-26": {
+    "addressed_count": 15397,
+    "cities": 12,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58436,
+    "streets": 1356,
+    "suburbs": 125,
+    "total_objects": 58436
+  },
+  "2026-07-03": {
+    "addressed_count": 15399,
+    "cities": 12,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58440,
+    "streets": 1356,
+    "suburbs": 125,
+    "total_objects": 58440
+  },
+  "2026-07-10": {
+    "addressed_count": 15425,
+    "cities": 12,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58498,
+    "streets": 1358,
+    "suburbs": 125,
+    "total_objects": 58498
+  },
+  "2026-07-17": {
+    "addressed_count": 15462,
+    "cities": 12,
+    "distinct_postcodes": 5034,
+    "postcode_count": 58552,
+    "streets": 1358,
+    "suburbs": 125,
+    "total_objects": 58552
+  },
+  "2026-07-24": {
+    "addressed_count": 15493,
+    "cities": 12,
+    "distinct_postcodes": 5036,
+    "postcode_count": 58616,
+    "streets": 1359,
+    "suburbs": 125,
+    "total_objects": 58616
+  },
+  "2026-07-31": {
+    "addressed_count": 15523,
+    "cities": 12,
+    "distinct_postcodes": 5039,
+    "postcode_count": 58654,
+    "streets": 1365,
+    "suburbs": 125,
+    "total_objects": 58654
+  },
+  "2026-08-01": {
+    "addressed_count": 15527,
+    "cities": 12,
+    "distinct_postcodes": 5040,
+    "postcode_count": 58663,
+    "streets": 1365,
+    "suburbs": 125,
+    "total_objects": 58663
+  },
+  "2026-08-07": {
+    "addressed_count": 15532,
+    "cities": 12,
+    "distinct_postcodes": 5040,
+    "postcode_count": 58670,
+    "streets": 1366,
+    "suburbs": 125,
+    "total_objects": 58670
+  },
+  "2026-08-14": {
+    "addressed_count": 15544,
+    "cities": 12,
+    "distinct_postcodes": 5040,
+    "postcode_count": 58694,
+    "streets": 1366,
+    "suburbs": 125,
+    "total_objects": 58694
+  },
+  "2026-08-21": {
+    "addressed_count": 15586,
+    "cities": 12,
+    "distinct_postcodes": 5041,
+    "postcode_count": 58752,
+    "streets": 1369,
+    "suburbs": 125,
+    "total_objects": 58752
+  },
+  "2026-08-28": {
+    "addressed_count": 15645,
+    "cities": 12,
+    "distinct_postcodes": 5049,
+    "postcode_count": 58811,
+    "streets": 1377,
+    "suburbs": 128,
+    "total_objects": 58811
+  },
+  "2026-08-29": {
+    "addressed_count": 15646,
+    "cities": 12,
+    "distinct_postcodes": 5050,
+    "postcode_count": 58812,
+    "streets": 1377,
+    "suburbs": 128,
+    "total_objects": 58812
+  },
+  "2026-09-04": {
+    "addressed_count": 15662,
+    "cities": 13,
+    "distinct_postcodes": 5051,
+    "postcode_count": 58869,
+    "streets": 1378,
+    "suburbs": 128,
+    "total_objects": 58869
+  },
+  "2026-09-11": {
+    "addressed_count": 15662,
+    "cities": 12,
+    "distinct_postcodes": 5051,
+    "postcode_count": 58869,
+    "streets": 1379,
+    "suburbs": 128,
+    "total_objects": 58869
+  },
+  "2026-09-18": {
+    "addressed_count": 15664,
+    "cities": 12,
+    "distinct_postcodes": 5052,
+    "postcode_count": 58870,
+    "streets": 1380,
+    "suburbs": 129,
+    "total_objects": 58870
+  },
+  "2026-09-25": {
+    "addressed_count": 15665,
+    "cities": 12,
+    "distinct_postcodes": 5052,
+    "postcode_count": 58870,
+    "streets": 1381,
+    "suburbs": 129,
+    "total_objects": 58870
+  },
+  "2026-10-02": {
+    "addressed_count": 15673,
+    "cities": 12,
+    "distinct_postcodes": 5052,
+    "postcode_count": 58877,
+    "streets": 1381,
+    "suburbs": 129,
+    "total_objects": 58877
+  },
+  "2026-10-09": {
+    "addressed_count": 15688,
+    "cities": 12,
+    "distinct_postcodes": 5052,
+    "postcode_count": 58877,
+    "streets": 1384,
+    "suburbs": 129,
+    "total_objects": 58877
+  }
+}
