@@ -4291,5 +4291,14 @@
     "streets": 2,
     "suburbs": 0,
     "total_objects": 2
+  },
+  "2026-10-16": {
+    "addressed_count": 0,
+    "cities": 2,
+    "distinct_postcodes": 2,
+    "postcode_count": 2,
+    "streets": 2,
+    "suburbs": 0,
+    "total_objects": 2
   }
 }
