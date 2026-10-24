@@ -7909,5 +7909,14 @@
     "streets": 3609,
     "suburbs": 616,
     "total_objects": 94278
+  },
+  "2026-10-22": {
+    "addressed_count": 54115,
+    "cities": 17,
+    "distinct_postcodes": 16490,
+    "postcode_count": 94671,
+    "streets": 3622,
+    "suburbs": 616,
+    "total_objects": 94671
   }
 }
