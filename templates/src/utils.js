@@ -121,6 +121,30 @@ export function getCityLetterKey(cityName) {
  * @param {string} suburbName - Suburb display or raw name.
  * @returns {string} Letter partition key ('a'-'z', 'no-suburb', or 'other').
  */
+/**
+ * Returns the letter key partition for a street name.
+ *
+ * @param {string} streetNameOrId - Street display or raw name.
+ * @returns {string} Letter partition key ('a'-'z', 'no-street', or 'other').
+ */
+export function getStreetLetterKey(streetNameOrId) {
+    if (!streetNameOrId || isMissingValue(streetNameOrId) || streetNameOrId.trim().toLowerCase() === 'no street') {
+        return 'no-street';
+    }
+    let clean = streetNameOrId.trim();
+    if (clean.includes('_')) {
+        clean = clean.split('_').pop();
+    }
+    if (clean.startsWith('street-') || clean.startsWith('street_area-')) {
+        clean = clean.replace(/^street(_area)?-/, '');
+    }
+    const firstChar = clean.length > 0 ? clean[0].toLowerCase() : '';
+    if (firstChar >= 'a' && firstChar <= 'z') {
+        return firstChar;
+    }
+    return 'other';
+}
+
 export function getSuburbLetterKey(suburbNameOrId) {
     if (!suburbNameOrId || isMissingValue(suburbNameOrId) || suburbNameOrId.trim().toLowerCase() === 'no suburb') {
         return 'no-suburb';

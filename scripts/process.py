@@ -27,6 +27,7 @@ from config import (
     assign_colours,
     get_city_letter_key,
     get_clean_id,
+    get_street_letter_key,
     get_suburb_letter_key,
 )
 from duplicates_detector import extract_duplicates_from_db
@@ -554,8 +555,30 @@ def process() -> None:
                         suburb_letter_map.setdefault(sub_key, {}).setdefault(c_id, []).append(sub_tuple)
 
                 for sub_key, sub_dict in suburb_letter_map.items():
-                    with open(f"{OUTPUT_DIR}/{no_postcode_id}_no-city_{sub_key}.json", 'w', encoding='utf-8') as f:
-                        json.dump(sub_dict, f, separators=(',', ':'))
+                    if sub_key == 'no-suburb':
+                        # Sub-split no-city_no-suburb further by street letter key: data/{no_postcode_id}_no-city_no-suburb_{st_letter_key}.json
+                        st_letter_map: dict[str, dict[str, list[Any]]] = {}
+                        for c_id, suburbs_list in sub_dict.items():
+                            for sub_tuple in suburbs_list:
+                                # sub_tuple is [display_name, raw_name, 'suburb', child_id, count, addr_perc, bbox, streets_list]
+                                streets_list = sub_tuple[7] if len(sub_tuple) > 7 and isinstance(sub_tuple[7], list) else []
+                                st_groups: dict[str, list[Any]] = {}
+                                for st_tuple in streets_list:
+                                    st_label = st_tuple[1]
+                                    st_key = get_street_letter_key(st_label)
+                                    st_groups.setdefault(st_key, []).append(st_tuple)
+
+                                for st_key, st_tuples in st_groups.items():
+                                    sub_copy = list(sub_tuple)
+                                    sub_copy[7] = st_tuples
+                                    st_letter_map.setdefault(st_key, {}).setdefault(c_id, []).append(sub_copy)
+
+                        for st_key, st_dict in st_letter_map.items():
+                            with open(f"{OUTPUT_DIR}/{no_postcode_id}_no-city_no-suburb_{st_key}.json", 'w', encoding='utf-8') as f:
+                                json.dump(st_dict, f, separators=(',', ':'))
+                    else:
+                        with open(f"{OUTPUT_DIR}/{no_postcode_id}_no-city_{sub_key}.json", 'w', encoding='utf-8') as f:
+                            json.dump(sub_dict, f, separators=(',', ':'))
             else:
                 with open(f"{OUTPUT_DIR}/{no_postcode_id}_{letter_key}.json", 'w', encoding='utf-8') as f:
                     json.dump(merged_letter_dict, f, separators=(',', ':'))

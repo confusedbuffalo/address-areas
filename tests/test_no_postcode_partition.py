@@ -43,8 +43,8 @@ def test_db_env(tmp_path):
         (57.1497, -2.0943, "No postcode", "No postcode", "Aberdeen", "Rosemount", "suburb", "suburb:Rosemount", "High St", "street", "street:High St", "{}", "n101", "High St 1", 1),
         # City: 'Alloa' -> letter_key 'a'
         (56.1165, -3.7932, "No postcode", "No postcode", "Alloa", "Town Centre", "suburb", "suburb:Town Centre", "Main St", "street", "street:Main St", "{}", "n102", "Main St 1", 1),
-        # City: None / missing -> letter_key 'no-city'
-        (55.9533, -3.1883, "No postcode", "No postcode", "No city", "Princes St", "suburb", "suburb:Princes St", "George St", "street", "street:George St", "{}", "n103", "George St 1", 0),
+        # City: None / missing -> letter_key 'no-city', suburb: 'No suburb'
+        (55.9533, -3.1883, "No postcode", "No postcode", "No city", "No suburb", "suburb", "suburb:No suburb", "George St", "street", "street:George St", "{}", "n103", "George St 1", 0),
         # City: 'Dundee' in standard postcode area 'DD'
         (56.4620, -2.9707, "DD1 1AA", "DD", "Dundee", "City Centre", "suburb", "suburb:City Centre", "Nethergate", "street", "street:Nethergate", "{}", "n104", "Nethergate 1", 1),
     ]
@@ -121,6 +121,17 @@ def test_process_no_postcode_sub_partition_worker_no_city(test_db_env) -> None:
     pa_id = get_clean_id('root', 'No postcode')
     expected_sector_id = f"{pa_id}_no-city_g"
     assert expected_sector_id in sector_points_dict
+
+    # Check that letter_suburbs_dict contains 'no-suburb' with 'George St'
+    city_id = city_items[0][3]
+    assert city_id in letter_suburbs_dict
+    suburbs = letter_suburbs_dict[city_id]
+    assert len(suburbs) == 1
+    no_sub_tuple = suburbs[0]
+    assert no_sub_tuple[1] == 'No suburb'
+    streets = no_sub_tuple[7]
+    assert len(streets) == 1
+    assert streets[0][1] == 'George St'
 
 
 def test_no_postcode_top_level_postcode_area_hull_properties(test_db_env) -> None:
