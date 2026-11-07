@@ -7918,5 +7918,14 @@
     "streets": 6,
     "suburbs": 0,
     "total_objects": 11
+  },
+  "2026-11-05": {
+    "addressed_count": 12,
+    "cities": 1,
+    "distinct_postcodes": 8,
+    "postcode_count": 13,
+    "streets": 8,
+    "suburbs": 0,
+    "total_objects": 13
   }
 }
